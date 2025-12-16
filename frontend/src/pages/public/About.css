@@ -1,0 +1,584 @@
+/* About.css - Consistent with HostelHub Design System */
+
+:root {
+  --modern-blue: #3A86FF;
+  --modern-dark-blue: #2A70E8;
+  --modern-light-blue: #5FA0FF;
+  --bg-color: rgba(26, 26, 46, 0.95);
+  --bg-color-solid: #1a1a2e;
+  --card-bg: rgba(30, 30, 50, 0.8);
+  --card-bg-solid: #1e1e32;
+  --text-color-light: rgba(255, 255, 255, 0.9);
+  --text-color-muted: rgba(255, 255, 255, 0.6);
+  --text-color-white: #ffffff;
+  --border-color: rgba(58, 134, 255, 0.2);
+  --border-color-light: rgba(58, 134, 255, 0.1);
+  --transition-speed: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius: 16px;
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
+  --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-blue: 0 4px 15px rgba(58, 134, 255, 0.3);
+}
+
+/* Main Container */
+.hostelhub-about-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    var(--bg-color-solid) 0%, 
+    rgba(22, 33, 62, 0.95) 100%);
+  color: var(--text-color-light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add subtle background pattern */
+.hostelhub-about-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(58, 134, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(58, 134, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hostelhub-about-page > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hero Section */
+.hostelhub-about-hero {
+  text-align: center;
+  padding: 5rem 2rem 4rem;
+  background: linear-gradient(135deg, 
+    rgba(22, 33, 62, 0.9) 0%,
+    rgba(26, 26, 46, 0.95) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hostelhub-about-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--modern-light-blue) 50%, 
+    transparent 100%);
+}
+
+.hostelhub-about-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, 
+    #ffffff 20%,
+    var(--modern-light-blue) 50%,
+    var(--modern-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(58, 134, 255, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(58, 134, 255, 0.6);
+  }
+}
+
+.hostelhub-about-subtitle {
+  font-size: 1.3rem;
+  color: var(--text-color-muted);
+  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Main Content */
+.hostelhub-about-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+/* Sections */
+.hostelhub-about-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 3rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  transition: all var(--transition-speed);
+  position: relative;
+  overflow: hidden;
+}
+
+.hostelhub-about-section:hover {
+  border-color: rgba(58, 134, 255, 0.3);
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-5px);
+}
+
+.hostelhub-about-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    var(--modern-blue), 
+    var(--modern-light-blue));
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+/* Section Titles */
+.hostelhub-section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 2rem 0;
+  color: var(--text-color-white);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.hostelhub-section-title::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    var(--modern-blue) 0%, 
+    transparent 100%);
+  margin-left: 1rem;
+  border-radius: 1px;
+}
+
+.hostelhub-section-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-color-light);
+  margin: 0 0 1.5rem 0;
+}
+
+.hostelhub-section-text:last-child {
+  margin-bottom: 0;
+}
+
+/* Mission Grid */
+.hostelhub-mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.hostelhub-mission-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-md);
+  padding: 2rem;
+  border: 1px solid var(--border-color-light);
+  text-align: center;
+  transition: all var(--transition-speed);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hostelhub-mission-card:hover {
+  background: rgba(58, 134, 255, 0.1);
+  border-color: var(--modern-light-blue);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-blue);
+}
+
+.hostelhub-mission-icon {
+  font-size: 3rem;
+  color: var(--modern-light-blue);
+  filter: drop-shadow(0 0 10px rgba(58, 134, 255, 0.3));
+}
+
+.hostelhub-mission-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color-white);
+}
+
+.hostelhub-mission-card p {
+  color: var(--text-color-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Values List */
+.hostelhub-values-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.hostelhub-value-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-speed);
+  position: relative;
+  overflow: hidden;
+}
+
+.hostelhub-value-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    var(--modern-blue), 
+    var(--modern-light-blue));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-speed);
+}
+
+.hostelhub-value-item:hover {
+  background: rgba(58, 134, 255, 0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hostelhub-value-item:hover::before {
+  transform: scaleX(1);
+}
+
+.hostelhub-value-item h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: var(--text-color-white);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hostelhub-value-item h3::before {
+  content: '✓';
+  color: var(--modern-light-blue);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.hostelhub-value-item p {
+  color: var(--text-color-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* CTA Section */
+.hostelhub-about-section:last-child {
+  background: linear-gradient(135deg, 
+    rgba(58, 134, 255, 0.1) 0%,
+    rgba(42, 112, 232, 0.05) 100%);
+  border: 1px solid rgba(58, 134, 255, 0.3);
+  text-align: center;
+}
+
+.hostelhub-about-section:last-child .hostelhub-section-text {
+  max-width: 700px;
+  margin: 0 auto 3rem;
+  font-size: 1.2rem;
+}
+
+.hostelhub-cta-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hostelhub-primary-button,
+.hostelhub-secondary-button {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+  transition: all var(--transition-speed);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 200px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hostelhub-primary-button {
+  background: linear-gradient(135deg, var(--modern-blue), var(--modern-dark-blue));
+  color: white;
+  border: none;
+}
+
+.hostelhub-primary-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+  z-index: -1;
+}
+
+.hostelhub-primary-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(58, 134, 255, 0.6);
+}
+
+.hostelhub-primary-button:hover::before {
+  left: 100%;
+}
+
+.hostelhub-secondary-button {
+  background: transparent;
+  border: 2px solid var(--modern-blue);
+  color: var(--modern-light-blue);
+}
+
+.hostelhub-secondary-button:hover {
+  background: rgba(58, 134, 255, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(58, 134, 255, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hostelhub-about-hero {
+    padding: 4rem 1.5rem 3rem;
+  }
+  
+  .hostelhub-about-title {
+    font-size: 3rem;
+  }
+  
+  .hostelhub-about-content {
+    padding: 1.5rem;
+    gap: 3rem;
+  }
+  
+  .hostelhub-about-section {
+    padding: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hostelhub-about-hero {
+    padding: 3rem 1rem 2.5rem;
+  }
+  
+  .hostelhub-about-title {
+    font-size: 2.5rem;
+  }
+  
+  .hostelhub-about-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .hostelhub-about-section {
+    padding: 2rem;
+  }
+  
+  .hostelhub-section-title {
+    font-size: 1.8rem;
+  }
+  
+  .hostelhub-mission-grid,
+  .hostelhub-values-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .hostelhub-cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hostelhub-primary-button,
+  .hostelhub-secondary-button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .hostelhub-about-section:last-child .hostelhub-section-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hostelhub-about-title {
+    font-size: 2rem;
+  }
+  
+  .hostelhub-about-subtitle {
+    font-size: 1rem;
+  }
+  
+  .hostelhub-about-content {
+    padding: 1rem;
+    gap: 2.5rem;
+  }
+  
+  .hostelhub-about-section {
+    padding: 1.5rem;
+  }
+  
+  .hostelhub-section-title {
+    font-size: 1.6rem;
+  }
+  
+  .hostelhub-section-text {
+    font-size: 1rem;
+  }
+  
+  .hostelhub-mission-card {
+    padding: 1.5rem;
+  }
+  
+  .hostelhub-mission-icon {
+    font-size: 2.5rem;
+  }
+  
+  .hostelhub-value-item {
+    padding: 1.25rem;
+  }
+  
+  .hostelhub-primary-button,
+  .hostelhub-secondary-button {
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hostelhub-values-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop-specific enhancements */
+@media (min-width: 1025px) {
+  .hostelhub-about-content {
+    padding: 4rem 2rem;
+  }
+  
+  .hostelhub-about-hero {
+    padding: 6rem 2rem 5rem;
+  }
+  
+  .hostelhub-about-title {
+    font-size: 4rem;
+  }
+  
+  .hostelhub-about-subtitle {
+    font-size: 1.4rem;
+  }
+}
+
+/* Animation for section entrance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hostelhub-about-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.hostelhub-about-section:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.hostelhub-about-section:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.hostelhub-about-section:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+/* Hover effects for mission cards */
+.hostelhub-mission-card .hostelhub-mission-icon {
+  transition: all var(--transition-speed);
+}
+
+.hostelhub-mission-card:hover .hostelhub-mission-icon {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 0 15px rgba(58, 134, 255, 0.5));
+}
+
+/* Focus accessibility improvements */
+.hostelhub-primary-button:focus,
+.hostelhub-secondary-button:focus {
+  outline: 2px solid var(--modern-light-blue);
+  outline-offset: 4px;
+}
+
+/* Print styles */
+@media print {
+  .hostelhub-about-page {
+    background: white;
+    color: black;
+  }
+  
+  .hostelhub-about-hero {
+    background: white;
+  }
+  
+  .hostelhub-about-title {
+    background: linear-gradient(135deg, #000, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hostelhub-about-section {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  .hostelhub-cta-buttons {
+    display: none;
+  }
+}

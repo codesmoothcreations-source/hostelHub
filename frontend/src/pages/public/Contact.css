@@ -1,0 +1,593 @@
+/* Contact.css - Consistent with HostelHub Design System */
+
+:root {
+  --modern-blue: #3A86FF;
+  --modern-dark-blue: #2A70E8;
+  --modern-light-blue: #5FA0FF;
+  --bg-color: rgba(26, 26, 46, 0.95);
+  --bg-color-solid: #1a1a2e;
+  --card-bg: rgba(30, 30, 50, 0.8);
+  --card-bg-solid: #1e1e32;
+  --text-color-light: rgba(255, 255, 255, 0.95);
+  --text-color-muted: rgba(255, 255, 255, 0.6);
+  --text-color-white: #ffffff;
+  --border-color: rgba(58, 134, 255, 0.2);
+  --border-color-light: rgba(58, 134, 255, 0.1);
+  --success-green: #4CAF50;
+  --transition-speed: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius: 20px;
+  --border-radius-md: 15px;
+  --border-radius-sm: 10px;
+  --shadow-light: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-blue: 0 10px 30px rgba(58, 134, 255, 0.2);
+}
+
+/* Main Container */
+.hostelhub-contact-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    var(--bg-color-solid) 0%, 
+    rgba(22, 33, 62, 0.95) 100%);
+  padding: 3rem 2rem;
+  color: var(--text-color-light);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Hero Section */
+.hostelhub-contact-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.hostelhub-contact-hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(58, 134, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.hostelhub-contact-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, 
+    #ffffff 30%,
+    var(--modern-light-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+}
+
+.hostelhub-contact-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-color-muted);
+  margin: 0;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+/* Contact Container - Two Column Layout */
+.hostelhub-contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Left Column - Contact Info */
+.hostelhub-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.hostelhub-info-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 2.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+}
+
+.hostelhub-info-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: var(--text-color-white);
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.hostelhub-info-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--modern-blue), var(--modern-light-blue));
+  border-radius: 2px;
+}
+
+.hostelhub-info-text {
+  font-size: 1.1rem;
+  color: var(--text-color-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Contact Details */
+.hostelhub-contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hostelhub-contact-item {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius-md);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  transition: all var(--transition-speed);
+}
+
+.hostelhub-contact-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--modern-light-blue);
+  box-shadow: var(--shadow-blue);
+}
+
+.hostelhub-contact-icon {
+  font-size: 2rem;
+  color: var(--modern-light-blue);
+  background: rgba(58, 134, 255, 0.1);
+  padding: 1rem;
+  border-radius: var(--border-radius-md);
+  min-width: 60px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hostelhub-contact-content {
+  flex: 1;
+}
+
+.hostelhub-contact-content h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color-white);
+}
+
+.hostelhub-contact-content p {
+  font-size: 1rem;
+  color: var(--text-color-muted);
+  margin: 0.25rem 0;
+  line-height: 1.5;
+}
+
+/* Business Hours */
+.hostelhub-business-hours {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 2.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+}
+
+.hostelhub-hours-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: var(--text-color-white);
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.hostelhub-hours-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--modern-blue), var(--modern-light-blue));
+  border-radius: 2px;
+}
+
+.hostelhub-hours-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.hostelhub-hour-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-speed);
+}
+
+.hostelhub-hour-item:hover {
+  background: rgba(58, 134, 255, 0.1);
+  transform: translateX(10px);
+}
+
+.hostelhub-hour-item span:first-child {
+  font-weight: 600;
+  color: var(--text-color-light);
+}
+
+.hostelhub-hour-item span:last-child {
+  color: var(--modern-light-blue);
+  font-weight: 500;
+}
+
+/* Right Column - Contact Form */
+.hostelhub-contact-form-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 3rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
+
+.hostelhub-form-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 2rem 0;
+  color: var(--text-color-white);
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.hostelhub-form-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--modern-blue), var(--modern-light-blue));
+  border-radius: 2px;
+}
+
+/* Success Message */
+.hostelhub-success-message {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: var(--border-radius-md);
+  padding: 3rem 2rem;
+  text-align: center;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hostelhub-success-message h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: var(--success-green);
+}
+
+.hostelhub-success-message p {
+  font-size: 1.1rem;
+  color: var(--text-color-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Contact Form */
+.hostelhub-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.hostelhub-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hostelhub-form-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hostelhub-form-label::after {
+  content: ' *';
+  color: #ff6b6b;
+  font-size: 1rem;
+}
+
+.hostelhub-form-input,
+.hostelhub-form-textarea {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid var(--border-color-light);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-color-white);
+  font-size: 1.1rem;
+  transition: all var(--transition-speed);
+  font-family: inherit;
+}
+
+.hostelhub-form-input:focus,
+.hostelhub-form-textarea:focus {
+  outline: none;
+  border-color: var(--modern-light-blue);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(58, 134, 255, 0.1);
+}
+
+.hostelhub-form-input::placeholder,
+.hostelhub-form-textarea::placeholder {
+  color: var(--text-color-muted);
+}
+
+.hostelhub-form-textarea {
+  resize: vertical;
+  min-height: 180px;
+  line-height: 1.6;
+}
+
+/* Submit Button */
+.hostelhub-submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, var(--modern-blue), var(--modern-dark-blue));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  margin-top: 1rem;
+}
+
+.hostelhub-submit-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.8s ease;
+  z-index: -1;
+}
+
+.hostelhub-submit-button:hover:not(:disabled) {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(58, 134, 255, 0.4);
+}
+
+.hostelhub-submit-button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.hostelhub-submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #666, #555);
+}
+
+.hostelhub-button-icon {
+  font-size: 1.2rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Loading Animation */
+@keyframes loadingPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.hostelhub-submit-button:disabled {
+  animation: loadingPulse 1.5s infinite;
+}
+
+/* Focus Accessibility */
+.hostelhub-form-input:focus,
+.hostelhub-form-textarea:focus,
+.hostelhub-submit-button:focus {
+  outline: 2px solid var(--modern-light-blue);
+  outline-offset: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hostelhub-contact-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  
+  .hostelhub-contact-form-section {
+    position: static;
+  }
+  
+  .hostelhub-contact-title {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hostelhub-contact-page {
+    padding: 2rem 1rem;
+  }
+  
+  .hostelhub-contact-title {
+    font-size: 2.4rem;
+  }
+  
+  .hostelhub-contact-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .hostelhub-info-section,
+  .hostelhub-business-hours,
+  .hostelhub-contact-form-section {
+    padding: 2rem;
+  }
+  
+  .hostelhub-contact-item {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .hostelhub-contact-icon {
+    margin: 0 auto;
+  }
+  
+  .hostelhub-hour-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .hostelhub-form-title,
+  .hostelhub-info-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hostelhub-contact-page {
+    padding: 1.5rem 0.75rem;
+  }
+  
+  .hostelhub-contact-title {
+    font-size: 2rem;
+  }
+  
+  .hostelhub-contact-hero {
+    margin-bottom: 2.5rem;
+  }
+  
+  .hostelhub-info-section,
+  .hostelhub-business-hours,
+  .hostelhub-contact-form-section,
+  .hostelhub-contact-item {
+    padding: 1.5rem;
+  }
+  
+  .hostelhub-form-input,
+  .hostelhub-form-textarea {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+  
+  .hostelhub-submit-button {
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hostelhub-contact-container {
+    max-width: 900px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .hostelhub-contact-page {
+    background: white;
+    color: black;
+    padding: 1rem;
+  }
+  
+  .hostelhub-contact-title {
+    background: linear-gradient(135deg, #000, #333);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  .hostelhub-contact-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .hostelhub-contact-info,
+  .hostelhub-contact-form-section {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  .hostelhub-submit-button {
+    display: none;
+  }
+}
