@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FaUser, FaSignOutAlt, FaHome, FaComments, FaBook, FaChartBar, FaBars, FaTimes } from 'react-icons/fa';
 import { MdSpaceDashboard } from "react-icons/md";
-import "./Header.css"
+import styles from './Header.module.css';
 
 const Header = ({ styleType = "modern" }) => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -22,60 +22,98 @@ const Header = ({ styleType = "modern" }) => {
 
   return (
     <>
-      <header className={`hostelhub-header ${styleType}`}>
-        <div className={`hostelhub-header-container ${styleType}`}>
-          <Link to="/" className={`hostelhub-logo ${styleType}`}>
-            <FaHome className={`hostelhub-logo-icon ${styleType}`} />
-            <span className={`hostelhub-logo-text ${styleType}`}>HostelHub</span>
+      <header className={styles.header}>
+        <div className={styles.container}>
+          <Link to="/" className={styles.logo}>
+            <FaHome className={styles.logoIcon} />
+            <span className={styles.logoText}>HostelHub</span>
           </Link>
 
-          <button className="hostelhub-menu-button" onClick={toggleMenu}>
+          <button 
+            className={styles.menuButton} 
+            onClick={toggleMenu}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
 
-          <nav className={`hostelhub-nav ${styleType} ${menuOpen ? 'active' : ''}`}>
+          <nav className={`${styles.nav} ${menuOpen ? styles.active : ''}`}>
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard" className={`hostelhub-nav-link ${styleType}`} onClick={() => setMenuOpen(false)}>
-                  {/* <FaHome className={`hostelhub-nav-icon ${styleType}`} /> */}
-                  < MdSpaceDashboard className={`hostelhub-nav-icon ${styleType}`} />
+                <Link 
+                  to="/dashboard" 
+                  className={styles.navLink} 
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <MdSpaceDashboard className={styles.navIcon} />
                   <span>Dashboard</span>
                 </Link>
                 
-                <Link to="/hostels" className={`hostelhub-nav-link ${styleType}`} onClick={() => setMenuOpen(false)}>
-                  <FaHome className={`hostelhub-nav-icon ${styleType}`} />
+                <Link 
+                  to="/hostels" 
+                  className={styles.navLink} 
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaHome className={styles.navIcon} />
                   <span>Hostels</span>
                 </Link>
 
-                <Link to="/bookings" className={`hostelhub-nav-link ${styleType}`} onClick={() => setMenuOpen(false)}>
-                  <FaBook className={`hostelhub-nav-icon ${styleType}`} />
+                <Link 
+                  to="/bookings" 
+                  className={styles.navLink} 
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaBook className={styles.navIcon} />
                   <span>Bookings</span>
                 </Link>
 
-                <Link to="/messages" className={`hostelhub-nav-link ${styleType}`} onClick={() => setMenuOpen(false)}>
-                  <FaComments className={`hostelhub-nav-icon ${styleType}`} />
+                <Link 
+                  to="/messages" 
+                  className={styles.navLink} 
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <FaComments className={styles.navIcon} />
                   <span>Messages</span>
                 </Link>
 
                 {user?.role === 'owner' && (
-                  <Link to="/analytics" className={`hostelhub-nav-link ${styleType}`} onClick={() => setMenuOpen(false)}>
-                    <FaChartBar className={`hostelhub-nav-icon ${styleType}`} />
+                  <Link 
+                    to="/owner-dashboard" 
+                    className={styles.navLink} 
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <FaChartBar className={styles.navIcon} />
                     <span>Analytics</span>
                   </Link>
                 )}
 
-                <div className={`hostelhub-user-menu ${styleType}`}>
-                  <button className={`hostelhub-user-button ${styleType}`}>
-                    <FaUser className={`hostelhub-user-icon ${styleType}`} />
+                <div className={styles.userMenu}>
+                  <button className={styles.userButton}>
+                    <FaUser className={styles.userIcon} />
                     <span>{user?.name}</span>
                   </button>
-                  <div className={`hostelhub-user-dropdown ${styleType}`}>
-                    <Link to="/profile" className={`hostelhub-dropdown-link ${styleType}`} onClick={() => setMenuOpen(false)}>Profile</Link>
+                  <div className={styles.userDropdown}>
+                    <Link 
+                      to="/profile" 
+                      className={styles.dropdownLink} 
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Profile
+                    </Link>
                     {user?.role === 'owner' && (
-                      <Link to="/my-hostels" className={`hostelhub-dropdown-link ${styleType}`} onClick={() => setMenuOpen(false)}>My Hostels</Link>
+                      <Link 
+                        to="/my-hostels" 
+                        className={styles.dropdownLink} 
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        My Hostels
+                      </Link>
                     )}
-                    <button onClick={handleLogout} className={`hostelhub-logout-button ${styleType}`}>
-                      <FaSignOutAlt className={`hostelhub-logout-icon ${styleType}`} />
+                    <button 
+                      onClick={handleLogout} 
+                      className={styles.logoutButton}
+                    >
+                      <FaSignOutAlt className={styles.logoutIcon} />
                       Logout
                     </button>
                   </div>
@@ -83,16 +121,26 @@ const Header = ({ styleType = "modern" }) => {
               </>
             ) : (
               <>
-                <Link to="/login" className={`hostelhub-nav-link ${styleType}`} onClick={() => setMenuOpen(true)}>Login</Link>
-                <Link to="/register" className={`hostelhub-nav-link hostelhub-register-button ${styleType}`} onClick={() => setMenuOpen(false)}>Register</Link>
+                <Link 
+                  to="/login" 
+                  className={styles.navLink} 
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link 
+                  to="/register" 
+                  className={`${styles.navLink} ${styles.registerButton}`} 
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Register
+                </Link>
               </>
             )}
           </nav>
         </div>
       </header>
-      {/* <br />
       <br />
-      <br /> */}
     </>
   );
 };

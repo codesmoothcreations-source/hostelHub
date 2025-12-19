@@ -1,0 +1,560 @@
+/**
+ * PROJECT: OBSIDIAN PREMIER
+ * MODULE: HOSTEL_DISCOVERY_SYSTEM
+ * VERSION: 6.0.0 (ULTRA-DETAIL)
+ * AUTHOR: GEMINI AI
+ */
+
+/* ==========================================
+   1. SYSTEM DESIGN TOKENS
+   ========================================== */
+:root {
+  /* Dark space architecture */
+  --bg-void: #02040a;
+  --bg-obsidian: #05080f;
+  --bg-panel: #0d1117;
+  --bg-elevated: #161b22;
+  
+  /* Brand Spectrum */
+  --accent-core: #8b5cf6;       /* Violet */
+  --accent-glow: rgba(139, 92, 246, 0.4);
+  --accent-secondary: #06b6d4;  /* Cyan */
+  --accent-success: #10b981;    /* Emerald */
+  --accent-error: #f43f5e;      /* Ruby */
+  
+  /* Material definitions */
+  --text-pure: #ffffff;
+  --text-high: #f8fafc;
+  --text-mid: #94a3b8;
+  --text-low: #475569;
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-active: rgba(139, 92, 246, 0.5);
+  
+  /* Kinematics */
+  --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================
+   2. GLOBAL PAGE ARCHITECTURE
+   ========================================== */
+.page {
+  min-height: 100vh;
+  background-color: var(--bg-void);
+  background-image: 
+    radial-gradient(circle at 50% -10%, rgba(139, 92, 246, 0.12), transparent 50%),
+    radial-gradient(circle at 0% 0%, rgba(6, 182, 212, 0.05), transparent 30%);
+  color: var(--text-high);
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow-x: hidden;
+  padding-bottom: 120px;
+}
+
+/* Custom Scrollbar for the entire page */
+.page::-webkit-scrollbar {
+  width: 10px;
+}
+
+.page::-webkit-scrollbar-track {
+  background: var(--bg-void);
+}
+
+.page::-webkit-scrollbar-thumb {
+  background: var(--bg-elevated);
+  border: 3px solid var(--bg-void);
+  border-radius: 10px;
+}
+
+/* ==========================================
+   3. HERO HEADER SECTION
+   ========================================== */
+.header {
+  padding: 100px 5% 60px;
+  text-align: center;
+  position: relative;
+}
+
+.title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -2.5px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff 30%, var(--accent-core));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titleReveal 1s var(--expo-out);
+}
+
+@keyframes titleReveal {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.subtitle {
+  color: var(--text-mid);
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   4. LOCATION SERVICE MONITOR (IMPORTANT)
+   ========================================== */
+.locationBanner {
+  margin: 0 5% 40px;
+  padding: 20px 30px;
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), transparent);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  border-left: 4px solid var(--accent-secondary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.locationIcon {
+  font-size: 1.8rem;
+  color: var(--accent-secondary);
+  filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.4));
+}
+
+.locationInfo p {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.locationAccuracy {
+  color: var(--accent-secondary) !important;
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 4px !important;
+}
+
+/* --- THE FAILURE STATE (RETRY UI) --- */
+.locationWarning {
+  margin: 0 5% 40px;
+  padding: 24px;
+  background: rgba(244, 63, 94, 0.05);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  border-left: 4px solid var(--accent-error);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  animation: warningEntry 0.5s var(--bounce);
+}
+
+@keyframes warningEntry {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.locationWarning p {
+  margin: 0;
+  color: #fda4af;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.retryLocation {
+  background: var(--accent-error);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s var(--expo-out);
+  box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3);
+}
+
+.retryLocation:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(244, 63, 94, 0.5);
+  background: #fb7185;
+}
+
+/* ==========================================
+   5. NAVIGATION & CONTROL CONSOLE
+   ========================================== */
+.controls {
+  margin: 0 5% 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-panel);
+  padding: 15px;
+  border-radius: 20px;
+  border: 1px solid var(--border-glass);
+}
+
+.searchContainer {
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-low);
+  font-size: 1.2rem;
+  pointer-events: none;
+  transition: color 0.3s;
+}
+
+.searchInput {
+  width: 75%;
+  background: var(--bg-void);
+  border: 1px solid var(--border-glass);
+  padding: 16px 20px 16px 55px;
+  border-radius: 14px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s var(--expo-out);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent-core);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+  background: #000;
+}
+
+.searchInput:focus + .searchIcon {
+  color: var(--accent-core);
+}
+
+.controlsButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.controlButton {
+  background: var(--bg-void);
+  border: 1px solid var(--border-glass);
+  color: var(--text-high);
+  padding: 14px 24px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s var(--expo-out);
+}
+
+.controlButton:hover {
+  background: var(--bg-elevated);
+  border-color: var(--accent-core);
+  transform: translateY(-2px);
+}
+
+.controlIcon {
+  font-size: 1.1rem;
+  color: var(--accent-core);
+}
+
+.filterCount {
+  background: var(--accent-core);
+  color: white;
+  font-size: 0.7rem;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+}
+
+/* Add Hostel Button Spec */
+.addHostelButton {
+  background: linear-gradient(135deg, var(--accent-core), #6d28d9);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s var(--expo-out);
+}
+
+.addHostelButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.5);
+  filter: brightness(1.1);
+}
+
+/* ==========================================
+   6. ADVANCED FILTERS SYSTEM
+   ========================================== */
+.filtersPanel {
+  margin: 0 5% 40px;
+  background: var(--bg-panel);
+  border: 1px solid var(--accent-core);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  animation: panelExpand 0.6s var(--expo-out);
+}
+
+@keyframes panelExpand {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.filtersHeader h3 {
+  margin: 0 0 30px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: var(--accent-core);
+}
+
+.activeFilters {
+  margin: 0 5% 30px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filterTag {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--accent-core);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: tagPop 0.3s var(--bounce);
+}
+
+@keyframes tagPop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.removeFilter {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+}
+
+.removeFilter:hover {
+  background: var(--accent-error);
+}
+
+/* ==========================================
+   7. THE GRID ENGINE
+   ========================================== */
+.resultsSummary {
+  margin: 0 5% 25px;
+  color: var(--text-mid);
+  font-size: 1.1rem;
+}
+
+.resultsSummary strong {
+  color: var(--accent-core);
+  font-weight: 800;
+}
+
+.hostelsGrid {
+  margin: 0 5%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 40px;
+}
+
+/* ==========================================
+   8. INTERACTIVE MAP BOX
+   ========================================== */
+.mapView {
+  margin: 0 5%;
+  height: 700px;
+  border-radius: 30px;
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+  position: relative;
+}
+
+/* ==========================================
+   9. EMPTY & LOADING STATES
+   ========================================== */
+.loadingState {
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.loadingSpinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid rgba(139, 92, 246, 0.1);
+  border-top-color: var(--accent-core);
+  border-radius: 50%;
+  animation: ultraSpin 1s linear infinite;
+}
+
+@keyframes ultraSpin {
+  to { transform: rotate(360deg); }
+}
+
+.emptyState {
+  padding: 120px 5%;
+  text-align: center;
+  background: var(--bg-panel);
+  margin: 0 5%;
+  border-radius: 30px;
+  border: 2px dashed var(--border-glass);
+}
+
+.emptyIcon {
+  font-size: 5rem;
+  color: var(--text-low);
+  margin-bottom: 30px;
+}
+
+.emptyState h3 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.addFirstHostel {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 16px 40px;
+  background: var(--accent-core);
+  color: white;
+  text-decoration: none;
+  border-radius: 14px;
+  font-weight: 800;
+  transition: all 0.3s;
+}
+
+/* ==========================================
+   10. SORT DROPDOWN OVERLAY
+   ========================================== */
+.sortDropdown {
+  position: relative;
+}
+
+.sortOptions {
+  position: absolute;
+  top: calc(100% + 15px);
+  right: 0;
+  width: 240px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-active);
+  border-radius: 16px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1000;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+  animation: dropdownPop 0.3s var(--bounce);
+}
+
+@keyframes dropdownPop {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.sortDropdown:hover .sortOptions {
+  display: flex;
+}
+
+.sortOptions button {
+  background: transparent;
+  border: none;
+  color: var(--text-mid);
+  padding: 14px 18px;
+  text-align: left;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sortOptions button:hover {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--accent-core);
+}
+
+/* ==========================================
+   11. RESPONSIVE MATRIX
+   ========================================== */
+@media (max-width: 1200px) {
+  .hostelsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header { padding: 60px 5% 30px; }
+  .title { font-size: 2.5rem; }
+  .controls { flex-direction: column; align-items: stretch; padding: 20px; }
+  .searchContainer { min-width: 80%; }
+  .controlsButtons { flex-direction: column; }
+  .controlButton, .addHostelButton { width: 80%; justify-content: center; }
+  .sortOptions { width: 100%; right: auto; left: 0; }
+  .mapView { height: 400px; }
+  .locationWarning { flex-direction: column; text-align: center; }
+  .retryLocation { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .title { font-size: 2rem; }
+  .filterTag { width: 100%; justify-content: space-between; }
+}
+
+/* Decorative background elements */
+.page::before {
+  content: '';
+  position: fixed;
+  top: 10%;
+  left: 5%;
+  width: 300px;
+  height: 300px;
+  background: var(--accent-core);
+  filter: blur(150px);
+  opacity: 0.05;
+  pointer-events: none;
+}

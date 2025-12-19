@@ -1,0 +1,283 @@
+/* --- Root Container --- */
+.container {
+  min-height: 100vh;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+}
+
+/* --- Loading State --- */
+.loadingState {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  gap: 1rem;
+}
+
+.loadingSpinner {
+  font-size: 2.5rem;
+  color: #fff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Dashboard Header --- */
+.header {
+  margin-bottom: 4rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  margin: 0;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.notificationButton {
+  background: #111;
+  border: 1px solid #222;
+  color: #fff;
+  padding: 0.8rem;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.notificationButton:hover { background: #1a1a1a; border-color: #444; }
+
+.notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #fff;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 900;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.userRoleBadge {
+  background: #fff;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* --- Section Titles --- */
+.sectionTitle {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #444;
+  margin-bottom: 1.5rem;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+/* --- Quick Actions Grid --- */
+.quickActionsSection { margin-bottom: 4rem; }
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.quickAction {
+  background: #080808;
+  border: 1px solid #1a1a1a;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quickAction:hover {
+  background: #111;
+  border-color: #fff;
+  transform: translateY(-4px);
+}
+
+.quickActionIcon {
+  font-size: 1.5rem;
+  color: #fff;
+  background: #111;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.quickActionContent { flex: 1; display: flex; flex-direction: column; }
+.quickActionLabel { color: #fff; font-weight: 800; font-size: 1.1rem; }
+.quickActionDescription { color: #555; font-size: 0.8rem; margin-top: 2px; }
+.quickActionArrow { color: #222; transition: 0.3s; }
+.quickAction:hover .quickActionArrow { color: #fff; transform: translateX(5px); }
+
+/* --- Stat Cards --- */
+.statsSection { margin-bottom: 4rem; }
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.statCard {
+  background: #000;
+  border: 1px solid #1a1a1a;
+  padding: 2rem;
+  border-radius: 2px;
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.statIcon { font-size: 1.2rem; color: #555; }
+
+.statTrend {
+  font-size: 0.7rem;
+  font-weight: 900;
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+.trendUp { background: #003311; color: #00ff88; }
+.trendDown { background: #330000; color: #ff3333; }
+
+.statValue {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin-bottom: 0.25rem;
+}
+
+.statTitle { color: #555; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin: 0; }
+
+/* --- Booking Items --- */
+.recentSection { margin-bottom: 4rem; }
+.bookingsList { display: flex; flex-direction: column; gap: 1rem; }
+
+.bookingItem {
+  background: #080808;
+  border: 1px solid #1a1a1a;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookingInfo { display: flex; gap: 3rem; align-items: center; }
+.bookingHostel { display: flex; align-items: center; gap: 1rem; }
+.bookingIcon { font-size: 1.2rem; color: #333; }
+.bookingName { margin: 0; font-size: 1.1rem; font-weight: 800; }
+.bookingDate { margin: 4px 0 0 0; font-size: 0.8rem; color: #555; font-weight: 600; }
+
+.bookingMeta { display: flex; gap: 2rem; align-items: center; }
+.bookingAmount { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: #fff; }
+.metaIcon { color: #333; }
+
+.bookingStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.statusSuccess { background: #fff; color: #000; }
+.statusPending { border: 1px solid #333; color: #fff; }
+
+.bookingLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 1px solid #222;
+  padding: 0.75rem 1.25rem;
+  transition: 0.3s;
+}
+.bookingLink:hover { background: #fff; color: #000; }
+
+/* --- Tips Section --- */
+.tipsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.tipCard {
+  background: #111;
+  padding: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border-radius: 4px;
+}
+
+.tipIcon { color: #fff; font-size: 1.1rem; margin-top: 0.2rem; }
+.tipCard p { margin: 0; color: #888; font-size: 0.9rem; line-height: 1.5; font-weight: 500; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 992px) {
+  .bookingInfo { gap: 1.5rem; flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 1.5rem 1rem; }
+  .headerContent { flex-direction: column; gap: 2rem; }
+  .title { font-size: 1.8rem; }
+  .bookingItem { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .bookingLink { width: 100%; justify-content: center; }
+}

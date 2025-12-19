@@ -1,0 +1,161 @@
+.statsCard {
+  background: #0f1115; /* Deep matte black */
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  width: 100%;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #22262b;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Background Effects */
+.gradientOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Text Content Area - High Z-index to prevent overlap */
+.content {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #6a7280;
+  margin: 8px 0 0 0;
+  display: flex;
+  align-items: center;
+}
+
+.date::before {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 12px;
+  background: currentColor; /* Inherits metric color from parent in JS if needed */
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+.iconWrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+/* Value Section */
+.valueSection {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+.changeIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.positive { color: #4cd964; background: rgba(76, 217, 100, 0.1); }
+.negative { color: #ff3b30; background: rgba(255, 59, 48, 0.1); }
+
+.description {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-top: 10px;
+  max-width: 80%;
+}
+
+/* Chart Container - Anchored to bottom */
+.chartContainer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 120px;
+  z-index: 5;
+}
+
+.chartGrid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.gridLine {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.05) 0%, transparent 100%);
+}
+
+/* Status Badge */
+.statusBadge {
+  position: absolute;
+  bottom: 16px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  z-index: 11;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.trendDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.up { color: #4cd964; background: #4cd964; }
+.down { color: #ff3b30; background: #ff3b30; }

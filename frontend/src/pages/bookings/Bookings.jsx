@@ -7,6 +7,7 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 import { PAYMENT_STATUS } from '../../utils/constants';
 import { FaCalendar, FaCheckCircle, FaTimesCircle, FaSpinner, FaEye } from 'react-icons/fa';
 import Pagination from '../../components/common/Pagination';
+import styles from './Bookings.module.css'; // Changed to CSS Modules
 
 const Bookings = () => {
   const { user } = useAuth();
@@ -58,32 +59,32 @@ const Bookings = () => {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'success':
-        return <FaCheckCircle className="hostelhub-status-success-icon" />;
+        return <FaCheckCircle className={styles.statusSuccessIcon} />;
       case 'failed':
-        return <FaTimesCircle className="hostelhub-status-failed-icon" />;
+        return <FaTimesCircle className={styles.statusFailedIcon} />;
       case 'pending':
-        return <FaSpinner className="hostelhub-status-pending-icon" />;
+        return <FaSpinner className={styles.statusPendingIcon} />;
       default:
-        return <FaSpinner className="hostelhub-status-processing-icon" />;
+        return <FaSpinner className={styles.statusProcessingIcon} />;
     }
   };
 
   return (
-    <div className="hostelhub-bookings-page">
-      <div className="hostelhub-bookings-header">
-        <h1 className="hostelhub-bookings-title">My Bookings</h1>
-        <p className="hostelhub-bookings-subtitle">
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>My Bookings</h1>
+        <p className={styles.subtitle}>
           Manage and track all your hostel bookings
         </p>
       </div>
 
-      <div className="hostelhub-bookings-filters">
-        <div className="hostelhub-filter-buttons">
+      <div className={styles.filters}>
+        <div className={styles.filterButtons}>
           {['all', 'success', 'pending', 'failed'].map((statusType) => (
             <button
               key={statusType}
               onClick={() => handleFilterChange(statusType)}
-              className={`hostelhub-filter-button ${filter === statusType ? 'hostelhub-filter-active' : ''}`}
+              className={`${styles.filterButton} ${filter === statusType ? styles.filterActive : ''}`}
             >
               {statusType.charAt(0).toUpperCase() + statusType.slice(1)}
             </button>
@@ -92,13 +93,13 @@ const Bookings = () => {
       </div>
 
       {loading ? (
-        <div className="hostelhub-loading-state">
-          <div className="hostelhub-loading-spinner"></div>
+        <div className={styles.loadingState}>
+          <div className={styles.loadingSpinner}></div>
           <p>Loading bookings...</p>
         </div>
       ) : bookings.length === 0 ? (
-        <div className="hostelhub-empty-state">
-          <FaCalendar className="hostelhub-empty-icon" />
+        <div className={styles.emptyState}>
+          <FaCalendar className={styles.emptyIcon} />
           <h3>No bookings found</h3>
           <p>
             {filter === 'all'
@@ -106,92 +107,96 @@ const Bookings = () => {
               : `No ${filter} bookings found.`}
           </p>
           {user?.role === 'student' && (
-            <Link to="/hostels" className="hostelhub-find-hostels-button">
+            <Link to="/hostels" className={styles.findHostelsButton}>
               Find Hostels
             </Link>
           )}
         </div>
       ) : (
         <>
-          <div className="hostelhub-bookings-list">
+          <div className={styles.bookingsList}>
             {bookings.map((booking) => (
-              <div key={booking._id} className="hostelhub-booking-card">
-                <div className="hostelhub-booking-header">
-                  <div className="hostelhub-booking-reference">
-                    <span className="hostelhub-reference-label">Reference:</span>
-                    <span className="hostelhub-reference-value">{booking.reference}</span>
+              <div key={booking._id} className={styles.bookingCard}>
+                <div className={styles.bookingHeader}>
+                  <div className={styles.bookingReference}>
+                    <span className={styles.referenceLabel}>Reference:</span>
+                    <span className={styles.referenceValue}>{booking.reference}</span>
                   </div>
-                  <div className="hostelhub-booking-status">
+                  <div className={styles.bookingStatus}>
                     {getStatusIcon(booking.paymentStatus)}
-                    <span className={`hostelhub-status-badge hostelhub-status-${booking.paymentStatus}`}>
+                    <span className={`${styles.statusBadge} ${styles[`status${booking.paymentStatus.charAt(0).toUpperCase() + booking.paymentStatus.slice(1)}`]}`}>
                       {booking.paymentStatus}
                     </span>
                   </div>
                 </div>
 
-                <div className="hostelhub-booking-content">
-                  <div className="hostelhub-booking-hostel-info">
-                    <div className="hostelhub-booking-hostel-image">
+                <div className={styles.bookingContent}>
+                  <div className={styles.bookingHostelInfo}>
+                    <div className={styles.bookingHostelImage}>
                       {booking.hostel?.images?.[0] ? (
-                        <img src={booking.hostel.images[0]} alt={booking.hostel.name} />
+                        <img 
+                          src={booking.hostel.images[0]} 
+                          alt={booking.hostel.name} 
+                          className={styles.hostelImage}
+                        />
                       ) : (
-                        <div className="hostelhub-booking-image-placeholder">
+                        <div className={styles.bookingImagePlaceholder}>
                           <FaCalendar />
                         </div>
                       )}
                     </div>
-                    <div className="hostelhub-booking-hostel-details">
-                      <h3 className="hostelhub-booking-hostel-name">
+                    <div className={styles.bookingHostelDetails}>
+                      <h3 className={styles.bookingHostelName}>
                         {booking.hostel?.name}
                       </h3>
-                      <p className="hostelhub-booking-hostel-address">
+                      <p className={styles.bookingHostelAddress}>
                         {booking.hostel?.location?.address}
                       </p>
-                      <p className="hostelhub-booking-owner">
+                      <p className={styles.bookingOwner}>
                         Owner: {booking.hostel?.owner?.name}
                       </p>
                     </div>
                   </div>
 
-                  <div className="hostelhub-booking-details">
-                    <div className="hostelhub-booking-detail-row">
-                      <span className="hostelhub-detail-label">Amount:</span>
-                      <span className="hostelhub-detail-value">
+                  <div className={styles.bookingDetails}>
+                    <div className={styles.bookingDetailRow}>
+                      <span className={styles.detailLabel}>Amount:</span>
+                      <span className={styles.detailValue}>
                         {formatCurrency(booking.amount, booking.currency)}
                       </span>
                     </div>
-                    <div className="hostelhub-booking-detail-row">
-                      <span className="hostelhub-detail-label">Date:</span>
-                      <span className="hostelhub-detail-value">
+                    <div className={styles.bookingDetailRow}>
+                      <span className={styles.detailLabel}>Date:</span>
+                      <span className={styles.detailValue}>
                         {formatDate(booking.createdAt)}
                       </span>
                     </div>
-                    <div className="hostelhub-booking-detail-row">
-                      <span className="hostelhub-detail-label">Duration:</span>
-                      <span className="hostelhub-detail-value">
+                    <div className={styles.bookingDetailRow}>
+                      <span className={styles.detailLabel}>Duration:</span>
+                      <span className={styles.detailValue}>
                         {booking.duration || 'Monthly'}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="hostelhub-booking-actions">
+                <div className={styles.bookingActions}>
                   <Link
                     to={`/bookings/${booking._id}`}
-                    className="hostelhub-view-details-button"
+                    className={styles.viewDetailsButton}
                   >
-                    <FaEye className="hostelhub-action-icon" />
+                    <FaEye className={styles.actionIcon} />
                     View Details
                   </Link>
                   {booking.paymentStatus === 'pending' && (
-                    <button className="hostelhub-retry-payment-button">
+                    <button className={styles.retryPaymentButton}>
                       Retry Payment
                     </button>
                   )}
                   {booking.paymentStatus === 'success' && (
                     <Link
                       to={`/messages/new/${booking.hostel?.owner?._id}`}
-                      className="hostelhub-contact-owner-button"
+                      className={styles.contactOwnerButton}
                     >
                       Contact Owner
                     </Link>

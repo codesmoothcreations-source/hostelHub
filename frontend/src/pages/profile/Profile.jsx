@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useUpload } from '../../hooks/useUpload';
 import { formatDate } from '../../utils/formatters';
-import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit, FaKey, FaCalendar } from 'react-icons/fa';
-import "./Profile.css"
+import { FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaEdit, FaKey, FaCalendar, FaSpinner, FaHome, FaBook, FaArrowLeft, FaCheckCircle, FaCamera } from 'react-icons/fa';
+import styles from './Profile.module.css';
 
 const Profile = () => {
   const { user, updateProfile } = useAuth();
@@ -66,141 +66,166 @@ const Profile = () => {
     setSuccess('');
 
     try {
-        let finalAvatarUrl = formData.avatar; 
+      let finalAvatarUrl = formData.avatar; 
+      
+      if (avatarFile) {
+        const uploadResult = await uploadFiles([avatarFile]);
         
-        // 1. Upload new avatar if selected
-        if (avatarFile) {
-            const uploadResult = await uploadFiles([avatarFile]);
-            
-            // 🔥 The Fix: Safely attempt to find the URL array on the result object.
-            // Check for 'images', 'data', or 'urls' in that order.
-            const uploadedUrls = uploadResult?.images 
-                                 || uploadResult?.data 
-                                 || uploadResult?.urls 
-                                 || []; 
-            
-            // Ensure we are working with an array before trying to access [0]
-            if (uploadResult.success && Array.isArray(uploadedUrls) && uploadedUrls.length > 0) {
-                // This line should now work because uploadedUrls is guaranteed to be an array
-                finalAvatarUrl = uploadedUrls[0]; 
-            } else {
-                console.error('Avatar file upload failed or returned invalid format.');
-                // Re-throw the original API Error from the upload step if possible
-                // For now, we stop the process:
-                setLoading(false);
-                return; 
-            }
-        }
-
-        // 2. Prepare data for the profile update (remains unchanged)
-        const updateData = {
-            name: formData.name,
-            phone: formData.phone,
-            avatar: finalAvatarUrl, 
-            address: formData.address
-        };
-
-        // 3. Call the update profile API
-        const result = await updateProfile(updateData);
+        const uploadedUrls = uploadResult?.images 
+          || uploadResult?.data 
+          || uploadResult?.urls 
+          || []; 
         
-        if (result.success) {
-            setSuccess('Profile updated successfully!');
-            setIsEditing(false);
-            setAvatarFile(null);
+        if (uploadResult.success && Array.isArray(uploadedUrls) && uploadedUrls.length > 0) {
+          finalAvatarUrl = uploadedUrls[0]; 
         } else {
-            console.error('Profile update failed:', result.message || 'Unknown error');
+          console.error('Avatar file upload failed or returned invalid format.');
+          setLoading(false);
+          return; 
         }
+      }
+
+      const updateData = {
+        name: formData.name,
+        phone: formData.phone,
+        avatar: finalAvatarUrl, 
+        address: formData.address
+      };
+
+      const result = await updateProfile(updateData);
+      
+      if (result.success) {
+        setSuccess('Profile updated successfully!');
+        setIsEditing(false);
+        setAvatarFile(null);
+      } else {
+        console.error('Profile update failed:', result.message || 'Unknown error');
+      }
     } catch (error) {
-        console.error('Error in profile update process:', error);
+      console.error('Error in profile update process:', error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   if (!user) {
     return (
-      <div className="hostelhub-loading-state">
-        <div className="hostelhub-loading-spinner"></div>
+      <div className={styles.loadingState}>
+        <FaSpinner className={styles.loadingSpinner} />
         <p>Loading profile...</p>
       </div>
     );
   }
 
   return (
-    <div className="hostelhub-profile-page">
-      <div className="hostelhub-profile-header">
-        <h1 className="hostelhub-profile-title">My Profile</h1>
-        <p className="hostelhub-profile-subtitle">
-          Manage your personal information and account settings
-        </p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerIcon}>
+            <FaUser />
+          </div>
+          <div>
+            <h1 className={styles.title}>My Profile</h1>
+            <p className={styles.subtitle}>
+              Manage your personal information and account settings
+            </p>
+          </div>
+        </div>
+        
+        <Link to="/dashboard" className={styles.backButton}>
+          <FaArrowLeft className={styles.backIcon} />
+          Back to Dashboard
+        </Link>
       </div>
 
-      <div className="hostelhub-profile-container">
-        <div className="hostelhub-profile-sidebar">
-          <div className="hostelhub-avatar-section">
-            <div className="hostelhub-avatar-container">
+      <div className={styles.content}>
+        {/* Sidebar */}
+        <div className={styles.sidebar}>
+          <div className={styles.avatarSection}>
+            <div className={styles.avatarContainer}>
               {formData.avatar ? (
-                <img src={formData.avatar} alt={user.name} className="hostelhub-avatar" />
+                <img src={formData.avatar} alt={user.name} className={styles.avatar} />
               ) : (
-                <div className="hostelhub-avatar-placeholder">
-                  <FaUser className="hostelhub-avatar-icon" />
+                <div className={styles.avatarPlaceholder}>
+                  <FaUser className={styles.avatarIcon} />
                 </div>
               )}
               
               {isEditing && (
-                <label className="hostelhub-avatar-upload">
+                <label className={styles.avatarUpload}>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleAvatarChange}
-                    className="hostelhub-avatar-input"
+                    className={styles.avatarInput}
                   />
-                  Change Photo
+                  <FaCamera className={styles.avatarCameraIcon} />
+                  <span>Change Photo</span>
                 </label>
               )}
             </div>
             
-            <div className="hostelhub-user-basic-info">
-              <h2 className="hostelhub-user-name">{user.name}</h2>
-              <span className="hostelhub-user-role">{user.role}</span>
-              <div className="hostelhub-member-since">
-                <FaCalendar className="hostelhub-calendar-icon" />
+            <div className={styles.userInfo}>
+              <h2 className={styles.userName}>{user.name}</h2>
+              <div className={styles.userRole}>
+                <span className={`${styles.roleBadge} ${user.role === 'owner' ? styles.roleOwner : styles.roleStudent}`}>
+                  {user.role}
+                </span>
+              </div>
+              <div className={styles.memberSince}>
+                <FaCalendar className={styles.calendarIcon} />
                 <span>Member since {formatDate(user.createdAt)}</span>
               </div>
             </div>
           </div>
 
-          <div className="hostelhub-profile-menu">
+          <div className={styles.menu}>
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="hostelhub-menubutton"
+              className={`${styles.menuButton} ${isEditing ? styles.menuButtonActive : ''}`}
             >
-              <FaEdit className="hostelhub-menu-icon" />
-              Edit Profile
+              <FaEdit className={styles.menuIcon} />
+              <span>Edit Profile</span>
             </button>
             
-            <Link to="/change-password" className="hostelhub-menubutton">
-              <FaKey className="hostelhub-menu-icon" />
-              Change Password
+            <Link to="/change-password" className={styles.menuButton}>
+              <FaKey className={styles.menuIcon} />
+              <span>Change Password</span>
             </Link>
+
+            {user.role === 'owner' && (
+              <Link to="/my-hostels" className={styles.menuButton}>
+                <FaHome className={styles.menuIcon} />
+                <span>My Hostels</span>
+              </Link>
+            )}
+
+            {user.role === 'student' && (
+              <Link to="/bookings" className={styles.menuButton}>
+                <FaBook className={styles.menuIcon} />
+                <span>My Bookings</span>
+              </Link>
+            )}
           </div>
         </div>
 
-        <div className="hostelhub-profile-main">
+        {/* Main Content */}
+        <div className={styles.main}>
           {success && (
-            <div className="hostelhub-success-message">
-              {success}
+            <div className={styles.successMessage}>
+              <FaCheckCircle className={styles.successIcon} />
+              <span>{success}</span>
             </div>
           )}
 
           {isEditing ? (
-            <form onSubmit={handleSubmit} className="hostelhub-edit-form">
-              <div className="hostelhub-form-section">
-                <h3 className="hostelhub-section-title">Personal Information</h3>
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.formSection}>
+                <h3 className={styles.sectionTitle}>Personal Information</h3>
                 
-                <div className="hostelhub-form-group">
-                  <label htmlFor="name" className="hostelhub-form-label">
-                    <FaUser className="hostelhub-label-icon" />
+                <div className={styles.formGroup}>
+                  <label htmlFor="name" className={styles.label}>
+                    <FaUser className={styles.labelIcon} />
                     Full Name
                   </label>
                   <input
@@ -209,14 +234,14 @@ const Profile = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="hostelhub-form-input"
+                    className={styles.input}
                     required
                   />
                 </div>
 
-                <div className="hostelhub-form-group">
-                  <label htmlFor="email" className="hostelhub-form-label">
-                    <FaEnvelope className="hostelhub-label-icon" />
+                <div className={styles.formGroup}>
+                  <label htmlFor="email" className={styles.label}>
+                    <FaEnvelope className={styles.labelIcon} />
                     Email Address
                   </label>
                   <input
@@ -224,17 +249,17 @@ const Profile = () => {
                     id="email"
                     name="email"
                     value={formData.email}
-                    className="hostelhub-form-input"
+                    className={`${styles.input} ${styles.inputDisabled}`}
                     disabled
                   />
-                  <p className="hostelhub-form-help">
+                  <p className={styles.helpText}>
                     Email cannot be changed. Contact support for assistance.
                   </p>
                 </div>
 
-                <div className="hostelhub-form-group">
-                  <label htmlFor="phone" className="hostelhub-form-label">
-                    <FaPhone className="hostelhub-label-icon" />
+                <div className={styles.formGroup}>
+                  <label htmlFor="phone" className={styles.label}>
+                    <FaPhone className={styles.labelIcon} />
                     Phone Number
                   </label>
                   <input
@@ -243,14 +268,14 @@ const Profile = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="hostelhub-form-input"
+                    className={styles.input}
                     placeholder="Enter your phone number"
                   />
                 </div>
 
-                <div className="hostelhub-form-group">
-                  <label htmlFor="address" className="hostelhub-form-label">
-                    <FaMapMarkerAlt className="hostelhub-label-icon" />
+                <div className={styles.formGroup}>
+                  <label htmlFor="address" className={styles.label}>
+                    <FaMapMarkerAlt className={styles.labelIcon} />
                     Address
                   </label>
                   <textarea
@@ -258,65 +283,78 @@ const Profile = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    className="hostelhub-form-textarea"
+                    className={styles.textarea}
                     rows="3"
                     placeholder="Enter your current address"
                   />
                 </div>
               </div>
 
-              <div className="hostelhub-form-actions">
+              <div className={styles.formActions}>
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  className="hostelhub-cancel-button"
+                  className={styles.cancelButton}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || uploading}
-                  className="hostelhub-save-button"
+                  className={styles.saveButton}
                 >
-                  {loading || uploading ? 'Saving...' : 'Save Changes'}
+                  {loading || uploading ? (
+                    <>
+                      <FaSpinner className={styles.spinner} />
+                      Saving...
+                    </>
+                  ) : 'Save Changes'}
                 </button>
               </div>
             </form>
           ) : (
-            <div className="hostelhub-profile-details">
-              <div className="hostelhub-detail-section">
-                <h3 className="hostelhub-section-title">Contact Information</h3>
+            <div className={styles.details}>
+              <div className={styles.detailsSection}>
+                <h3 className={styles.sectionTitle}>Contact Information</h3>
                 
-                <div className="hostelhub-detail-grid">
-                  <div className="hostelhub-detail-item">
-                    <FaUser className="hostelhub-detail-icon" />
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Full Name</span>
-                      <span className="hostelhub-detail-value">{user.name}</span>
+                <div className={styles.detailsGrid}>
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <FaUser />
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Full Name</span>
+                      <span className={styles.detailValue}>{user.name}</span>
                     </div>
                   </div>
 
-                  <div className="hostelhub-detail-item">
-                    <FaEnvelope className="hostelhub-detail-icon" />
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Email Address</span>
-                      <span className="hostelhub-detail-value">{user.email}</span>
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <FaEnvelope />
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Email Address</span>
+                      <span className={styles.detailValue}>{user.email}</span>
                     </div>
                   </div>
 
-                  <div className="hostelhub-detail-item">
-                    <FaPhone className="hostelhub-detail-icon" />
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Phone Number</span>
-                      <span className="hostelhub-detail-value">{user.phone || 'Not provided'}</span>
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <FaPhone />
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Phone Number</span>
+                      <span className={styles.detailValue}>{user.phone || 'Not provided'}</span>
                     </div>
                   </div>
 
-                  <div className="hostelhub-detail-item">
-                    <FaMapMarkerAlt className="hostelhub-detail-icon" />
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Address</span>
-                      <span className="hostelhub-detail-value">
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <FaMapMarkerAlt />
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Address</span>
+                      <span className={styles.detailValue}>
                         {user.location?.address || 'Not provided'}
                       </span>
                     </div>
@@ -324,32 +362,32 @@ const Profile = () => {
                 </div>
               </div>
 
-              <div className="hostelhub-detail-section">
-                <h3 className="hostelhub-section-title">Account Information</h3>
+              <div className={styles.detailsSection}>
+                <h3 className={styles.sectionTitle}>Account Information</h3>
                 
-                <div className="hostelhub-detail-grid">
-                  <div className="hostelhub-detail-item">
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Account Type</span>
-                      <span className="hostelhub-detail-value hostelhub-role-badge">
+                <div className={styles.detailsGrid}>
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Account Type</span>
+                      <span className={`${styles.roleBadge} ${user.role === 'owner' ? styles.roleOwner : styles.roleStudent}`}>
                         {user.role}
                       </span>
                     </div>
                   </div>
 
-                  <div className="hostelhub-detail-item">
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Account Status</span>
-                      <span className="hostelhub-detail-value hostelhub-status-active">
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Account Status</span>
+                      <span className={styles.statusActive}>
                         Active
                       </span>
                     </div>
                   </div>
 
-                  <div className="hostelhub-detail-item">
-                    <div className="hostelhub-detail-content">
-                      <span className="hostelhub-detail-label">Member Since</span>
-                      <span className="hostelhub-detail-value">
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Member Since</span>
+                      <span className={styles.detailValue}>
                         {formatDate(user.createdAt)}
                       </span>
                     </div>
@@ -358,14 +396,14 @@ const Profile = () => {
               </div>
 
               {user.role === 'owner' && (
-                <div className="hostelhub-detail-section">
-                  <h3 className="hostelhub-section-title">Hostel Owner Stats</h3>
-                  <div className="hostelhub-owner-stats">
-                    <p className="hostelhub-stat-info">
+                <div className={styles.detailsSection}>
+                  <h3 className={styles.sectionTitle}>Hostel Owner</h3>
+                  <div className={styles.ownerInfo}>
+                    <p className={styles.infoText}>
                       As a hostel owner, you can manage your hostels, view bookings,
                       and track your earnings through the owner dashboard.
                     </p>
-                    <Link to="/my-hostels" className="hostelhub-manage-hostels-button">
+                    <Link to="/my-hostels" className={styles.manageButton}>
                       Manage My Hostels
                     </Link>
                   </div>
@@ -373,14 +411,14 @@ const Profile = () => {
               )}
 
               {user.role === 'student' && (
-                <div className="hostelhub-detail-section">
-                  <h3 className="hostelhub-section-title">Student Information</h3>
-                  <div className="hostelhub-student-info">
-                    <p className="hostelhub-student-text">
+                <div className={styles.detailsSection}>
+                  <h3 className={styles.sectionTitle}>Student</h3>
+                  <div className={styles.studentInfo}>
+                    <p className={styles.infoText}>
                       Browse hostels, make bookings, and communicate with hostel owners
                       directly through our platform.
                     </p>
-                    <Link to="/hostels" className="hostelhub-browse-hostels-button">
+                    <Link to="/hostels" className={styles.browseButton}>
                       Browse Hostels
                     </Link>
                   </div>

@@ -1,0 +1,353 @@
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  background: #000000;
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.headerIcon {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  margin: 0;
+  color: #fff;
+}
+
+.subtitle {
+  color: #94a3b8;
+  margin: 0.25rem 0 0 0;
+}
+
+.addButton {
+  background: #8b5cf6;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.addButton:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.statCard {
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.statTotal .statIcon { background: rgba(99, 102, 241, 0.1); color: #818cf8; }
+.statApproved .statIcon { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
+.statPending .statIcon { background: rgba(245, 158, 11, 0.1); color: #fbbf24; }
+.statRevenue .statIcon { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
+
+.statValue {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.statLabel {
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+
+/* Filters and Search */
+.filtersSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.searchBox {
+  position: relative;
+  flex: 1;
+  min-width: 300px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.searchInput {
+  width: 80%;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  border-color: #6366f1;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 0.5rem;
+  background: #1e293b;
+  padding: 0.4rem;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+
+.filterButton {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.filterActive {
+  background: #334155;
+  color: #fff;
+}
+
+/* Table Styling */
+.tableContainer {
+  background: #1e293b;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tableHeader th {
+  padding: 1.25rem 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  border-bottom: 1px solid #334155;
+}
+
+.tableRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.tableRow td {
+  padding: 1rem 1.5rem;
+  vertical-align: middle;
+}
+
+.tableImage {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.noImage {
+  width: 48px;
+  height: 48px;
+  background: #0f172a;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+}
+
+.hostelLink {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.hostelLink:hover {
+  color: #818cf8;
+}
+
+.locationText { color: #94a3b8; font-size: 0.9rem; }
+
+.priceAmount { font-weight: 700; color: #fff; }
+.pricePeriod { color: #64748b; font-size: 0.8rem; }
+
+/* Status Badges */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusBadgeApproved { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
+.statusBadgePending { background: rgba(245, 158, 11, 0.1); color: #fbbf24; }
+.statusBadgeRejected { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #334155;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.viewButton:hover { color: #fff; background: #334155; }
+.editButton:hover { color: #fbbf24; background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2); }
+.deleteButton:hover { color: #f87171; background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.2); }
+
+/* Table Summary Footer */
+.tableSummary {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Empty States */
+.emptyState {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: #1e293b;
+  border-radius: 20px;
+  border: 1px dashed #334155;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  color: #334155;
+  margin-bottom: 1.5rem;
+}
+
+.addFirstButton {
+  display: inline-block;
+  margin-top: 1.5rem;
+  background: #6366f1;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Loading State */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem;
+}
+
+.loadingSpinner {
+  font-size: 2rem;
+  color: #6366f1;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .filtersSection { flex-direction: column; }
+  .filterButtons { overflow-x: auto; width: 93%; }
+}
+

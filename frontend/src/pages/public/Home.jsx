@@ -2,134 +2,93 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FaSearch, FaHome, FaShieldAlt, FaComments, FaStar } from 'react-icons/fa';
-import "./Home.css"
+import { FaSearch, FaShieldAlt, FaComments, FaStar, FaRocket, FaHeart } from 'react-icons/fa';
+import styles from './Home.module.css';
 
 const Home = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
-    <div className="hostelhub-home-page">
+    <div className={styles.homePage}>
       {/* Hero Section */}
-      <section className="hostelhub-hero">
-        <div className="hostelhub-hero-content">
-          <h1 className="hostelhub-hero-title">
-            Find Your Perfect Student Accommodation
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <div className={styles.badge}>
+            <FaHeart className={styles.heartIcon} /> <span>Trusted by 10k+ Students</span>
+          </div>
+          <h1 className={styles.heroTitle}>
+            Your Dream Space, <br /><span>Simplified.</span>
           </h1>
-          <p className="hostelhub-hero-subtitle">
-            Browse, book, and manage hostels with ease. HostelHub connects students 
-            with verified hostel owners for a seamless accommodation experience.
+          <p className={styles.heroSubtitle}>
+            Find and book verified hostels with a single tap. 
+            The modern way to manage your student life.
           </p>
           
-          <div className="hostelhub-hero-actions">
-            {isAuthenticated ? (
-              <>
-                <Link to="/hostels" className="hostelhub-primary-button">
-                  <FaSearch className="hostelhub-button-icon" />
-                  Browse Hostels
-                </Link>
-                <Link to="/dashboard" className="hostelhub-secondary-button">
-                  Go to Dashboard
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/register" className="hostelhub-primary-button">
-                  Get Started
-                </Link>
-                <Link to="/login" className="hostelhub-secondary-button">
-                  Login
-                </Link>
-              </>
+          <div className={styles.heroActions}>
+            <Link to={isAuthenticated ? "/hostels" : "/register"} className={styles.primaryButton}>
+              {isAuthenticated ? <FaSearch /> : <FaRocket />}
+              {isAuthenticated ? "Explore Now" : "Join the Hub"}
+            </Link>
+            {!isAuthenticated && (
+              <Link to="/login" className={styles.secondaryButton}>
+                Member Login
+              </Link>
             )}
           </div>
         </div>
+        
+        {/* Floating Decor Elements for 'Cute' factor */}
+        <div className={`${styles.floatCircle} ${styles.c1}`}></div>
+        <div className={`${styles.floatCircle} ${styles.c2}`}></div>
       </section>
 
       {/* Features Section */}
-      <section className="hostelhub-features">
-        <div className="hostelhub-features-header">
-          <h2 className="hostelhub-features-title">Why Choose HostelHub?</h2>
-          <p className="hostelhub-features-subtitle">
-            Everything you need for a stress-free hostel experience
-          </p>
+      <section className={styles.features}>
+        <div className={styles.featuresHeader}>
+          <h2 className={styles.featuresTitle}>Why you'll love us</h2>
+          <div className={styles.titleUnderline}></div>
         </div>
 
-        <div className="hostelhub-features-grid">
-          <div className="hostelhub-feature-card">
-            <div className="hostelhub-feature-icon">
-              <FaSearch />
+        <div className={styles.featuresGrid}>
+          {[
+            { icon: <FaSearch />, title: "Smart Search", desc: "Filters that actually work for you." },
+            { icon: <FaShieldAlt />, title: "Verified stays", desc: "Safety first. Always verified." },
+            { icon: <FaComments />, title: "Fast Chat", desc: "Talk to owners in real-time." },
+            { icon: <FaStar />, title: "Real Reviews", desc: "Honest feedback from students." }
+          ].map((f, i) => (
+            <div key={i} className={styles.featureCard}>
+              <div className={styles.featureIcon}>{f.icon}</div>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
             </div>
-            <h3 className="hostelhub-feature-title">Easy Search</h3>
-            <p className="hostelhub-feature-description">
-              Find hostels near your campus with advanced filters and location-based search.
-            </p>
-          </div>
+          ))}
+        </div>
+      </section>
 
-          <div className="hostelhub-feature-card">
-            <div className="hostelhub-feature-icon">
-              <FaShieldAlt />
-            </div>
-            <h3 className="hostelhub-feature-title">Secure Booking</h3>
-            <p className="hostelhub-feature-description">
-              Secure payments with Paystack and verified hostel listings for your safety.
-            </p>
+      {/* Stats Section - More Compact */}
+      <section className={styles.stats}>
+        <div className={styles.statsGrid}>
+          <div className={styles.statItem}>
+            <h3>500+</h3>
+            <p>Hostels</p>
           </div>
-
-          <div className="hostelhub-feature-card">
-            <div className="hostelhub-feature-icon">
-              <FaComments />
-            </div>
-            <h3 className="hostelhub-feature-title">Direct Communication</h3>
-            <p className="hostelhub-feature-description">
-              Chat directly with hostel owners for inquiries and booking arrangements.
-            </p>
+          <div className={styles.statItem}>
+            <h3>10k+</h3>
+            <p>Students</p>
           </div>
-
-          <div className="hostelhub-feature-card">
-            <div className="hostelhub-feature-icon">
-              <FaStar />
-            </div>
-            <h3 className="hostelhub-feature-title">Verified Reviews</h3>
-            <p className="hostelhub-feature-description">
-              Read authentic reviews from students who have stayed in the hostels.
-            </p>
+          <div className={styles.statItem}>
+            <h3>98%</h3>
+            <p>Happy</p>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="hostelhub-cta">
-        <div className="hostelhub-cta-content">
-          <h2 className="hostelhub-cta-title">Ready to find your new home?</h2>
-          <p className="hostelhub-cta-text">
-            Join thousands of students who have found their perfect accommodation through HostelHub.
-          </p>
-          <Link to={isAuthenticated ? "/hostels" : "/register"} className="hostelhub-cta-button">
-            {isAuthenticated ? "Browse Hostels Now" : "Get Started Free"}
-          </Link>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="hostelhub-stats">
-        <div className="hostelhub-stats-grid">
-          <div className="hostelhub-stat-item">
-            <h3 className="hostelhub-stat-number">500+</h3>
-            <p className="hostelhub-stat-label">Hostels Listed</p>
-          </div>
-          <div className="hostelhub-stat-item">
-            <h3 className="hostelhub-stat-number">10,000+</h3>
-            <p className="hostelhub-stat-label">Happy Students</p>
-          </div>
-          <div className="hostelhub-stat-item">
-            <h3 className="hostelhub-stat-number">98%</h3>
-            <p className="hostelhub-stat-label">Satisfaction Rate</p>
-          </div>
-          <div className="hostelhub-stat-item">
-            <h3 className="hostelhub-stat-number">24/7</h3>
-            <p className="hostelhub-stat-label">Support Available</p>
-          </div>
+      {/* CTA Section - Gradient Transition */}
+      <section className={styles.cta}>
+        <div className={styles.ctaContent}>
+          <h2>Ready to move in?</h2>
+          <p>Secure your spot in seconds.</p>
+          <Link to="/register" className={styles.ctaButton}>Get Started ✨</Link>
         </div>
       </section>
     </div>

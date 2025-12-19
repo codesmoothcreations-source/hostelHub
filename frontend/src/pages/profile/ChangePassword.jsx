@@ -4,14 +4,18 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { FaArrowLeft, FaKey, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaArrowLeft, FaKey, FaEye, FaEyeSlash, FaCheckCircle, FaExclamationTriangle, FaLock, FaShieldAlt, FaSpinner, FaInfoCircle } from 'react-icons/fa';
 import * as yup from 'yup';
-import "./ChangePassword.css"
+import styles from './ChangePassword.module.css';
 
 const passwordSchema = yup.object({
   currentPassword: yup.string().required('Current password is required'),
   newPassword: yup.string()
-    .min(6, 'Password must be at least 6 characters')
+    .min(8, 'Password must be at least 8 characters')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/[0-9]/, 'Password must contain at least one number')
+    .matches(/[^a-zA-Z0-9]/, 'Password must contain at least one special character')
     .required('New password is required'),
   confirmPassword: yup.string()
     .oneOf([yup.ref('newPassword'), null], 'Passwords must match')
@@ -33,7 +37,8 @@ const ChangePassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    watch
   } = useForm({
     resolver: yupResolver(passwordSchema)
   });
@@ -50,13 +55,13 @@ const ChangePassword = () => {
       });
 
       if (result.success) {
-        setSuccess('Password changed successfully!');
+        setSuccess('Password changed successfully! Redirecting to profile...');
         reset();
         setTimeout(() => {
           navigate('/profile');
         }, 2000);
       } else {
-        setError(result.error?.message || 'Failed to change password');
+        setError(result.error?.message || 'Failed to change password. Please check your current password.');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -66,141 +71,227 @@ const ChangePassword = () => {
     }
   };
 
+  // Password strength indicator
+  const newPassword = watch('newPassword', '');
+  const getPasswordStrength = (password) => {
+    if (!password) return 0;
+    
+    let strength = 0;
+    if (password.length >= 8) strength += 1;
+    if (/[a-z]/.test(password)) strength += 1;
+    if (/[A-Z]/.test(password)) strength += 1;
+    if (/[0-9]/.test(password)) strength += 1;
+    if (/[^a-zA-Z0-9]/.test(password)) strength += 1;
+    
+    return strength;
+  };
+
+  const passwordStrength = getPasswordStrength(newPassword);
+  const getStrengthLabel = () => {
+    if (passwordStrength === 0) return 'None';
+    if (passwordStrength <= 2) return 'Weak';
+    if (passwordStrength <= 3) return 'Fair';
+    if (passwordStrength <= 4) return 'Good';
+    return 'Strong';
+  };
+
+  const getStrengthClass = () => {
+    if (passwordStrength === 0) return styles.strengthNone;
+    if (passwordStrength <= 2) return styles.strengthWeak;
+    if (passwordStrength <= 3) return styles.strengthFair;
+    if (passwordStrength <= 4) return styles.strengthGood;
+    return styles.strengthStrong;
+  };
+
   return (
-    <div className="hostelhub-change-password-page">
-      <div className="hostelhub-change-password-header">
-        <Link to="/profile" className="hostelhub-back-link">
-          <FaArrowLeft className="hostelhub-back-icon" />
+    <div className={styles.container}>
+      {/* Header */}
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerIcon}>
+            <FaKey />
+          </div>
+          <div>
+            <h1 className={styles.title}>Change Password</h1>
+            <p className={styles.subtitle}>Update your password to keep your account secure</p>
+          </div>
+        </div>
+        
+        <Link to="/profile" className={styles.backButton}>
+          <FaArrowLeft className={styles.backIcon} />
           Back to Profile
         </Link>
-        
-        <h1 className="hostelhub-change-password-title">
-          <FaKey className="hostelhub-title-icon" />
-          Change Password
-        </h1>
       </div>
 
-      <div className="hostelhub-change-password-container">
-        <div className="hostelhub-change-password-card">
-          <div className="hostelhub-password-info">
-            <h3 className="hostelhub-info-title">Password Requirements</h3>
-            <ul className="hostelhub-requirements-list">
-              <li>At least 6 characters long</li>
-              <li>Use a combination of letters and numbers</li>
-              <li>Avoid common words and patterns</li>
+      {/* Main Content */}
+      <div className={styles.content}>
+        <div className={styles.card}>
+          {/* Requirements Section */}
+          <div className={styles.requirements}>
+            <div className={styles.requirementsHeader}>
+              <FaShieldAlt className={styles.requirementsIcon} />
+              <h3 className={styles.requirementsTitle}>Password Requirements</h3>
+            </div>
+            <ul className={styles.requirementsList}>
+              <li>At least 8 characters long</li>
+              <li>Contains uppercase and lowercase letters</li>
+              <li>Includes at least one number</li>
+              <li>Includes at least one special character</li>
               <li>Don't reuse your previous passwords</li>
             </ul>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="hostelhub-password-form">
+          {/* Form Section */}
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             {success && (
-              <div className="hostelhub-success-message">
-                {success}
+              <div className={styles.successMessage}>
+                <FaCheckCircle className={styles.successIcon} />
+                <span>{success}</span>
               </div>
             )}
             
             {error && (
-              <div className="hostelhub-error-message">
-                {error}
+              <div className={styles.errorMessage}>
+                <FaExclamationTriangle className={styles.errorIcon} />
+                <span>{error}</span>
               </div>
             )}
 
-            <div className="hostelhub-formgroup">
-              <label htmlFor="currentPassword" className="hostelhub-form-label">
+            {/* Current Password */}
+            <div className={styles.formGroup}>
+              <label htmlFor="currentPassword" className={styles.label}>
+                <FaLock className={styles.labelIcon} />
                 Current Password
               </label>
-              <div className="hostelhub-password-input-wrapper">
+              <div className={styles.passwordWrapper}>
                 <input
                   type={showCurrentPassword ? 'text' : 'password'}
                   id="currentPassword"
                   {...register('currentPassword')}
-                  className="hostelhub-form-input"
+                  className={`${styles.input} ${errors.currentPassword ? styles.inputError : ''}`}
                   placeholder="Enter your current password"
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                  className="hostelhub-password-toggle"
+                  className={styles.toggleButton}
+                  disabled={loading}
                 >
                   {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.currentPassword && (
-                <p className="hostelhub-form-error">{errors.currentPassword.message}</p>
+                <p className={styles.errorText}>{errors.currentPassword.message}</p>
               )}
             </div>
 
-            <div className="hostelhub-formgroup">
-              <label htmlFor="newPassword" className="hostelhub-form-label">
-                New Password
-              </label>
-              <div className="hostelhub-password-input-wrapper">
+            {/* New Password */}
+            <div className={styles.formGroup}>
+              <div className={styles.passwordHeader}>
+                <label htmlFor="newPassword" className={styles.label}>
+                  <FaLock className={styles.labelIcon} />
+                  New Password
+                </label>
+                {newPassword && (
+                  <div className={styles.strengthIndicator}>
+                    <span className={styles.strengthLabel}>Strength:</span>
+                    <span className={`${styles.strengthValue} ${getStrengthClass()}`}>
+                      {getStrengthLabel()}
+                    </span>
+                    <div className={styles.strengthBar}>
+                      <div 
+                        className={`${styles.strengthFill} ${getStrengthClass()}`}
+                        style={{ width: `${(passwordStrength / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className={styles.passwordWrapper}>
                 <input
                   type={showNewPassword ? 'text' : 'password'}
                   id="newPassword"
                   {...register('newPassword')}
-                  className="hostelhub-form-input"
+                  className={`${styles.input} ${errors.newPassword ? styles.inputError : ''}`}
                   placeholder="Enter your new password"
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="hostelhub-password-toggle"
+                  className={styles.toggleButton}
+                  disabled={loading}
                 >
                   {showNewPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.newPassword && (
-                <p className="hostelhub-form-error">{errors.newPassword.message}</p>
+                <p className={styles.errorText}>{errors.newPassword.message}</p>
               )}
             </div>
 
-            <div className="hostelhub-form-group">
-              <label htmlFor="confirmPassword" className="hostelhub-form-label">
+            {/* Confirm Password */}
+            <div className={styles.formGroup}>
+              <label htmlFor="confirmPassword" className={styles.label}>
+                <FaLock className={styles.labelIcon} />
                 Confirm New Password
               </label>
-              <div className="hostelhub-password-input-wrapper">
+              <div className={styles.passwordWrapper}>
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirmPassword"
                   {...register('confirmPassword')}
-                  className="hostelhub-form-input"
+                  className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ''}`}
                   placeholder="Confirm your new password"
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="hostelhub-password-toggle"
+                  className={styles.toggleButton}
+                  disabled={loading}
                 >
                   {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="hostelhub-form-error">{errors.confirmPassword.message}</p>
+                <p className={styles.errorText}>{errors.confirmPassword.message}</p>
               )}
             </div>
 
-            <div className="hostelhub-form-actions">
+            {/* Form Actions */}
+            <div className={styles.formActions}>
               <button
                 type="button"
                 onClick={() => navigate('/profile')}
-                className="hostelhub-cancel-button"
+                className={styles.cancelButton}
+                disabled={loading}
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="hostelhub-save-button"
+                className={styles.submitButton}
               >
-                {loading ? 'Changing Password...' : 'Change Password'}
+                {loading ? (
+                  <>
+                    <FaSpinner className={styles.spinner} />
+                    Changing Password...
+                  </>
+                ) : 'Change Password'}
               </button>
             </div>
           </form>
 
-          <div className="hostelhub-security-tips">
-            <h4 className="hostelhub-tips-title">Security Tips</h4>
-            <ul className="hostelhub-tips-list">
+          {/* Security Tips */}
+          <div className={styles.securityTips}>
+            <div className={styles.tipsHeader}>
+              <FaInfoCircle className={styles.tipsIcon} />
+              <h4 className={styles.tipsTitle}>Security Tips</h4>
+            </div>
+            <ul className={styles.tipsList}>
               <li>Never share your password with anyone</li>
               <li>Use a unique password for HostelHub</li>
               <li>Consider using a password manager</li>

@@ -1,0 +1,300 @@
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+/* --- Header --- */
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* --- Filters --- */
+.filters {
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 0.70rem;
+}
+
+.filterButton {
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.filterButton:hover {
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.filterActive {
+  background: #1e293b;
+  color: white;
+  border-color: #1e293b;
+}
+
+/* --- Booking Cards --- */
+.bookingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bookingCard {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.bookingCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.bookingHeader {
+  padding: 1.25rem 1.5rem;
+  background: #fcfcfd;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bookingReference {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.referenceLabel {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.referenceValue {
+  color: #475569;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.bookingStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.statusSuccess { background: #dcfce7; color: #166534; }
+.statusPending { background: #fef9c3; color: #854d0e; }
+.statusFailed { background: #fee2e2; color: #991b1b; }
+
+.statusSuccessIcon { color: #22c55e; }
+.statusFailedIcon { color: #ef4444; }
+.statusPendingIcon { color: #eab308; animation: spin 2s linear infinite; }
+
+/* --- Booking Content --- */
+.bookingContent {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 250px;
+  gap: 2rem;
+}
+
+.bookingHostelInfo {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.bookingHostelImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f1f5f9;
+}
+
+.hostelImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bookingImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  font-size: 2rem;
+}
+
+.bookingHostelName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.bookingHostelAddress {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.bookingOwner {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.bookingDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-left: 2rem;
+  border-left: 1px solid #f1f5f9;
+}
+
+.bookingDetailRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.detailLabel { color: #94a3b8; }
+.detailValue { color: #334155; font-weight: 600; }
+
+/* --- Booking Actions --- */
+.bookingActions {
+  padding: 1rem 1.5rem;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.viewDetailsButton, .contactOwnerButton, .retryPaymentButton {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.viewDetailsButton {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.viewDetailsButton:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.contactOwnerButton {
+  background: #3b82f6;
+  color: white;
+}
+
+.contactOwnerButton:hover {
+  background: #2563eb;
+}
+
+.retryPaymentButton {
+  background: #f59e0b;
+  color: white;
+}
+
+/* --- States --- */
+.loadingState, .emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  border: 1px dashed #e2e8f0;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  color: #cbd5e1;
+  margin-bottom: 1.5rem;
+}
+
+.findHostelsButton {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  background: #3b82f6;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .bookingContent { grid-template-columns: 1fr; gap: 1rem; }
+  .bookingDetails { border-left: none; padding-left: 0; padding-top: 1rem; border-top: 1px solid #f1f5f9; }
+  .bookingHeader { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .bookingActions { flex-direction: column; }
+  .viewDetailsButton, .contactOwnerButton, .retryPaymentButton { width: 100%; justify-content: center; }
+}

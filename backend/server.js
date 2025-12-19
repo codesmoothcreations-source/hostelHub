@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 import app from './app.js';
 import logger from './utils/logger.js';
 import * as messageService from './services/messageService.js';
+// import path from 'path';
 
 // Load environment variables
 dotenv.config();
@@ -147,7 +148,7 @@ io.on('connection', (socket) => {
 // Make io accessible to routes
 app.set('io', io);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Start server
 server.listen(PORT, () => {

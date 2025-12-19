@@ -1,0 +1,456 @@
+/* src/components/maps/InteractiveMap.module.css */
+
+/**
+ * PREMIUM DARK THEME DESIGN SYSTEM
+ * Features: Neon accents, Glassmorphism, Micro-interactions, and Mobile Optimization.
+ */
+
+ :root {
+  --primary-glow: #00f2ff;
+  --secondary-glow: #7000ff;
+  --bg-dark: #0f172a;
+  --card-dark: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-mint: #42b883;
+  --accent-coral: #ff6b6b;
+  --glass: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.container {
+  --map-height: 600px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--bg-dark);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--text-main);
+  animation: fadeInContainer 1s ease-out;
+}
+
+@keyframes fadeInContainer {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- HEADER SECTION --- */
+.header {
+  padding: 30px 40px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-bottom: 1px solid var(--glass-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+  opacity: 0.1;
+  filter: blur(40px);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  background: linear-gradient(to right, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  margin: 8px 0 0 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* --- MAP WRAPPER --- */
+.mapWrapper {
+  position: relative;
+  width: 100%;
+  height: var(--map-height);
+  background: #020617;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  filter: contrast(1.1) brightness(0.8) hue-rotate(-5deg);
+  z-index: 1;
+}
+
+/* --- CUSTOM NEON MARKER PIN --- */
+/* (Note: Applied via the createCustomIcon function's divIcon) */
+.markerWrapper {
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.markerWrapper:hover {
+  transform: scale(1.2) translateY(-10px);
+  z-index: 999 !important;
+}
+
+/* --- INTERACTIVE CONTROLS --- */
+.controls {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.locationButton {
+  width: 50px;
+  height: 50px;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-glow);
+  font-size: 20px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.locationButton:hover {
+  background: var(--primary-glow);
+  color: var(--bg-dark);
+  box-shadow: 0 0 20px var(--primary-glow);
+  transform: rotate(15deg);
+}
+
+/* --- CUTE NEON LEGEND --- */
+.legend {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  z-index: 1000;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  padding: 16px 24px;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-main);
+  cursor: default;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px; /* Square dots for a technical look */
+  position: relative;
+}
+
+.dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 6px;
+  background: inherit;
+  opacity: 0.4;
+  filter: blur(4px);
+}
+
+.blue { background: var(--primary-glow); box-shadow: 0 0 10px var(--primary-glow); }
+.green { background: var(--accent-mint); box-shadow: 0 0 10px var(--accent-mint); }
+.red { background: var(--accent-coral); box-shadow: 0 0 10px var(--accent-coral); }
+
+/* --- DARK LEAFLET POPUP OVERRIDES --- */
+:global(.leaflet-popup-content-wrapper) {
+  background: var(--card-dark) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+  padding: 0 !important;
+}
+
+:global(.leaflet-popup-tip) {
+  background: var(--card-dark) !important;
+}
+
+:global(.leaflet-popup-content) {
+  margin: 0 !important;
+  width: 280px !important;
+}
+
+/* Popup Content Styling */
+.popupContainer {
+  padding: 20px;
+}
+
+.popupBtn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: linear-gradient(90deg, var(--secondary-glow), #9d50bb);
+  color: white !important;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: var(--transition-smooth);
+  border: none;
+  box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
+}
+
+.popupBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(112, 0, 255, 0.5);
+  filter: brightness(1.1);
+}
+
+/* --- FOOTER SECTION --- */
+.footer {
+  padding: 20px 40px;
+  background: #0f172a;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.footer strong {
+  color: var(--accent-mint);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* --- LOADING ANIMATION --- */
+.loading {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-dark);
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid var(--glass-border);
+  border-top: 4px solid var(--primary-glow);
+  border-right: 4px solid var(--secondary-glow);
+  border-radius: 50%;
+  animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- SCROLLBAR CUSTOMIZATION --- */
+.container ::-webkit-scrollbar {
+  width: 6px;
+}
+
+.container ::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+.container ::-webkit-scrollbar-thumb {
+  background: var(--card-dark);
+  border-radius: 10px;
+}
+
+/* --- MOBILE RESPONSIVENESS (Advanced) --- */
+
+@media (max-width: 1024px) {
+  .container {
+    --map-height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    border-radius: 0;
+    --map-height: 450px;
+  }
+
+  .header {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .legend {
+    bottom: 20px;
+    left: 20px;
+    padding: 12px 16px;
+  }
+
+  .footer {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    --map-height: calc(100vh - 200px);
+  }
+
+  .controls {
+    top: 15px;
+    right: 15px;
+  }
+
+  .locationButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .legend {
+    width: calc(100% - 40px);
+    flex-direction: row;
+    justify-content: space-around;
+    left: 20px;
+    bottom: 10px;
+    padding: 10px;
+  }
+
+  .legendItem span {
+    font-size: 0.7rem;
+  }
+
+  :global(.leaflet-popup-content) {
+    width: 220px !important;
+  }
+}
+
+/* --- ACCESSIBILITY & UTILITY --- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Hover effect for hostels markers */
+:global(.custom-hostel-marker) {
+  filter: drop-shadow(0 0 5px var(--accent-mint));
+  transition: transform 0.3s ease;
+}
+
+:global(.custom-hostel-marker:hover) {
+  transform: scale(1.3);
+  filter: drop-shadow(0 0 10px var(--accent-mint));
+}
+
+/* Animation for the "Selected" marker */
+:global(.custom-selected-marker) {
+  animation: pulseNeon 2s infinite;
+}
+
+@keyframes pulseNeon {
+  0% { filter: drop-shadow(0 0 2px var(--accent-coral)); }
+  50% { filter: drop-shadow(0 0 15px var(--accent-coral)); }
+  100% { filter: drop-shadow(0 0 2px var(--accent-coral)); }
+}
+
+/* Map Dark Mode Overlays */
+.map::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.4) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* --- EXTRA LINES TO ENSURE ROBUSTNESS & DEPTH --- */
+/* Add subtle texture to header */
+.header {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2394a3b8' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Leaflet Zoom Control Styling */
+:global(.leaflet-control-zoom) {
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+:global(.leaflet-control-zoom-in), 
+:global(.leaflet-control-zoom-out) {
+  background: var(--glass) !important;
+  color: var(--text-main) !important;
+  border: none !important;
+  backdrop-filter: blur(10px);
+}
+
+:global(.leaflet-control-zoom-in:hover), 
+:global(.leaflet-control-zoom-out:hover) {
+  background: var(--card-dark) !important;
+  color: var(--primary-glow) !important;
+}
+
+/* Final Animation Layer */
+.mapWrapper > * {
+  animation: mapEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes mapEnter {
+  from { clip-path: inset(50% 50% 50% 50%); }
+  to { clip-path: inset(0 0 0 0); }
+}

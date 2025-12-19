@@ -17,7 +17,7 @@ import { AMENITIES, RENT_DURATIONS } from "../../utils/constants";
 import InteractiveMap from "../../components/maps/InteractiveMap";
 import ImageUpload from "../../components/uploads/ImageUpload";
 
-// Icons (using Fa for consistent naming)
+// Icons
 import {
   FaMapMarkerAlt,
   FaSpinner,
@@ -43,33 +43,28 @@ import {
   FaListAlt,
 } from "react-icons/fa";
 
-// Component Styles (assumed to contain the 'hostelhub-' class styles)
-import "./AddHostel.css";
+// Component Styles - CSS MODULES
+import styles from './AddHostel.module.css';
 
-// --- Amenity Icons Mapping (Optimized with useMemo for performance) ---
+// Amenity Icons Mapping
 const useAmenityIcons = () =>
   useMemo(
     () => ({
-      WiFi: <FaWifi className="hostelhub-amenity-icon" />,
-      AC: <FaSnowflake className="hostelhub-amenity-icon" />,
-      "Air Conditioning": <FaSnowflake className="hostelhub-amenity-icon" />,
-      "Private Bathroom": <FaBath className="hostelhub-amenity-icon" />,
-      TV: <FaTv className="hostelhub-amenity-icon" />,
-      Meals: <FaUtensils className="hostelhub-amenity-icon" />,
-      Parking: <FaCar className="hostelhub-amenity-icon" />,
-      Garden: <FaLeaf className="hostelhub-amenity-icon" />,
+      WiFi: <FaWifi className={styles.amenityIcon} />,
+      AC: <FaSnowflake className={styles.amenityIcon} />,
+      "Air Conditioning": <FaSnowflake className={styles.amenityIcon} />,
+      "Private Bathroom": <FaBath className={styles.amenityIcon} />,
+      TV: <FaTv className={styles.amenityIcon} />,
+      Meals: <FaUtensils className={styles.amenityIcon} />,
+      Parking: <FaCar className={styles.amenityIcon} />,
+      Garden: <FaLeaf className={styles.amenityIcon} />,
     }),
     []
   );
 
-// ====================================================================
-// --- Main Component: AddHostel ---
-// ====================================================================
-
 const AddHostel = () => {
-  // --- Hooks and State Initialization ---
   const navigate = useNavigate();
-  const { user } = useAuth(); // Keeping for context access, though not directly used in the current render
+  const { user } = useAuth();
   const amenityIcons = useAmenityIcons();
 
   const {
@@ -78,7 +73,6 @@ const AddHostel = () => {
     loading: locationLoading,
   } = useGeolocation();
 
-  // Local State for non-form managed data
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [location, setLocation] = useState({
     lat: null,
@@ -88,7 +82,6 @@ const AddHostel = () => {
   const [images, setImages] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-  // React Hook Form Configuration
   const {
     register,
     handleSubmit,
@@ -101,7 +94,6 @@ const AddHostel = () => {
       rentDuration: "monthly",
       availableRooms: 1,
       price: "",
-      // Placeholder for location and images, managed outside form state but validated via schema
       lat: null,
       lng: null,
       address: "",
@@ -110,12 +102,6 @@ const AddHostel = () => {
     },
   });
 
-  // --- Utility Functions ---
-
-  /**
-   * Reverse geocodes coordinates to a human-readable address.
-   * Uses OpenStreetMap's Nominatim service.
-   */
   const reverseGeocode = useCallback(
     async (lat, lng) => {
       try {
@@ -124,7 +110,6 @@ const AddHostel = () => {
         );
         const data = await response.json();
         if (data.display_name) {
-          // Truncate address for cleaner display (e.g., first 3 parts)
           const address = data.display_name.split(",").slice(0, 3).join(",");
           setValue("address", address, { shouldValidate: true });
         }
@@ -138,11 +123,6 @@ const AddHostel = () => {
     [setValue]
   );
 
-  // --- Handlers ---
-
-  /**
-   * Handles location selection from the map component.
-   */
   const handleMapLocationSelect = useCallback(
     (selectedLocation) => {
       const { lat, lng } = selectedLocation;
@@ -155,9 +135,6 @@ const AddHostel = () => {
     [setValue, reverseGeocode]
   );
 
-  /**
-   * Toggles an amenity's selection state.
-   */
   const handleAmenityToggle = useCallback(
     (amenity) => {
       setSelectedAmenities((prevAmenities) => {
@@ -173,9 +150,6 @@ const AddHostel = () => {
     [setValue]
   );
 
-  /**
-   * Handles image URLs received from the ImageUpload component.
-   */
   const handleImageUpload = useCallback(
     (newImageUrls) => {
       const validUrls = newImageUrls.filter((url) => {
@@ -193,7 +167,7 @@ const AddHostel = () => {
       }
 
       setImages((prevImages) => {
-        const allImages = [...prevImages, ...validUrls].slice(0, 10); // Limit to 10 images
+        const allImages = [...prevImages, ...validUrls].slice(0, 10);
         setValue("images", allImages, { shouldValidate: true });
         toast.success(`🎉 Added ${validUrls.length} image(s)`);
         return allImages;
@@ -202,9 +176,6 @@ const AddHostel = () => {
     [setValue]
   );
 
-  /**
-   * Removes an image by its index from the preview list.
-   */
   const handleRemoveImage = useCallback(
     (index) => {
       setImages((prevImages) => {
@@ -217,13 +188,10 @@ const AddHostel = () => {
     [setValue]
   );
 
-  /**
-   * Sets a specific image as the main/first photo.
-   */
   const handleSetMainImage = useCallback(
     (index) => {
       setImages((prevImages) => {
-        if (index === 0) return prevImages; // Already main
+        if (index === 0) return prevImages;
         const newImages = [
           prevImages[index],
           ...prevImages.filter((_, i) => i !== index),
@@ -236,9 +204,6 @@ const AddHostel = () => {
     [setValue]
   );
 
-  /**
-   * Tries to get the user's precise current location via native Geolocation API.
-   */
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
       toast.error("Geolocation not supported by your browser");
@@ -252,7 +217,7 @@ const AddHostel = () => {
         toast.dismiss("location-toast");
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
-        handleMapLocationSelect({ lat, lng }); // Use existing handler for consistency
+        handleMapLocationSelect({ lat, lng });
         toast.success("Location found! 🎯");
       },
       (error) => {
@@ -263,11 +228,7 @@ const AddHostel = () => {
     );
   };
 
-  /**
-   * Final submission logic for the form.
-   */
   const onSubmit = async (data) => {
-    // Client-side guard check for non-form-controlled fields
     if (!location.lat || !location.lng) {
       toast.error("📍 Please select a location on the map");
       return;
@@ -287,7 +248,6 @@ const AddHostel = () => {
         price: parseFloat(data.price),
         lat: parseFloat(location.lat),
         lng: parseFloat(location.lng),
-        // Use the geocoded address, fallback to location state address if needed
         address: data.address || location.address,
         availableRooms: parseInt(data.availableRooms),
         rentDuration: data.rentDuration,
@@ -317,27 +277,18 @@ const AddHostel = () => {
     }
   };
 
-  // --- Effects ---
-
-  // Auto-detect user location on load (using useGeolocation hook)
   useEffect(() => {
     if (userLocation) {
       handleMapLocationSelect(userLocation);
     }
-    // Note: handleMapLocationSelect includes setValue and reverseGeocode
   }, [userLocation, handleMapLocationSelect]);
 
-  // --- Render Functions ---
-
-  /**
-   * Render helper for form section headers.
-   */
   const renderStepHeader = (icon, title, subtitle) => (
-    <div className="hostelhub-step-header">
-      <div className="hostelhub-step-icon">{icon}</div>
+    <div className={styles.stepHeader}>
+      <div className={styles.stepIcon}>{icon}</div>
       <div>
-        <h3 className="hostelhub-step-title">{title}</h3>
-        <p className="hostelhub-step-description">{subtitle}</p>
+        <h3 className={styles.stepTitle}>{title}</h3>
+        <p className={styles.stepDescription}>{subtitle}</p>
       </div>
     </div>
   );
@@ -347,420 +298,415 @@ const AddHostel = () => {
     [submitting, location.lat, images.length]
   );
 
-  // --- JSX Return ---
   return (
-    <div className="hostelhub-add-hostel">
-      {/* Header */}
-      <div className="hostelhub-add-hostel-header">
-        <button
-          onClick={() => navigate("/my-hostels")}
-          className="hostelhub-back-button"
-        >
-          <FaArrowLeft /> Back to Hostels
-        </button>
-        <div className="hostelhub-header-content">
-          <div className="hostelhub-header-icon">
-            <FaHome />
-          </div>
-          <div>
-            <h1 className="hostelhub-add-hostel-title">List Your Hostel</h1>
-            <p className="hostelhub-add-hostel-subtitle">
-              Share your space with students. Fill in all details below and click
-              Publish. 🚀
-            </p>
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        {/* Header */}
+        <div className={styles.header}>
+          <button
+            onClick={() => navigate("/my-hostels")}
+            className={styles.backButton}
+          >
+            <FaArrowLeft /> Back to Hostels
+          </button>
+          <div className={styles.headerContent}>
+            <div className={styles.headerIcon}>
+              <FaHome />
+            </div>
+            <div>
+              <h1 className={styles.title}>List Your Hostel</h1>
+              <p className={styles.subtitle}>
+                Share your space with students. Fill in all details below and click
+                Publish. 🚀
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="hostelhub-add-hostel-form">
-        
-        {/* SECTION 1: Location (Map) */}
-        <div className="hostelhub-form-step">
-          {renderStepHeader(
-            <FaMapMarkerAlt />,
-            "📍 1. Set Your Location",
-            "Help students find your hostel by setting the exact location on the map."
-          )}
+        {/* Main Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+          
+          {/* SECTION 1: Location (Map) */}
+          <div className={styles.formStep}>
+            {renderStepHeader(
+              <FaMapMarkerAlt />,
+              "📍 1. Set Your Location",
+              "Help students find your hostel by setting the exact location on the map."
+            )}
 
-          <div className="hostelhub-location-card">
-            <div className="hostelhub-location-controls">
-              <button
-                type="button"
-                onClick={handleGetCurrentLocation}
-                disabled={locationLoading}
-                className="hostelhub-location-button"
-              >
-                {locationLoading ? (
-                  <FaSpinner className="hostelhub-spinner" />
-                ) : (
-                  <FaCrosshairs />
+            <div className={styles.locationCard}>
+              <div className={styles.locationControls}>
+                <button
+                  type="button"
+                  onClick={handleGetCurrentLocation}
+                  disabled={locationLoading}
+                  className={styles.locationButton}
+                >
+                  {locationLoading ? (
+                    <FaSpinner className={styles.spinner} />
+                  ) : (
+                    <FaCrosshairs />
+                  )}
+                  Use My Current Location
+                </button>
+                <div className={styles.locationHint}>
+                  <FaInfoCircle />
+                  <span>Click on the map to select your hostel's location</span>
+                </div>
+              </div>
+
+              {location.lat && location.lng ? (
+                <div className={styles.locationSuccess}>
+                  <FaCheckCircle />
+                  <div>
+                    <span className={styles.locationSuccessTitle}>
+                      Location Set! 🎯
+                    </span>
+                    <span className={styles.locationSuccessText}>
+                      {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.locationWarning}>
+                  <FaExclamationTriangle />
+                  <span>Please select a location on the map to continue</span>
+                </div>
+              )}
+
+              {/* Interactive Map */}
+              <div className={styles.mapContainer}>
+                <InteractiveMap
+                  userLocation={location.lat ? location : null}
+                  onLocationSelect={handleMapLocationSelect}
+                  interactive={true}
+                />
+              </div>
+
+              {/* Address Field */}
+              <div className={styles.formGroup}>
+                <label>
+                  <FaMap /> Address *
+                  <span className={styles.labelHint}>
+                    (will be auto-filled from map)
+                  </span>
+                </label>
+                <textarea
+                  {...register("address")}
+                  placeholder="🎯 Click on the map to set address..."
+                  rows="2"
+                  className={`${styles.input} ${errors.address ? styles.inputError : ''}`}
+                />
+                {errors.address && (
+                  <span className={styles.formError}>
+                    {errors.address.message}
+                  </span>
                 )}
-                Use My Current Location
-              </button>
-              <div className="hostelhub-location-hint">
-                <FaInfoCircle />
-                <span>Click on the map to select your hostel's location</span>
               </div>
             </div>
+          </div>
 
-            {location.lat && location.lng ? (
-              <div className="hostelhub-location-success">
-                <FaCheckCircle />
-                <div>
-                  <span className="hostelhub-location-success-title">
-                    Location Set! 🎯
-                  </span>
-                  <span className="hostelhub-location-success-text">
-                    {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+          {/* SECTION 2: Basic Info */}
+          <div className={styles.formStep}>
+            {renderStepHeader(
+              <FaListAlt />,
+              "📝 2. Hostel Details",
+              "Tell students about your hostel. Make it descriptive and inviting!"
+            )}
+            <div className={styles.detailsGrid}>
+              {/* Left Card: Name & Description */}
+              <div className={styles.formCard}>
+                <div className={styles.formGroup}>
+                  <label>
+                    <FaHome /> Hostel Name *
+                  </label>
+                  <input
+                    {...register("name")}
+                    placeholder="e.g., Sunshine Student Hostel"
+                    className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+                  />
+                  {errors.name && (
+                    <span className={styles.formError}>
+                      {errors.name.message}
+                    </span>
+                  )}
+                </div>
+                <div className={styles.formGroup}>
+                  <label>Description *</label>
+                  <textarea
+                    {...register("description")}
+                    placeholder="✨ Describe your hostel... What makes it special? What facilities are available? What's nearby?"
+                    rows="4"
+                    className={`${styles.input} ${errors.description ? styles.inputError : ''}`}
+                  />
+                  {errors.description && (
+                    <span className={styles.formError}>
+                      {errors.description.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Card: Price, Rooms, Duration */}
+              <div className={styles.formCard}>
+                <div className={styles.detailsRow}>
+                  <div className={styles.formGroup}>
+                    <label>
+                      <FaMoneyBill /> Price (GH₵) *
+                    </label>
+                    <div className={styles.priceInput}>
+                      <span className={styles.currency}>GH₵</span>
+                      <input
+                        type="number"
+                        {...register("price")}
+                        placeholder="Yearly rent"
+                        min="0"
+                        step="10"
+                        className={`${styles.input} ${errors.price ? styles.inputError : ''}`}
+                      />
+                      <span className={styles.priceSuffix}>/year</span>
+                    </div>
+                    {errors.price && (
+                      <span className={styles.formError}>
+                        {errors.price.message}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label>
+                      <FaBed /> Available Rooms *
+                    </label>
+                    <div className={styles.roomsInput}>
+                      <input
+                        type="number"
+                        {...register("availableRooms")}
+                        placeholder="Number of rooms"
+                        min="1"
+                        className={`${styles.input} ${errors.availableRooms ? styles.inputError : ''}`}
+                      />
+                      {/* <span className={styles.roomsSuffix}>rooms</span> */}
+                    </div>
+                    {errors.availableRooms && (
+                      <span className={styles.formError}>
+                        {errors.availableRooms.message}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>
+                    <FaCalendar /> Rent Duration *
+                  </label>
+                  <div className={styles.rentOptions}>
+                    {RENT_DURATIONS.map((duration) => (
+                      <label
+                        key={duration.value}
+                        className={styles.rentOption}
+                      >
+                        <input
+                          type="radio"
+                          {...register("rentDuration")}
+                          value={duration.value}
+                          checked={watch("rentDuration") === duration.value}
+                        />
+                        <span className={styles.rentLabel}>
+                          {duration.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 3: Amenities */}
+          <div className={styles.formStep}>
+            {renderStepHeader(
+              <FaWifi />,
+              "⭐ 3. Select Amenities",
+              "What does your hostel offer? Select all that apply to attract more students."
+            )}
+
+            <div className={`${styles.amenitiesSection} ${styles.formCard}`}>
+              {/* Selected Amenities Display */}
+              {selectedAmenities.length > 0 && (
+                <div className={styles.selectedAmenities}>
+                  <div className={styles.selectedHeader}>
+                    <span>
+                      ✅ Your selected amenities ({selectedAmenities.length})
+                    </span>
+                  </div>
+                  <div className={styles.selectedTags}>
+                    {selectedAmenities.map((amenity) => (
+                      <span
+                        key={amenity}
+                        className={styles.selectedTag}
+                        onClick={() => handleAmenityToggle(amenity)}
+                        title="Click to remove"
+                      >
+                        {amenityIcons[amenity] || <FaWifi />}
+                        {amenity}
+                        <span className={styles.removeTag}>×</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Amenity Selection Grid */}
+              <div className={styles.amenitiesGrid}>
+                {AMENITIES.map((amenity) => (
+                  <button
+                    key={amenity}
+                    type="button"
+                    onClick={() => handleAmenityToggle(amenity)}
+                    className={`${styles.amenityButton} ${
+                      selectedAmenities.includes(amenity)
+                        ? styles.amenityButtonActive
+                        : ''
+                    }`}
+                  >
+                    <div className={styles.amenityIconWrapper}>
+                      {amenityIcons[amenity] || (
+                        <FaWifi className={styles.amenityIcon} />
+                      )}
+                    </div>
+                    <span className={styles.amenityText}>{amenity}</span>
+                    {selectedAmenities.includes(amenity) && (
+                      <div className={styles.amenityCheck}>✓</div>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <div className={styles.amenitiesNote}>
+                <FaInfoCircle />
+                <span>
+                  Select amenities that best describe your hostel. Students love
+                  seeing what's included!
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 4: Images */}
+          <div className={styles.formStep}>
+            {renderStepHeader(
+              <FaImages />,
+              "📸 4. Upload Photos",
+              "Showcase your hostel with beautiful photos. First image will be the main thumbnail! (Minimum 1 image required)"
+            )}
+
+            <div className={styles.imagesSection}>
+              <div className={styles.uploadCard}>
+                <div className={styles.uploadIcon}>
+                  <FaUpload />
+                </div>
+                <h4>Drag & Drop or Click to Upload</h4>
+                <p className={styles.uploadHint}>
+                  Upload clear photos of rooms, common areas, exterior, and
+                  amenities
+                </p>
+                <ImageUpload onUploadComplete={handleImageUpload} maxFiles={10} />
+                <div className={styles.uploadTips}>
+                  <FaInfoCircle />
+                  <span>
+                    Tips: Use bright, clear photos. Show different angles. Include
+                    amenities!
                   </span>
                 </div>
               </div>
-            ) : (
-              <div className="hostelhub-location-warning">
-                <FaExclamationTriangle />
-                <span>Please select a location on the map to continue</span>
-              </div>
-            )}
 
-            {/* Interactive Map */}
-            <div className="hostelhub-map-container">
-              <InteractiveMap
-                userLocation={location.lat ? location : null}
-                onLocationSelect={handleMapLocationSelect}
-                interactive={true}
-              />
-              {/* Optional: Trigger a diagram of the map component */}
-              
-            </div>
+              {images.length > 0 && (
+                <div className={styles.imagesPreview}>
+                  <div className={styles.imagesHeader}>
+                    <h4>
+                      <FaImages /> Selected Photos ({images.length}/10)
+                    </h4>
+                    <span className={styles.imagesHint}>
+                      Click "Set as Main" to choose the thumbnail
+                    </span>
+                  </div>
+                  <div className={styles.imagesGrid}>
+                    {images.map((url, index) => (
+                      <div key={index} className={styles.imageCard}>
+                        <div className={styles.imageContainer}>
+                          <img
+                            src={url}
+                            alt={`Hostel ${index + 1}`}
+                            loading="lazy"
+                          />
+                          <div className={styles.imageOverlay}>
+                            <span className={styles.imageNumber}>
+                              #{index + 1}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(index)}
+                              className={styles.removeImage}
+                              title="Remove image"
+                            >
+                              ×
+                            </button>
+                          </div>
+                          {index === 0 && (
+                            <div className={styles.mainImageBadge}>
+                              ⭐ Main Photo
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleSetMainImage(index)}
+                          className={styles.setMainButton}
+                          disabled={index === 0}
+                        >
+                          {index === 0 ? "★ Main" : "Set as Main"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {/* Address Field */}
-            <div className="hostelhub-form-group">
-              <label>
-                <FaMap /> Address *
-                <span className="hostelhub-label-hint">
-                  (will be auto-filled from map)
-                </span>
-              </label>
-              <textarea
-                {...register("address")}
-                placeholder="🎯 Click on the map to set address..."
-                rows="2"
-                className={errors.address ? "hostelhub-input-error" : ""}
-              />
-              {errors.address && (
-                <span className="hostelhub-form-error">
-                  {errors.address.message}
-                </span>
+              {errors.images && (
+                <div className={styles.imagesError}>
+                  <FaExclamationTriangle />
+                  <span>{errors.images.message}</span>
+                </div>
               )}
             </div>
           </div>
-        </div>
 
-        {/* SECTION 2: Basic Info */}
-        <div className="hostelhub-form-step">
-          {renderStepHeader(
-            <FaListAlt />,
-            "📝 2. Hostel Details",
-            "Tell students about your hostel. Make it descriptive and inviting!"
-          )}
-          <div className="hostelhub-details-grid">
-            {/* Left Card: Name & Description */}
-            <div className="hostelhub-form-card">
-              <div className="hostelhub-form-group">
-                <label>
-                  <FaHome /> Hostel Name *
-                </label>
-                <input
-                  {...register("name")}
-                  placeholder="e.g., Sunshine Student Hostel"
-                  className={errors.name ? "hostelhub-input-error" : ""}
-                />
-                {errors.name && (
-                  <span className="hostelhub-form-error">
-                    {errors.name.message}
-                  </span>
-                )}
-              </div>
-              <div className="hostelhub-form-group">
-                <label>Description *</label>
-                <textarea
-                  {...register("description")}
-                  placeholder="✨ Describe your hostel... What makes it special? What facilities are available? What's nearby?"
-                  rows="4"
-                  className={errors.description ? "hostelhub-input-error" : ""}
-                />
-                {errors.description && (
-                  <span className="hostelhub-form-error">
-                    {errors.description.message}
-                  </span>
-                )}
-              </div>
-            </div>
+          {/* Hidden inputs for React Hook Form */}
+          <input type="hidden" {...register("lat")} />
+          <input type="hidden" {...register("lng")} />
+          <input type="hidden" {...register("amenities")} />
+          <input type="hidden" {...register("images")} />
 
-            {/* Right Card: Price, Rooms, Duration */}
-            <div className="hostelhub-form-card">
-              <div className="hostelhub-details-row">
-                <div className="hostelhub-form-group">
-                  <label>
-                    <FaMoneyBill /> Price (GH₵) *
-                  </label>
-                  <div className="hostelhub-price-input">
-                    <span className="hostelhub-currency">GH₵</span>
-                    <input
-                      type="number"
-                      {...register("price")}
-                      placeholder="Monthly rent"
-                      min="0"
-                      step="10"
-                      className={errors.price ? "hostelhub-input-error" : ""}
-                    />
-                    <span className="hostelhub-price-suffix">/month</span>
-                  </div>
-                  {errors.price && (
-                    <span className="hostelhub-form-error">
-                      {errors.price.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="hostelhub-form-group">
-                  <label>
-                    <FaBed /> Available Rooms *
-                  </label>
-                  <div className="hostelhub-rooms-input">
-                    <input
-                      type="number"
-                      {...register("availableRooms")}
-                      placeholder="Number of rooms"
-                      min="1"
-                      className={
-                        errors.availableRooms ? "hostelhub-input-error" : ""
-                      }
-                    />
-                    <span className="hostelhub-rooms-suffix">rooms</span>
-                  </div>
-                  {errors.availableRooms && (
-                    <span className="hostelhub-form-error">
-                      {errors.availableRooms.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              <div className="hostelhub-form-group">
-                <label>
-                  <FaCalendar /> Rent Duration *
-                </label>
-                <div className="hostelhub-rent-options">
-                  {RENT_DURATIONS.map((duration) => (
-                    <label
-                      key={duration.value}
-                      className="hostelhub-rent-option"
-                    >
-                      <input
-                        type="radio"
-                        {...register("rentDuration")}
-                        value={duration.value}
-                        checked={watch("rentDuration") === duration.value}
-                      />
-                      <span className="hostelhub-rent-label">
-                        {duration.label}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
+          {/* Final Submission Footer */}
+          <div className={styles.formSubmissionFooter}>
+            <button
+              type="submit"
+              disabled={!canSubmit}
+              className={`${styles.submitButton} ${
+                canSubmit ? styles.submitButtonReady : styles.submitButtonDisabled
+              }`}
+            >
+              {submitting ? (
+                <>
+                  <FaSpinner className={styles.spinner} /> Creating Hostel...
+                </>
+              ) : (
+                "✨ Publish Hostel"
+              )}
+            </button>
           </div>
-        </div>
-
-        {/* SECTION 3: Amenities */}
-        <div className="hostelhub-form-step">
-          {renderStepHeader(
-            <FaWifi />,
-            "⭐ 3. Select Amenities",
-            "What does your hostel offer? Select all that apply to attract more students."
-          )}
-
-          <div className="hostelhub-amenities-section hostelhub-form-card">
-            {/* Selected Amenities Display */}
-            {selectedAmenities.length > 0 && (
-              <div className="hostelhub-selected-amenities">
-                <div className="hostelhub-selected-header">
-                  <span>
-                    ✅ Your selected amenities ({selectedAmenities.length})
-                  </span>
-                </div>
-                <div className="hostelhub-selected-tags">
-                  {selectedAmenities.map((amenity) => (
-                    <span
-                      key={amenity}
-                      className="hostelhub-selected-tag"
-                      onClick={() => handleAmenityToggle(amenity)}
-                      title="Click to remove"
-                    >
-                      {amenityIcons[amenity] || <FaWifi />}
-                      {amenity}
-                      <span className="hostelhub-remove-tag">×</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Amenity Selection Grid */}
-            <div className="hostelhub-amenities-grid">
-              {AMENITIES.map((amenity) => (
-                <button
-                  key={amenity}
-                  type="button"
-                  onClick={() => handleAmenityToggle(amenity)}
-                  className={`hostelhub-amenity-button ${
-                    selectedAmenities.includes(amenity)
-                      ? "hostelhub-amenity-button-active"
-                      : ""
-                  }`}
-                >
-                  <div className="hostelhub-amenity-icon-wrapper">
-                    {amenityIcons[amenity] || (
-                      <FaWifi className="hostelhub-amenity-icon" />
-                    )}
-                  </div>
-                  <span className="hostelhub-amenity-text">{amenity}</span>
-                  {selectedAmenities.includes(amenity) && (
-                    <div className="hostelhub-amenity-check">✓</div>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            <div className="hostelhub-amenities-note">
-              <FaInfoCircle />
-              <span>
-                Select amenities that best describe your hostel. Students love
-                seeing what's included!
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* SECTION 4: Images */}
-        <div className="hostelhub-form-step">
-          {renderStepHeader(
-            <FaImages />,
-            "📸 4. Upload Photos",
-            "Showcase your hostel with beautiful photos. First image will be the main thumbnail! (Minimum 1 image required)"
-          )}
-
-          <div className="hostelhub-images-section">
-            <div className="hostelhub-upload-card">
-              <div className="hostelhub-upload-icon">
-                <FaUpload />
-              </div>
-              <h4>Drag & Drop or Click to Upload</h4>
-              <p className="hostelhub-upload-hint">
-                Upload clear photos of rooms, common areas, exterior, and
-                amenities
-              </p>
-              {/* ImageUpload component handles the file-to-URL/cloud logic */}
-              <ImageUpload onUploadComplete={handleImageUpload} maxFiles={10} />
-              <div className="hostelhub-upload-tips">
-                <FaInfoCircle />
-                <span>
-                  Tips: Use bright, clear photos. Show different angles. Include
-                  amenities!
-                </span>
-              </div>
-              
-            </div>
-
-            {images.length > 0 && (
-              <div className="hostelhub-images-preview">
-                <div className="hostelhub-images-header">
-                  <h4>
-                    <FaImages /> Selected Photos ({images.length}/10)
-                  </h4>
-                  <span className="hostelhub-images-hint">
-                    Click "Set as Main" to choose the thumbnail
-                  </span>
-                </div>
-                <div className="hostelhub-images-grid">
-                  {images.map((url, index) => (
-                    <div key={index} className="hostelhub-image-card">
-                      <div className="hostelhub-image-container">
-                        <img
-                          src={url}
-                          alt={`Hostel ${index + 1}`}
-                          loading="lazy"
-                        />
-                        <div className="hostelhub-image-overlay">
-                          <span className="hostelhub-image-number">
-                            #{index + 1}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveImage(index)}
-                            className="hostelhub-remove-image"
-                            title="Remove image"
-                          >
-                            ×
-                          </button>
-                        </div>
-                        {index === 0 && (
-                          <div className="hostelhub-main-image-badge">
-                            ⭐ Main Photo
-                          </div>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleSetMainImage(index)}
-                        className="hostelhub-set-main-button"
-                        disabled={index === 0}
-                      >
-                        {index === 0 ? "★ Main" : "Set as Main"}
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {errors.images && (
-              <div className="hostelhub-images-error">
-                <FaExclamationTriangle />
-                <span>{errors.images.message}</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Hidden inputs for React Hook Form (for validation/data passing) */}
-        <input type="hidden" {...register("lat")} />
-        <input type="hidden" {...register("lng")} />
-        <input type="hidden" {...register("amenities")} />
-        <input type="hidden" {...register("images")} />
-
-        {/* Final Submission Footer */}
-        <div className="hostelhub-form-submission-footer">
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className={`hostelhub-submit-button ${
-              canSubmit ? "hostelhub-submit-button-ready" : "hostelhub-submit-button-disabled"
-            }`}
-          >
-            {submitting ? (
-              <>
-                <FaSpinner className="hostelhub-spinner" /> Creating Hostel...
-              </>
-            ) : (
-              "✨ Publish Hostel"
-            )}
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

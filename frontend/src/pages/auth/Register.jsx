@@ -1,4 +1,4 @@
-// src/pages/auth/Register.jsx - UPDATED WITH GEOLOCATION
+// src/pages/auth/Register.jsx
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,15 +6,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { registerSchema } from '../../utils/validators';
-import { FaMapMarkerAlt, FaSpinner, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
-import "./auth.css"
+import { FaMapMarkerAlt, FaSpinner, FaCheckCircle, FaExclamationTriangle, FaHome, FaEye, FaEyeSlash, FaUser, FaEnvelope, FaPhone, FaLock } from 'react-icons/fa';
+import styles from './Auth.module.css';
 
 const Register = () => {
   const navigate = useNavigate();
   const { register: registerUser } = useAuth();
   const [selectedRole, setSelectedRole] = useState('student');
+  const [showPassword, setShowPassword] = useState(false);
   
-  // Use geolocation hook
   const { location, error: locationError, loading: locationLoading, permission } = useGeolocation();
   
   const {
@@ -27,13 +27,11 @@ const Register = () => {
     resolver: yupResolver(registerSchema)
   });
 
-  // Auto-fill location when available
   useEffect(() => {
     if (location) {
       setValue('lat', location.lat);
       setValue('lng', location.lng);
       
-      // Reverse geocode to get address
       getAddressFromCoordinates(location.lat, location.lng);
     }
   }, [location, setValue]);
@@ -50,20 +48,17 @@ const Register = () => {
       }
     } catch (error) {
       console.error('Reverse geocoding error:', error);
-      // Fallback to coordinates
       setValue('address', `${lat.toFixed(6)}, ${lng.toFixed(6)}`);
     }
   };
 
   const handleManualLocation = () => {
-    // Allow user to manually enter location
     setValue('lat', '');
     setValue('lng', '');
     setValue('address', '');
   };
 
   const onSubmit = async (data) => {
-    // If no location, ask user to enable it
     if (!data.lat || !data.lng) {
       alert('Please enable location services for better experience. You can add location later in profile settings.');
     }
@@ -93,20 +88,34 @@ const Register = () => {
   };
 
   return (
-    <div className="hostelhub-auth-page">
-      <div className="hostelhub-auth-container">
-        <h1 className="hostelhub-auth-title">Create Account</h1>
-        
-        <div className="hostelhub-location-banner">
-          <div className="hostelhub-location-status">
-            <FaMapMarkerAlt className="hostelhub-location-icon" />
-            <div className="hostelhub-location-info">
+    <div className={styles.page}>
+      <div className={styles.container}>
+        {/* Header with Logo */}
+        <div className={styles.header}>
+          <Link to="/" className={styles.logo}>
+            <div className={styles.logoIcon}>
+              <FaHome />
+            </div>
+            <span className={styles.logoText}>HostelHub</span>
+          </Link>
+          
+          <h1 className={styles.title}>Create Account</h1>
+          <p className={styles.subtitle}>
+            Join HostelHub and find your perfect student accommodation
+          </p>
+        </div>
+
+        {/* Location Banner */}
+        <div className={styles.locationBanner}>
+          <div className={styles.locationStatus}>
+            <FaMapMarkerAlt className={styles.locationIcon} />
+            <div className={styles.locationInfo}>
               <h4>Location Services</h4>
-              <p className="hostelhub-location-text">
+              <p className={styles.locationText}>
                 {getLocationStatus()}
               </p>
               {location && (
-                <p className="hostelhub-location-coordinates">
+                <p className={styles.locationCoordinates}>
                   Coordinates: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
                 </p>
               )}
@@ -114,104 +123,123 @@ const Register = () => {
           </div>
           
           {locationError && (
-            <div className="hostelhub-location-error">
+            <div className={styles.locationError}>
               <FaExclamationTriangle />
               <p>{locationError}</p>
             </div>
           )}
           
           {location && (
-            <div className="hostelhub-location-success">
+            <div className={styles.locationSuccess}>
               <FaCheckCircle />
               <p>Location captured successfully!</p>
             </div>
           )}
         </div>
 
-        <div className="hostelhub-role-selector">
+        {/* Role Selector */}
+        <div className={styles.roleSelector}>
           <button
             type="button"
             onClick={() => setSelectedRole('student')}
-            className={`hostelhub-role-button ${selectedRole === 'student' ? 'hostelhub-role-button-active' : ''}`}
+            className={`${styles.roleButton} ${selectedRole === 'student' ? styles.roleButtonActive : ''}`}
           >
             Student
           </button>
           <button
             type="button"
             onClick={() => setSelectedRole('owner')}
-            className={`hostelhub-role-button ${selectedRole === 'owner' ? 'hostelhub-role-button-active' : ''}`}
+            className={`${styles.roleButton} ${selectedRole === 'owner' ? styles.roleButtonActive : ''}`}
           >
             Hostel Owner
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="hostelhub-auth-form">
-          <div className="hostelhub-formgroup">
-            <label htmlFor="name" className="hostelhub-form-label">Full Name *</label>
+        {/* Registration Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label htmlFor="name" className={styles.label}>
+              <FaUser /> Full Name *
+            </label>
             <input
               type="text"
               id="name"
               {...register('name')}
-              className="hostelhub-form-input"
+              className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
               placeholder="Enter your full name"
             />
             {errors.name && (
-              <p className="hostelhub-form-error">{errors.name.message}</p>
+              <p className={styles.errorText}>{errors.name.message}</p>
             )}
           </div>
 
-          <div className="hostelhub-formgroup">
-            <label htmlFor="email" className="hostelhub-form-label">Email *</label>
+          <div className={styles.formGroup}>
+            <label htmlFor="email" className={styles.label}>
+              <FaEnvelope /> Email *
+            </label>
             <input
               type="email"
               id="email"
               {...register('email')}
-              className="hostelhub-form-input"
+              className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
               placeholder="Enter your email"
             />
             {errors.email && (
-              <p className="hostelhub-form-error">{errors.email.message}</p>
+              <p className={styles.errorText}>{errors.email.message}</p>
             )}
           </div>
 
-          <div className="hostelhub-formgroup">
-            <label htmlFor="phone" className="hostelhub-form-label">Phone Number</label>
+          <div className={styles.formGroup}>
+            <label htmlFor="phone" className={styles.label}>
+              <FaPhone /> Phone Number
+            </label>
             <input
               type="tel"
               id="phone"
               {...register('phone')}
-              className="hostelhub-form-input"
+              className={styles.input}
               placeholder="Enter your phone number"
             />
           </div>
 
-          <div className="hostelhub-formgroup">
-            <label htmlFor="password" className="hostelhub-form-label">Password *</label>
-            <input
-              type="password"
-              id="password"
-              {...register('password')}
-              className="hostelhub-form-input"
-              placeholder="Create a password (min. 6 characters)"
-            />
+          <div className={styles.formGroup}>
+            <label htmlFor="password" className={styles.label}>
+              <FaLock /> Password *
+            </label>
+            <div className={styles.passwordWrapper}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                {...register('password')}
+                className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
+                placeholder="Create a password (min. 6 characters)"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.toggleButton}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
             {errors.password && (
-              <p className="hostelhub-form-error">{errors.password.message}</p>
+              <p className={styles.errorText}>{errors.password.message}</p>
             )}
           </div>
 
-          {/* Location fields (hidden by default) */}
-          <div className="hostelhub-location-fields">
+          {/* Location fields */}
+          <div className={styles.hidden}>
             <input type="hidden" {...register('lat')} />
             <input type="hidden" {...register('lng')} />
             <input type="hidden" {...register('address')} />
             
             {watch('address') && (
-              <div className="hostelhub-detected-location">
+              <div className={styles.detectedLocation}>
                 <p><strong>Detected Location:</strong> {watch('address')}</p>
                 <button
                   type="button"
                   onClick={handleManualLocation}
-                  className="hostelhub-change-location"
+                  className={styles.changeLocation}
                 >
                   Change Location
                 </button>
@@ -224,11 +252,11 @@ const Register = () => {
           <button
             type="submit"
             disabled={isSubmitting || locationLoading}
-            className="hostelhub-auth-button"
+            className={styles.submitButton}
           >
             {isSubmitting ? (
               <>
-                <FaSpinner className="hostelhub-spinner" />
+                <FaSpinner className={styles.spinner} />
                 Creating Account...
               </>
             ) : (
@@ -237,19 +265,19 @@ const Register = () => {
           </button>
         </form>
 
-        <div className="hostelhub-auth-links">
-          <p className="hostelhub-auth-text">
+        {/* Login Link */}
+        <div className={styles.links}>
+          <p className={styles.text}>
             Already have an account?{' '}
-            <Link to="/login" className="hostelhub-auth-link">Login here</Link>
+            <Link to="/login" className={styles.link}>Login here</Link>
           </p>
         </div>
 
-        <div className="hostelhub-location-privacy">
-          <p className="hostelhub-privacy-text">
-            <small>
-              We use your location to show nearby hostels and improve your experience. 
-              Your location data is stored securely and never shared with third parties.
-            </small>
+        {/* Privacy Notice */}
+        <div className={styles.privacyNotice}>
+          <p className={styles.privacyText}>
+            We use your location to show nearby hostels and improve your experience. 
+            Your location data is stored securely and never shared with third parties.
           </p>
         </div>
       </div>

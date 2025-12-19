@@ -1,0 +1,315 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa; /* Light gray for content contrast */
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+}
+
+/* --- Sidebar Base --- */
+.sidebar {
+  width: 260px;
+  background-color: #0d0e12; /* Deep Ink */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
+  border-right: 1px solid #1e2026;
+}
+
+.collapsed {
+  width: 80px;
+}
+
+/* --- Sidebar Header & User Info --- */
+.sidebarHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid #1e2026;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+.avatar, .avatarPlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00e5ff, #007bff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+  border: 2px solid #1e2026;
+}
+
+.userDetails {
+  white-space: nowrap;
+  animation: fadeIn 0.3s ease;
+}
+
+.userName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.roleBadge {
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.roleOwner { background: rgba(255, 165, 0, 0.1); color: #ffa500; }
+.roleAdmin { background: rgba(255, 50, 50, 0.1); color: #ff3232; }
+.roleStudent { background: rgba(0, 229, 255, 0.1); color: #00e5ff; }
+
+.collapseButton {
+  background: #1e2026;
+  border: none;
+  color: #888;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.collapseButton:hover { color: #fff; background: #333; }
+
+/* --- Navigation Links --- */
+.nav {
+  flex: 1;
+  padding: 1.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  color: #888;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.2s;
+  gap: 1rem;
+}
+
+.navIcon {
+  font-size: 1.2rem;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.navLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.active {
+  background: #fff !important;
+  color: #000 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Sidebar Footer --- */
+.sidebarFooter {
+  padding: 1.5rem 0.75rem;
+  border-top: 1px solid #1e2026;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.logoutButton {
+  background: rgba(255, 50, 50, 0.05);
+  border: none;
+  color: #ff4d4d;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.logoutButton:hover { background: #ff4d4d; color: #fff; }
+
+/* --- Main Content Area --- */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevent flex overflow */
+}
+
+.contentHeader {
+  height: 70px;
+  background: #fff;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eef0f2;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.breadcrumb { display: flex; align-items: center; gap: 0.75rem; color: #888; font-size: 0.85rem; font-weight: 600; }
+.breadcrumbSeparator { font-size: 0.7rem; color: #ccc; }
+.breadcrumbItem:last-child { color: #1a1a1a; font-weight: 800; }
+
+/* --- Header Actions --- */
+.headerActions { display: flex; align-items: center; gap: 1.5rem; }
+
+.headerButton {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.2rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.headerBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff3232;
+  color: #fff;
+  font-size: 0.65rem;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.userDropdown {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: 0.2s;
+  position: relative;
+}
+
+.userDropdown:hover { background: #f8f9fa; }
+
+.userAvatarSmall, .avatarPlaceholderSmall {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #eee;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.userNameSmall { font-size: 0.85rem; font-weight: 700; color: #1a1a1a; }
+
+/* Dropdown Menu (Hidden by default) */
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background: #fff;
+  border: 1px solid #eef0f2;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 0.5rem;
+  display: none; /* Show with JS logic or :hover */
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.userDropdown:hover .dropdownMenu { display: flex; }
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.dropdownItem:hover { background: #f8f9fa; color: #000; }
+
+/* --- Mobile Specifics --- */
+.mobileHeader { display: none; }
+
+@media (max-width: 992px) {
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    height: 100vh;
+  }
+  
+  .mobileOpen { left: 0; }
+  
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 60px;
+    background: #0d0e12;
+    color: #fff;
+  }
+  
+  .mobileOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 95;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}

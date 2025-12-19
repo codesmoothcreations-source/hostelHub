@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { messagesAPI, usersAPI } from '../../api';
 import { FaArrowLeft, FaSearch, FaUser } from 'react-icons/fa';
-import "./NewMessage.css"
+import styles from './NewMessage.module.css';
 
 const NewMessage = () => {
   const { recipientId } = useParams();
@@ -36,8 +36,6 @@ const NewMessage = () => {
 
   const fetchRecipient = async () => {
     try {
-      // This would normally be an API call to get user by ID
-      // For now, we'll use a placeholder
       setRecipient({ _id: recipientId, name: 'User', role: 'student' });
     } catch (error) {
       console.error('Error fetching recipient:', error);
@@ -47,13 +45,7 @@ const NewMessage = () => {
   const searchUsers = async () => {
     setLoading(true);
     try {
-      // This would normally be an API call to search users
-      // For now, we'll use mock data
-      const mockUsers = [
-        { _id: '1', name: 'John Doe', role: 'student' },
-        { _id: '2', name: 'Jane Smith', role: 'owner' },
-        { _id: '3', name: 'Hostel Owner', role: 'owner' },
-      ];
+      const mockUsers = [];
       setUsers(mockUsers.filter(u => 
         u._id !== user._id && 
         u.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -70,13 +62,11 @@ const NewMessage = () => {
 
     setSending(true);
     try {
-      // Send via API
       await messagesAPI.sendMessage({
         to: recipient._id,
         content: message
       });
 
-      // Send via socket if connected
       if (socket && isConnected) {
         socket.emit('send_message', {
           to: recipient._id,
@@ -85,7 +75,6 @@ const NewMessage = () => {
         });
       }
 
-      // Navigate to conversation
       navigate(`/messages/${recipient._id}`);
     } catch (error) {
       console.error('Error sending message:', error);
@@ -102,55 +91,57 @@ const NewMessage = () => {
   };
 
   return (
-    <div className="hostelhub-new-message-page">
-      <div className="hostelhub-new-message-header">
+    <div className={styles.newMessagePage}>
+      <br />
+      <br />
+      <div className={styles.header}>
         <button
           onClick={() => navigate('/messages')}
-          className="hostelhub-back-button"
+          className={styles.backButton}
         >
-          <FaArrowLeft className="hostelhub-back-icon" />
+          <FaArrowLeft className={styles.backIcon} />
           Back to Messages
         </button>
         
-        <h1 className="hostelhub-new-message-title">New Message</h1>
+        <h1 className={styles.title}>New Message</h1>
       </div>
 
-      <div className="hostelhub-new-message-container">
-        <div className="hostelhub-recipient-section">
-          <h3 className="hostelhub-section-title">Recipient</h3>
+      <div className={styles.container}>
+        <div className={styles.recipientSection}>
+          <h3 className={styles.sectionTitle}>Recipient</h3>
           
-          <div className="hostelhub-user-search">
-            <div className="hostelhub-search-input-wrapper">
-              <FaSearch className="hostelhub-search-icon" />
+          <div className={styles.userSearch}>
+            <div className={styles.searchInputWrapper}>
+              <FaSearch className={styles.searchIcon} />
               <input
                 type="text"
                 placeholder="Search users by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="hostelhub-search-input"
+                className={styles.searchInput}
               />
             </div>
 
             {loading && (
-              <div className="hostelhub-search-loading">
-                <div className="hostelhub-loading-spinner"></div>
+              <div className={styles.searchLoading}>
+                <div className={styles.loadingSpinner}></div>
               </div>
             )}
 
             {users.length > 0 && (
-              <div className="hostelhub-search-results">
+              <div className={styles.searchResults}>
                 {users.map((userResult) => (
                   <div
                     key={userResult._id}
                     onClick={() => handleSelectUser(userResult)}
-                    className="hostelhub-user-result"
+                    className={styles.userResult}
                   >
-                    <div className="hostelhub-user-avatar">
-                      <FaUser className="hostelhub-avatar-icon" />
+                    <div className={styles.userAvatar}>
+                      <FaUser className={styles.avatarIcon} />
                     </div>
-                    <div className="hostelhub-user-info">
-                      <h4 className="hostelhub-user-name">{userResult.name}</h4>
-                      <span className="hostelhub-user-role">{userResult.role}</span>
+                    <div className={styles.userInfo}>
+                      <h4 className={styles.userName}>{userResult.name}</h4>
+                      <span className={styles.userRole}>{userResult.role}</span>
                     </div>
                   </div>
                 ))}
@@ -159,18 +150,18 @@ const NewMessage = () => {
           </div>
 
           {recipient && (
-            <div className="hostelhub-selected-recipient">
-              <div className="hostelhub-recipient-card">
-                <div className="hostelhub-recipient-avatar">
-                  <FaUser className="hostelhub-avatar-icon" />
+            <div className={styles.selectedRecipient}>
+              <div className={styles.recipientCard}>
+                <div className={styles.recipientAvatar}>
+                  <FaUser className={styles.avatarIcon} />
                 </div>
-                <div className="hostelhub-recipient-info">
-                  <h4 className="hostelhub-recipient-name">{recipient.name}</h4>
-                  <span className="hostelhub-recipient-role">{recipient.role}</span>
+                <div className={styles.recipientInfo}>
+                  <h4 className={styles.recipientName}>{recipient.name}</h4>
+                  <span className={styles.recipientRole}>{recipient.role}</span>
                 </div>
                 <button
                   onClick={() => setRecipient(null)}
-                  className="hostelhub-remove-recipient"
+                  className={styles.removeRecipient}
                 >
                   ×
                 </button>
@@ -179,24 +170,24 @@ const NewMessage = () => {
           )}
         </div>
 
-        <div className="hostelhub-message-section">
-          <h3 className="hostelhub-section-title">Message</h3>
+        <div className={styles.messageSection}>
+          <h3 className={styles.sectionTitle}>Message</h3>
           
-          <div className="hostelhub-message-editor">
+          <div className={styles.messageEditor}>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message here..."
-              className="hostelhub-message-textarea"
+              className={styles.messageTextarea}
               rows="6"
               disabled={!recipient}
             />
             
-            <div className="hostelhub-message-actions">
+            <div className={styles.messageActions}>
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || !recipient || sending}
-                className="hostelhub-send-button"
+                className={styles.sendButton}
               >
                 {sending ? 'Sending...' : 'Send Message'}
               </button>
@@ -204,9 +195,9 @@ const NewMessage = () => {
           </div>
         </div>
 
-        <div className="hostelhub-tips-section">
-          <h3 className="hostelhub-section-title">Tips for Effective Communication</h3>
-          <ul className="hostelhub-tips-list">
+        <div className={styles.tipsSection}>
+          <h3 className={styles.sectionTitle}>Tips for Effective Communication</h3>
+          <ul className={styles.tipsList}>
             <li>Be clear and specific about your inquiry</li>
             <li>Mention the hostel name if relevant</li>
             <li>Include your booking reference if you have one</li>

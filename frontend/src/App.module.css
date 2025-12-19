@@ -1,0 +1,240 @@
+/* src/App.module.css */
+
+/* Import fonts */
+@font-face {
+  font-family: 'Retail Monoline JNL Regular';
+  src: url('path/to/retail-monoline-jnl.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global CSS Variables */
+:root {
+  /* Midnight Cyan Color Palette */
+  --color-primary: #0a0a0a;
+  --color-secondary: #00e5ff;
+  --color-neutral: #ffffff;
+  --color-glass: rgba(255, 255, 255, 0.03);
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-card-bg: rgba(10, 10, 10, 0.7);
+  
+  /* Typography */
+  --font-heading: 'Retail Monoline JNL Regular', sans-serif;
+  --font-body: 'Josefin Sans', sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+  
+  /* Shadows */
+  --shadow-neon: 0 0 20px rgba(0, 229, 255, 0.3);
+  --shadow-glow: 0 0 40px rgba(0, 229, 255, 0.15);
+  --shadow-elevated: 0 8px 32px rgba(0, 0, 0, 0.2);
+  
+  /* Animations */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  
+  /* Layout */
+  --header-height: 72px;
+  --sidebar-width: 260px;
+}
+
+/* Animation Keyframes */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(0, 229, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+  }
+  50% {
+    border-color: rgba(0, 229, 255, 0.6);
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+  }
+}
+
+/* Base Styles */
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+  color: var(--color-neutral);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Glassmorphism Base */
+.glass {
+  background: var(--color-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+}
+
+/* Premium Card Base */
+.premiumCard {
+  background: var(--color-card-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  transition: all var(--transition-base);
+}
+
+.premiumCard:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+  box-shadow: var(--shadow-neon);
+  transform: translateY(-4px);
+}
+
+/* Gradient Text */
+.gradientText {
+  background: linear-gradient(90deg, var(--color-neutral), var(--color-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Neon Border Effect */
+.neonBorder {
+  position: relative;
+  border: 1px solid transparent;
+  background: linear-gradient(var(--color-card-bg), var(--color-card-bg)) padding-box,
+              linear-gradient(90deg, var(--color-secondary), transparent) border-box;
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-secondary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Page Transitions */
+.pageEnter {
+  animation: slideUp var(--transition-slow);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark/Light Mode Detection */
+@media (prefers-color-scheme: light) {
+  .app {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: var(--color-primary);
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .premiumCard {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  :root {
+    --spacing-xl: 24px;
+    --spacing-xxl: 36px;
+    --header-height: 64px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --spacing-lg: 20px;
+    --spacing-xl: 20px;
+    --header-height: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --header-height: 52px;
+  }
+}

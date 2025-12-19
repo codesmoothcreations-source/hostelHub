@@ -2,6 +2,7 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { FaUser, FaCircle } from 'react-icons/fa';
+import styles from './ConversationList.module.css';
 
 const ConversationList = ({ conversations, selectedConversation, onSelectConversation, currentUser }) => {
   const formatTime = (date) => {
@@ -9,7 +10,7 @@ const ConversationList = ({ conversations, selectedConversation, onSelectConvers
   };
 
   return (
-    <div className="hostelhub-conversation-list">
+    <div className={styles.conversationList}>
       {conversations.map((conversation) => {
         const isSelected = selectedConversation?.user?._id === conversation.user._id;
         const isOnline = conversation.user.isOnline;
@@ -18,40 +19,40 @@ const ConversationList = ({ conversations, selectedConversation, onSelectConvers
           <div
             key={conversation.user._id}
             onClick={() => onSelectConversation(conversation)}
-            className={`hostelhub-conversation-item ${isSelected ? 'hostelhub-conversation-selected' : ''}`}
+            className={`${styles.conversationItem} ${isSelected ? styles.conversationSelected : ''}`}
           >
-            <div className="hostelhub-conversation-avatar">
+            <div className={styles.conversationAvatar}>
               {conversation.user.avatar ? (
                 <img src={conversation.user.avatar} alt={conversation.user.name} />
               ) : (
-                <div className="hostelhub-avatar-placeholder">
+                <div className={styles.avatarPlaceholder}>
                   <FaUser />
                 </div>
               )}
               {isOnline && (
-                <span className="hostelhub-online-indicator">
+                <span className={styles.onlineIndicator}>
                   <FaCircle />
                 </span>
               )}
             </div>
 
-            <div className="hostelhub-conversation-info">
-              <div className="hostelhub-conversation-header">
-                <h4 className="hostelhub-conversation-name">
+            <div className={styles.conversationInfo}>
+              <div className={styles.conversationHeader}>
+                <h4 className={styles.conversationName}>
                   {conversation.user.name}
                 </h4>
-                <span className="hostelhub-conversation-time">
+                <span className={styles.conversationTime}>
                   {formatTime(conversation.lastMessageTime)}
                 </span>
               </div>
 
-              <p className="hostelhub-conversation-preview">
+              <p className={styles.conversationPreview}>
                 {conversation.lastMessage}
               </p>
             </div>
 
             {conversation.unreadCount > 0 && (
-              <span className="hostelhub-unread-count">
+              <span className={styles.unreadCount}>
                 {conversation.unreadCount}
               </span>
             )}

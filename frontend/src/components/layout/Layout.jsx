@@ -2,45 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import "./Layout.css"
+import styles from './Layout.module.css';
 
 const Layout = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
 
+  // Trigger loading state on route change
   useEffect(() => {
     setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 300);
+    const timer = setTimeout(() => setLoading(false), 600); // Slightly longer for smoother transition
     return () => clearTimeout(timer);
   }, [location]);
 
   return (
-    <div className="hostelhub-layout">
-      {/* Decorative elements */}
-      <div className="layout-decoration star" style={{ top: '20%', left: '15%' }} />
-      <div className="layout-decoration star" style={{ top: '60%', right: '10%', animationDelay: '1s' }} />
-      <div className="layout-decoration star" style={{ top: '40%', left: '5%', animationDelay: '2s' }} />
-      <div className="layout-decoration glow" style={{ top: '-100px', right: '-100px' }} />
-      <div className="layout-decoration glow" style={{ bottom: '-100px', left: '-100px' }} />
+    <div className={styles.layout}>
+      {/* Dynamic Background Elements */}
+      <div className={styles.decorations}>
+        <div className={`${styles.star} ${styles.s1}`} />
+        <div className={`${styles.star} ${styles.s2}`} />
+        <div className={`${styles.star} ${styles.s3}`} />
+        <div className={`${styles.glowTop}`} />
+        <div className={`${styles.glowBottom}`} />
+      </div>
       
-      {/* Floating particles in content area */}
-      <div className="floating-particle" style={{ top: '20%', left: '10%' }} />
-      <div className="floating-particle" style={{ top: '60%', right: '15%', animationDelay: '5s' }} />
-      <div className="floating-particle" style={{ top: '40%', left: '20%', animationDelay: '10s' }} />
-      <div className="floating-particle" style={{ bottom: '30%', right: '25%', animationDelay: '15s' }} />
+      {/* Floating Particles */}
+      <div className={styles.particleContainer}>
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className={styles.particle} style={{ '--delay': `${i * 3}s`, '--left': `${10 + (i * 15)}%` }} />
+        ))}
+      </div>
       
       <Header />
-      <main className="hostelhub-main">
+
+      <main className={styles.main}>
         {loading ? (
-          <div className="hostelhub-loading">
-            <div className="hostelhub-loader"></div>
+          <div className={styles.loadingOverlay}>
+            <div className={styles.loaderWrapper}>
+              <div className={styles.loader}></div>
+              <div className={styles.loaderText}>Syncing Hub...</div>
+            </div>
           </div>
         ) : (
-          <div className="hostelhub-content-wrapper">
+          <div className={styles.contentWrapper}>
             <Outlet />
           </div>
         )}
       </main>
+
       <Footer />
     </div>
   );

@@ -2,43 +2,44 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { FaCheck, FaCheckDouble } from 'react-icons/fa';
+import styles from './MessageBubble.module.css';
 
 const MessageBubble = ({ message, isOwnMessage }) => {
   const time = format(new Date(message.createdAt), 'HH:mm');
   
   return (
-    <div className={`hostelhub-message-bubble ${isOwnMessage ? 'hostelhub-message-own' : 'hostelhub-message-other'}`}>
+    <div className={`${styles.messageBubble} ${isOwnMessage ? styles.messageOwn : styles.messageOther}`}>
       {!isOwnMessage && (
-        <div className="hostelhub-message-avatar">
+        <div className={styles.messageAvatar}>
           {message.user?.avatar ? (
             <img src={message.user.avatar} alt={message.user.name} />
           ) : (
-            <div className="hostelhub-avatar-placeholder">
+            <div className={styles.avatarPlaceholder}>
               {message.user?.name?.charAt(0)}
             </div>
           )}
         </div>
       )}
       
-      <div className="hostelhub-message-content">
+      <div className={styles.messageContent}>
         {!isOwnMessage && (
-          <div className="hostelhub-message-sender">
+          <div className={styles.messageSender}>
             {message.user?.name}
           </div>
         )}
         
-        <div className="hostelhub-message-text">
+        <div className={styles.messageText}>
           {message.content}
         </div>
         
-        <div className="hostelhub-message-footer">
-          <span className="hostelhub-message-time">{time}</span>
+        <div className={styles.messageFooter}>
+          <span className={styles.messageTime}>{time}</span>
           {isOwnMessage && (
-            <span className="hostelhub-message-status">
+            <span className={styles.messageStatus}>
               {message.read ? (
-                <FaCheckDouble className="hostelhub-status-read" />
+                <FaCheckDouble className={styles.statusRead} />
               ) : (
-                <FaCheck className="hostelhub-status-sent" />
+                <FaCheck className={styles.statusSent} />
               )}
             </span>
           )}

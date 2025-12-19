@@ -1,6 +1,7 @@
 // src/components/messaging/MessageInput.jsx
 import React, { useState } from 'react';
 import { FaPaperPlane, FaSmile } from 'react-icons/fa';
+import styles from './MessageInput.module.css';
 
 const MessageInput = ({ onSendMessage, sending }) => {
   const [message, setMessage] = useState('');
@@ -21,10 +22,10 @@ const MessageInput = ({ onSendMessage, sending }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="hostelhub-message-input">
-      <div className="hostelhub-input-container">
-        <button type="button" className="hostelhub-emoji-button">
-          <FaSmile className="hostelhub-emoji-icon" />
+    <form onSubmit={handleSubmit} className={styles.messageInput}>
+      <div className={styles.inputContainer}>
+        <button type="button" className={styles.emojiButton}>
+          <FaSmile className={styles.emojiIcon} />
         </button>
         
         <textarea
@@ -32,7 +33,7 @@ const MessageInput = ({ onSendMessage, sending }) => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type your message..."
-          className="hostelhub-message-textarea"
+          className={styles.messageTextarea}
           rows="1"
           disabled={sending}
         />
@@ -40,15 +41,15 @@ const MessageInput = ({ onSendMessage, sending }) => {
         <button
           type="submit"
           disabled={!message.trim() || sending}
-          className="hostelhub-send-button"
+          className={styles.sendButton}
         >
-          <FaPaperPlane className="hostelhub-send-icon" />
+          <FaPaperPlane className={styles.sendIcon} />
           {sending ? 'Sending...' : 'Send'}
         </button>
       </div>
       
-      <div className="hostelhub-input-actions">
-        <p className="hostelhub-input-hint">
+      <div className={styles.inputActions}>
+        <p className={styles.inputHint}>
           Press Enter to send, Shift + Enter for new line
         </p>
       </div>

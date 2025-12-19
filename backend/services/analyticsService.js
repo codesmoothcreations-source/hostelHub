@@ -185,9 +185,9 @@ const getOwnerOverview = async (ownerId) => {
       { $sort: { _id: 1 } }
     ]);
     
-    // Occupancy rate
+    // Occupancy rate - UPDATED WITH 'new'
     const occupancyStats = await Hostel.aggregate([
-      { $match: { owner: mongoose.Types.ObjectId(ownerId) } },
+      { $match: { owner: new mongoose.Types.ObjectId(ownerId) } },
       {
         $group: {
           _id: null,
@@ -203,9 +203,9 @@ const getOwnerOverview = async (ownerId) => {
       occupancyRate = Math.round((occupied / occupancyStats[0].totalInitialRooms) * 100);
     }
     
-    // Hostel performance
+    // Hostel performance - UPDATED WITH 'new'
     const hostelPerformance = await Hostel.aggregate([
-      { $match: { owner: mongoose.Types.ObjectId(ownerId) } },
+      { $match: { owner: new mongoose.Types.ObjectId(ownerId) } },
       {
         $lookup: {
           from: 'bookings',

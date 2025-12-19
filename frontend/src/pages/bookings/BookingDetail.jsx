@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { bookingsAPI } from '../../api';
 import { formatCurrency, formatDateTime } from '../../utils/formatters';
 import { FaArrowLeft, FaPrint, FaDownload, FaCalendar, FaMoneyBill, FaCheckCircle, FaTimesCircle, FaBuilding, FaUser } from 'react-icons/fa';
-import "./BookingDetail.css"
+import styles from './BookingDetail.module.css'; // Changed to CSS Modules import
 
 const BookingDetail = () => {
   const { id } = useParams();
@@ -114,23 +114,25 @@ const BookingDetail = () => {
 
   if (loading) {
     return (
-      <div className="booking-detail-loading">
-        <div className="booking-detail-loading-spinner">
-          <div className="booking-detail-spinner-circle"></div>
+      <div className={styles.loading}>
+        <div className={styles.loadingSpinner}>
+          <div className={styles.spinnerCircle}></div>
         </div>
-        <p className="booking-detail-loading-text">Loading booking details...</p>
+        <p className={styles.loadingText}>Loading booking details...</p>
       </div>
     );
   }
 
   if (!booking) {
     return (
-      <div className="booking-detail-not-found">
-        <div className="booking-detail-not-found-content">
-          <h2 className="booking-detail-not-found-title">Booking Not Found</h2>
-          <p className="booking-detail-not-found-message">The booking you're looking for doesn't exist or has been removed.</p>
-          <Link to="/bookings" className="booking-detail-back-button">
-            <FaArrowLeft className="booking-detail-back-icon" />
+      <div className={styles.notFound}>
+        <div className={styles.notFoundContent}>
+          <h2 className={styles.notFoundTitle}>Booking Not Found</h2>
+          <p className={styles.notFoundMessage}>
+            The booking you're looking for doesn't exist or has been removed.
+          </p>
+          <Link to="/bookings" className={styles.backButton}>
+            <FaArrowLeft className={styles.backIcon} />
             Back to Bookings
           </Link>
         </div>
@@ -142,29 +144,29 @@ const BookingDetail = () => {
                    user?._id === booking.student?._id;
 
   return (
-    <div className="booking-detail-container">
-      <div className="booking-detail-wrapper">
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
         {/* Header Section */}
-        <div className="booking-detail-header">
-          <div className="booking-detail-header-content">
-            <Link to="/bookings" className="booking-detail-nav-back">
-              <FaArrowLeft className="booking-detail-nav-icon" />
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            <Link to="/bookings" className={styles.navBack}>
+              <FaArrowLeft className={styles.navIcon} />
               Back to Bookings
             </Link>
             
-            <div className="booking-detail-header-actions">
+            <div className={styles.headerActions}>
               <button
                 onClick={handlePrintReceipt}
-                className="booking-detail-action-btn booking-detail-action-print"
+                className={`${styles.actionBtn} ${styles.actionPrint}`}
               >
-                <FaPrint className="booking-detail-action-btn-icon" />
+                <FaPrint className={styles.actionBtnIcon} />
                 Print Receipt
               </button>
               <button
                 onClick={handleDownloadReceipt}
-                className="booking-detail-action-btn booking-detail-action-download"
+                className={`${styles.actionBtn} ${styles.actionDownload}`}
               >
-                <FaDownload className="booking-detail-action-btn-icon" />
+                <FaDownload className={styles.actionBtnIcon} />
                 Download
               </button>
             </div>
@@ -172,67 +174,67 @@ const BookingDetail = () => {
         </div>
 
         {/* Main Content Card */}
-        <div className="booking-detail-card">
+        <div className={styles.card}>
           {/* Booking Header */}
-          <div className="booking-detail-card-header">
-            <div className="booking-detail-title-section">
-              <h1 className="booking-detail-title">Booking Details</h1>
-              <div className="booking-detail-reference">
-                Reference: <span className="booking-detail-ref-code">{booking.reference}</span>
+          <div className={styles.cardHeader}>
+            <div className={styles.titleSection}>
+              <h1 className={styles.title}>Booking Details</h1>
+              <div className={styles.reference}>
+                Reference: <span className={styles.refCode}>{booking.reference}</span>
               </div>
             </div>
             
             <div 
-              className="booking-detail-status-badge"
+              className={styles.statusBadge}
               style={{ 
                 backgroundColor: `${getStatusColor(booking.paymentStatus)}20`,
                 color: getStatusColor(booking.paymentStatus),
                 border: `1px solid ${getStatusColor(booking.paymentStatus)}40`
               }}
             >
-              <span className="booking-detail-status-icon">
+              <span className={styles.statusIcon}>
                 {getStatusIcon(booking.paymentStatus)}
               </span>
-              <span className="booking-detail-status-text">
+              <span className={styles.statusText}>
                 {booking.paymentStatus.toUpperCase()}
               </span>
             </div>
           </div>
 
           {/* Booking Information Grid */}
-          <div className="booking-detail-grid">
+          <div className={styles.grid}>
             {/* Booking Info Section */}
-            <div className="booking-detail-section">
-              <div className="booking-detail-section-header">
-                <FaCalendar className="booking-detail-section-icon" />
-                <h3 className="booking-detail-section-title">Booking Information</h3>
+            <div className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <FaCalendar className={styles.sectionIcon} />
+                <h3 className={styles.sectionTitle}>Booking Information</h3>
               </div>
               
-              <div className="booking-detail-info-grid">
-                <div className="booking-detail-info-item">
-                  <span className="booking-detail-info-label">Booking Date:</span>
-                  <span className="booking-detail-info-value">
+              <div className={styles.infoGrid}>
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Booking Date:</span>
+                  <span className={styles.infoValue}>
                     {formatDateTime(booking.createdAt)}
                   </span>
                 </div>
                 
-                <div className="booking-detail-info-item">
-                  <span className="booking-detail-info-label">Amount:</span>
-                  <span className="booking-detail-info-value booking-detail-amount">
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Amount:</span>
+                  <span className={`${styles.infoValue} ${styles.amount}`}>
                     {formatCurrency(booking.amount, booking.currency)}
                   </span>
                 </div>
                 
-                <div className="booking-detail-info-item">
-                  <span className="booking-detail-info-label">Duration:</span>
-                  <span className="booking-detail-info-value booking-detail-duration">
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Duration:</span>
+                  <span className={`${styles.infoValue} ${styles.duration}`}>
                     {booking.duration || 'Monthly'}
                   </span>
                 </div>
                 
-                <div className="booking-detail-info-item">
-                  <span className="booking-detail-info-label">Payment Method:</span>
-                  <span className="booking-detail-info-value">
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Payment Method:</span>
+                  <span className={styles.infoValue}>
                     {booking.paymentMeta?.channel || 'Paystack'}
                   </span>
                 </div>
@@ -240,31 +242,31 @@ const BookingDetail = () => {
             </div>
 
             {/* Payment Details Section */}
-            <div className="booking-detail-section">
-              <div className="booking-detail-section-header">
-                <FaMoneyBill className="booking-detail-section-icon" />
-                <h3 className="booking-detail-section-title">Payment Details</h3>
+            <div className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <FaMoneyBill className={styles.sectionIcon} />
+                <h3 className={styles.sectionTitle}>Payment Details</h3>
               </div>
               
-              <div className="booking-detail-payment-details">
-                <div className="booking-detail-payment-item">
-                  <span className="booking-detail-payment-label">Amount Paid:</span>
-                  <span className="booking-detail-payment-value">
+              <div className={styles.paymentDetails}>
+                <div className={styles.paymentItem}>
+                  <span className={styles.paymentLabel}>Amount Paid:</span>
+                  <span className={styles.paymentValue}>
                     {formatCurrency(booking.amount, booking.currency)}
                   </span>
                 </div>
                 
-                <div className="booking-detail-payment-item">
-                  <span className="booking-detail-payment-label">Payment Reference:</span>
-                  <span className="booking-detail-payment-reference">
+                <div className={styles.paymentItem}>
+                  <span className={styles.paymentLabel}>Payment Reference:</span>
+                  <span className={styles.paymentReference}>
                     {booking.paystackReference || 'N/A'}
                   </span>
                 </div>
                 
-                <div className="booking-detail-payment-item">
-                  <span className="booking-detail-payment-label">Payment Status:</span>
+                <div className={styles.paymentItem}>
+                  <span className={styles.paymentLabel}>Payment Status:</span>
                   <span 
-                    className="booking-detail-payment-status"
+                    className={styles.paymentStatus}
                     style={{ color: getStatusColor(booking.paymentStatus) }}
                   >
                     {booking.paymentStatus.toUpperCase()}
@@ -272,17 +274,17 @@ const BookingDetail = () => {
                 </div>
                 
                 {booking.paymentMeta && (
-                  <div className="booking-detail-payment-meta">
+                  <div className={styles.paymentMeta}>
                     <button
                       onClick={() => setShowPaymentMeta(!showPaymentMeta)}
-                      className="booking-detail-meta-toggle"
+                      className={styles.metaToggle}
                     >
                       {showPaymentMeta ? 'Hide' : 'Show'} Payment Metadata
                     </button>
                     
                     {showPaymentMeta && (
-                      <div className="booking-detail-meta-content">
-                        <pre className="booking-detail-meta-pre">
+                      <div className={styles.metaContent}>
+                        <pre className={styles.metaPre}>
                           {JSON.stringify(booking.paymentMeta, null, 2)}
                         </pre>
                       </div>
@@ -294,51 +296,51 @@ const BookingDetail = () => {
           </div>
 
           {/* Hostel Information */}
-          <div className="booking-detail-section booking-detail-hostel-section">
-            <div className="booking-detail-section-header">
-              <FaBuilding className="booking-detail-section-icon" />
-              <h3 className="booking-detail-section-title">Hostel Information</h3>
+          <div className={`${styles.section} ${styles.hostelSection}`}>
+            <div className={styles.sectionHeader}>
+              <FaBuilding className={styles.sectionIcon} />
+              <h3 className={styles.sectionTitle}>Hostel Information</h3>
             </div>
             
-            <div className="booking-detail-hostel-card">
-              <div className="booking-detail-hostel-image">
+            <div className={styles.hostelCard}>
+              <div className={styles.hostelImage}>
                 {booking.hostel?.images?.[0] ? (
                   <img 
                     src={booking.hostel.images[0]} 
                     alt={booking.hostel.name}
-                    className="booking-detail-hostel-img"
+                    className={styles.hostelImg}
                   />
                 ) : (
-                  <div className="booking-detail-hostel-image-placeholder">
-                    <FaBuilding className="booking-detail-placeholder-icon" />
+                  <div className={styles.hostelImagePlaceholder}>
+                    <FaBuilding className={styles.placeholderIcon} />
                     <span>No Image Available</span>
                   </div>
                 )}
               </div>
               
-              <div className="booking-detail-hostel-info">
-                <h4 className="booking-detail-hostel-name">{booking.hostel?.name}</h4>
-                <p className="booking-detail-hostel-address">
+              <div className={styles.hostelInfo}>
+                <h4 className={styles.hostelName}>{booking.hostel?.name}</h4>
+                <p className={styles.hostelAddress}>
                   {booking.hostel?.location?.address}
                 </p>
-                <div className="booking-detail-hostel-price">
-                  <span className="booking-detail-price-label">Price:</span>
-                  <span className="booking-detail-price-value">
+                <div className={styles.hostelPrice}>
+                  <span className={styles.priceLabel}>Price:</span>
+                  <span className={styles.priceValue}>
                     {formatCurrency(booking.hostel?.price, booking.hostel?.currency)}/{booking.hostel?.rentDuration}
                   </span>
                 </div>
                 
-                <div className="booking-detail-hostel-actions">
+                <div className={styles.hostelActions}>
                   <Link
                     to={`/hostels/${booking.hostel?._id}`}
-                    className="booking-detail-btn booking-detail-btn-secondary"
+                    className={`${styles.btn} ${styles.btnSecondary}`}
                   >
                     View Hostel Details
                   </Link>
                   {booking.paymentStatus === 'success' && (
                     <Link
                       to={`/messages/new/${booking.hostel?.owner?._id}`}
-                      className="booking-detail-btn booking-detail-btn-primary"
+                      className={`${styles.btn} ${styles.btnPrimary}`}
                     >
                       Contact Owner
                     </Link>
@@ -349,49 +351,49 @@ const BookingDetail = () => {
           </div>
 
           {/* Owner Information */}
-          <div className="booking-detail-section booking-detail-owner-section">
-            <div className="booking-detail-section-header">
-              <FaUser className="booking-detail-section-icon" />
-              <h3 className="booking-detail-section-title">Owner Information</h3>
+          <div className={`${styles.section} ${styles.ownerSection}`}>
+            <div className={styles.sectionHeader}>
+              <FaUser className={styles.sectionIcon} />
+              <h3 className={styles.sectionTitle}>Owner Information</h3>
             </div>
             
-            <div className="booking-detail-owner-card">
-              <div className="booking-detail-owner-avatar">
+            <div className={styles.ownerCard}>
+              <div className={styles.ownerAvatar}>
                 {booking.hostel?.owner?.avatar ? (
                   <img 
                     src={booking.hostel.owner.avatar} 
                     alt={booking.hostel.owner.name}
-                    className="booking-detail-owner-img"
+                    className={styles.ownerImg}
                   />
                 ) : (
-                  <div className="booking-detail-owner-avatar-placeholder">
+                  <div className={styles.ownerAvatarPlaceholder}>
                     {booking.hostel?.owner?.name?.charAt(0) || 'O'}
                   </div>
                 )}
               </div>
               
-              <div className="booking-detail-owner-details">
-                <h4 className="booking-detail-owner-name">{booking.hostel?.owner?.name}</h4>
-                <p className="booking-detail-owner-email">{booking.hostel?.owner?.email}</p>
+              <div className={styles.ownerDetails}>
+                <h4 className={styles.ownerName}>{booking.hostel?.owner?.name}</h4>
+                <p className={styles.ownerEmail}>{booking.hostel?.owner?.email}</p>
                 {booking.hostel?.owner?.phone && (
-                  <p className="booking-detail-owner-phone">{booking.hostel.owner.phone}</p>
+                  <p className={styles.ownerPhone}>{booking.hostel.owner.phone}</p>
                 )}
               </div>
             </div>
           </div>
 
           {/* Footer Actions */}
-          <div className="booking-detail-actions-footer">
-            <div className="booking-detail-actions-group">
+          <div className={styles.actionsFooter}>
+            <div className={styles.actionsGroup}>
               {canCancel && (
                 <button
                   onClick={handleCancelBooking}
                   disabled={cancelling}
-                  className="booking-detail-btn booking-detail-btn-danger"
+                  className={`${styles.btn} ${styles.btnDanger}`}
                 >
                   {cancelling ? (
                     <>
-                      <span className="booking-detail-btn-spinner"></span>
+                      <span className={styles.btnSpinner}></span>
                       Cancelling...
                     </>
                   ) : (
@@ -402,7 +404,7 @@ const BookingDetail = () => {
               
               <Link 
                 to="/bookings" 
-                className="booking-detail-btn booking-detail-btn-outline"
+                className={`${styles.btn} ${styles.btnOutline}`}
               >
                 Back to Bookings List
               </Link>

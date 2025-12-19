@@ -7,7 +7,7 @@ import { messagesAPI } from '../../api';
 import ChatWindow from '../../components/messaging/ChatWindow';
 import ConversationList from '../../components/messaging/ConversationList';
 import { FaComments, FaSearch, FaUserPlus } from 'react-icons/fa';
-import "./Messages.css"
+import styles from './Messages.module.css';
 
 const Messages = () => {
   const { userId } = useParams();
@@ -119,52 +119,54 @@ const Messages = () => {
   );
 
   return (
-    <div className="hostelhub-messages-page">
-      <div className="hostelhub-messages-header">
-        <div className="hostelhub-messages-title-section">
-          <h1 className="hostelhub-messages-title">
-            <FaComments className="hostelhub-title-icon" />
+    <div className={styles.messagesPage}>
+      <br />
+      <br />
+      <div className={styles.messagesHeader}>
+        <div className={styles.titleSection}>
+          <h1 className={styles.title}>
+            <FaComments className={styles.titleIcon} />
             Messages
           </h1>
           {unreadCount > 0 && (
-            <span className="hostelhub-unread-badge">{unreadCount}</span>
+            <span className={styles.unreadBadge}>{unreadCount}</span>
           )}
         </div>
         
         <button
           onClick={handleStartNewChat}
-          className="hostelhub-new-chat-button"
+          className={styles.newChatButton}
         >
-          <FaUserPlus className="hostelhub-button-icon" />
+          <FaUserPlus className={styles.buttonIcon} />
           New Chat
         </button>
       </div>
 
-      <div className="hostelhub-messages-container">
-        <div className="hostelhub-conversations-sidebar">
-          <div className="hostelhub-conversations-search">
-            <FaSearch className="hostelhub-search-icon" />
+      <div className={styles.messagesContainer}>
+        <div className={styles.conversationsSidebar}>
+          <div className={styles.search}>
+            <FaSearch className={styles.searchIcon} />
             <input
               type="text"
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="hostelhub-search-input"
+              className={styles.searchInput}
             />
           </div>
 
           {loading ? (
-            <div className="hostelhub-loading-conversations">
-              <div className="hostelhub-loading-spinner"></div>
+            <div className={styles.loading}>
+              <div className={styles.spinner}></div>
               <p>Loading conversations...</p>
             </div>
           ) : filteredConversations.length === 0 ? (
-            <div className="hostelhub-empty-conversations">
-              <FaComments className="hostelhub-empty-icon" />
+            <div className={styles.empty}>
+              <FaComments className={styles.emptyIcon} />
               <p>No conversations yet</p>
               <button
                 onClick={handleStartNewChat}
-                className="hostelhub-start-chat-button"
+                className={styles.startChatButton}
               >
                 Start a conversation
               </button>
@@ -179,7 +181,7 @@ const Messages = () => {
           )}
         </div>
 
-        <div className="hostelhub-chat-main">
+        <div className={styles.chatMain}>
           {selectedConversation ? (
             <ChatWindow
               conversation={selectedConversation}
@@ -187,13 +189,13 @@ const Messages = () => {
               socket={socket}
             />
           ) : (
-            <div className="hostelhub-no-chat-selected">
-              <FaComments className="hostelhub-no-chat-icon" />
+            <div className={styles.noChatSelected}>
+              <FaComments className={styles.noChatIcon} />
               <h3>Select a conversation</h3>
               <p>Choose a conversation from the list to start chatting</p>
               <button
                 onClick={handleStartNewChat}
-                className="hostelhub-start-chat-button"
+                className={styles.startChatButton}
               >
                 Start New Chat
               </button>

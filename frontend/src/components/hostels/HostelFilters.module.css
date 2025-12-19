@@ -1,0 +1,461 @@
+.filterCard {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  position: sticky;
+  top: 100px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Header --- */
+.header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.iconBadge {
+  width: 40px;
+  height: 40px;
+  background: #eff6ff;
+  color: #3b82f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.header p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.resetBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.resetBtn:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* --- Scrollable Content --- */
+.scrollArea {
+  padding: 0.5rem 1.5rem 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.section {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionToggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.sectionToggle:hover {
+  color: #1e293b;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.labelIcon {
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.activeSection .labelIcon {
+  color: #3b82f6;
+}
+
+.content {
+  padding-top: 1.25rem;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Price Section --- */
+.priceInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.inputWrapper label {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.rangeInput {
+  width: 100%;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+/* --- Radius Pills --- */
+.radiusPills {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pill, .pillActive {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.pill {
+  background: #fff;
+  color: #64748b;
+}
+
+.pillActive {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* --- Amenities Section --- */
+.amenityList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag, .tagActive {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+}
+
+.tag {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.tagActive {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.countBadge {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.expandLink {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* --- Footer --- */
+.footer {
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-top: 1px solid #f1f5f9;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: none;
+}
+
+.footerVisible {
+  display: block;
+  transform: translateY(0);
+}
+
+.applyBtn {
+  width: 100%;
+  padding: 0.8rem;
+  background: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.applyBtn:hover {
+  background: #0f172a;
+}
+
+
+
+
+.filterCard {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* On Desktop: Card style */
+@media (min-width: 769px) {
+  .filterCard {
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    position: sticky;
+    top: 100px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* On Mobile: Full width / Bottom Sheet feel */
+@media (max-width: 768px) {
+  .filterCard {
+    border-top: 1px solid #e2e8f0;
+    border-radius: 20px 20px 0 0;
+    margin-top: 1rem;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+
+  /* Make price inputs larger for touch targets */
+  .inputWrapper input {
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  /* Expand amenities to be easier to tap */
+  .tag, .tagActive {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* --- Header --- */
+.header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.iconBadge {
+  width: 40px;
+  height: 40px;
+  background: #eff6ff;
+  color: #3b82f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resetBtn {
+  background: #f8fafc;
+  border: none;
+  color: #64748b;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* --- Scroll Area --- */
+.scrollArea {
+  padding: 0 1.5rem;
+  /* Prevents the page from scrolling while inside the filter on mobile */
+  -webkit-overflow-scrolling: touch; 
+}
+
+@media (max-width: 768px) {
+  .scrollArea {
+    max-height: 60vh; /* Shorter for mobile viewports */
+    overflow-y: auto;
+  }
+}
+
+.section {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.sectionToggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- Radius Section (Scrollable Pills) --- */
+.radiusPills {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  /* Mobile horizontal scroll for pills */
+  overflow-x: auto;
+  padding-bottom: 5px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.radiusPills::-webkit-scrollbar {
+  display: none; /* Safari/Chrome */
+}
+
+.pill, .pillActive {
+  flex: 0 0 auto; /* Don't shrink pills on mobile */
+  min-width: 70px;
+  text-align: center;
+}
+
+/* --- Sticky Mobile Footer --- */
+.footer {
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-top: 1px solid #f1f5f9;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    padding: 0.8rem 1rem env(safe-area-inset-bottom); /* Support for iPhone notch */
+    display: none; /* Hidden until hasChanges is true */
+  }
+
+  .footerVisible {
+    display: flex;
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@media (min-width: 769px) {
+  .footer {
+    position: relative;
+    display: none;
+  }
+  .footerVisible {
+    display: block;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.applyBtn {
+  width: 100%;
+  padding: 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}

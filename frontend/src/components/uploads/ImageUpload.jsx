@@ -153,27 +153,27 @@ const ImageUpload = ({
           <div className="hostelhub-images-grid">
             {uploadedUrls.map((url, index) => (
               <div key={index} className="hostelhub-image-preview">
-                <img 
+                {/* <img 
                   src={url} 
                   alt={`Uploaded ${index + 1}`}
                   onError={(e) => {
                     e.target.src = 'https://via.placeholder.com/150?text=Error';
                     e.target.style.opacity = '0.5';
                   }}
-                />
+                /> */}
                 <div className="hostelhub-image-overlay">
-                  <span className="hostelhub-image-number">#{index + 1}</span>
-                  <button
+                  {/* <span className="hostelhub-image-number">#{index + 1}</span> */}
+                  {/* <button
                     type="button"
                     onClick={(e) => handleRemove(index, e)}
                     className="hostelhub-remove-image"
                     title="Remove image"
                   >
                     <FaTimes />
-                  </button>
-                  <div className="hostelhub-image-status">
+                  </button> */}
+                  {/* <div className="hostelhub-image-status">
                     <FaCheckCircle className="hostelhub-check-icon" />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             ))}

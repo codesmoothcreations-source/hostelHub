@@ -5,6 +5,7 @@ import { messagesAPI } from '../../api';
 import MessageInput from './MessageInput';
 import MessageBubble from './MessageBubble';
 import { FaUser, FaArrowLeft, FaPhone, FaEnvelope } from 'react-icons/fa';
+import styles from './ChatWindow.module.css';
 
 const ChatWindow = ({ conversation, currentUser, socket }) => {
   const [messages, setMessages] = useState([]);
@@ -108,28 +109,28 @@ const ChatWindow = ({ conversation, currentUser, socket }) => {
   }, {});
 
   return (
-    <div className="hostelhub-chat-window">
-      <div className="hostelhub-chat-header">
-        <div className="hostelhub-chat-user-info">
-          <div className="hostelhub-chat-avatar">
+    <div className={styles.chatWindow}>
+      <div className={styles.chatHeader}>
+        <div className={styles.userInfo}>
+          <div className={styles.avatar}>
             {conversation.user.avatar ? (
               <img src={conversation.user.avatar} alt={conversation.user.name} />
             ) : (
-              <div className="hostelhub-avatar-placeholder">
+              <div className={styles.avatarPlaceholder}>
                 <FaUser />
               </div>
             )}
           </div>
-          <div className="hostelhub-chat-user-details">
-            <h3 className="hostelhub-chat-user-name">{conversation.user.name}</h3>
-            <span className="hostelhub-chat-user-role">{conversation.user.role}</span>
-            <div className="hostelhub-chat-user-contact">
+          <div className={styles.userDetails}>
+            <h3 className={styles.userName}>{conversation.user.name}</h3>
+            <span className={styles.userRole}>{conversation.user.role}</span>
+            <div className={styles.userContact}>
               {conversation.user.phone && (
-                <span className="hostelhub-contact-item">
+                <span className={styles.contactItem}>
                   <FaPhone /> {conversation.user.phone}
                 </span>
               )}
-              <span className="hostelhub-contact-item">
+              <span className={styles.contactItem}>
                 <FaEnvelope /> {conversation.user.email}
               </span>
             </div>
@@ -137,21 +138,21 @@ const ChatWindow = ({ conversation, currentUser, socket }) => {
         </div>
       </div>
 
-      <div className="hostelhub-messages-container">
+      <div className={styles.messagesContainer}>
         {loading ? (
-          <div className="hostelhub-loading-messages">
-            <div className="hostelhub-loading-spinner"></div>
+          <div className={styles.loadingMessages}>
+            <div className={styles.loadingSpinner}></div>
             <p>Loading messages...</p>
           </div>
         ) : messages.length === 0 ? (
-          <div className="hostelhub-no-messages">
+          <div className={styles.noMessages}>
             <p>No messages yet. Start the conversation!</p>
           </div>
         ) : (
-          <div className="hostelhub-messages-list">
+          <div className={styles.messagesList}>
             {Object.entries(groupedMessages).map(([date, dateMessages]) => (
-              <div key={date} className="hostelhub-date-group">
-                <div className="hostelhub-date-separator">
+              <div key={date} className={styles.dateGroup}>
+                <div className={styles.dateSeparator}>
                   {format(new Date(date), 'MMMM d, yyyy')}
                 </div>
                 {dateMessages.map((message) => (

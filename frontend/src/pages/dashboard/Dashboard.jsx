@@ -1,191 +1,434 @@
-// src/pages/dashboard/Dashboard.jsx - STYLED & ENHANCED
+// src/pages/dashboard/Dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { bookingsAPI } from '../../api';
+import { bookingsAPI, hostelsAPI } from '../../api';
 import { Link } from 'react-router-dom';
-import { FaHome, FaBook, FaUser, FaChartBar, FaCalendar, FaMoneyBill, FaStar, FaSpinner } from 'react-icons/fa';
-import "./Dashboard.css"
+import { 
+  FaHome, 
+  FaBook, 
+  FaUser, 
+  FaChartBar, 
+  FaCalendar, 
+  FaMoneyBill, 
+  FaStar, 
+  FaSpinner,
+  FaSearch,
+  FaBell,
+  FaPlus,
+  FaArrowRight,
+  FaCheckCircle,
+  FaClock,
+  FaExclamationTriangle,
+  FaEye,
+  FaWallet,
+  FaUsers,
+  FaBuilding
+} from 'react-icons/fa';
+import { formatCurrency } from '../../utils/formatters';
+import styles from './Dashboard.module.css';
 
-// --- Sub-Component for Loading State ---
+// Loading State Component
 const LoadingState = () => (
-    <div className="hostelhub-loading-state flex justify-center items-center h-64 bg-white rounded-lg shadow-md">
-        <FaSpinner className="animate-spin text-4xl text-teal-500" />
-        <p className="ml-4 text-gray-600">Loading dashboard...</p>
-    </div>
+  <div className={styles.loadingState}>
+    <FaSpinner className={styles.loadingSpinner} />
+    <p>Loading dashboard...</p>
+  </div>
 );
 
-// --- Main Dashboard Component ---
-const Dashboard = () => {
-    const { user } = useAuth();
-    const [recentBookings, setRecentBookings] = useState([]);
-    const [loading, setLoading] = useState(true);
+// Quick Action Component
+const QuickAction = ({ to, Icon, label, description, color }) => (
+  <Link to={to} className={`${styles.quickAction} ${color ? styles[`quickAction${color}`] : ''}`}>
+    <div className={styles.quickActionIcon}>
+      <Icon />
+    </div>
+    <div className={styles.quickActionContent}>
+      <span className={styles.quickActionLabel}>{label}</span>
+      <span className={styles.quickActionDescription}>{description}</span>
+    </div>
+    <FaArrowRight className={styles.quickActionArrow} />
+  </Link>
+);
 
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
+// Stat Card Component
+const StatCard = ({ title, value, icon, trend, color }) => (
+  <div className={`${styles.statCard} ${color ? styles[`stat${color}`] : ''}`}>
+    <div className={styles.statHeader}>
+      <div className={styles.statIcon}>
+        {icon}
+      </div>
+      {trend && (
+        <div className={`${styles.statTrend} ${trend > 0 ? styles.trendUp : styles.trendDown}`}>
+          {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
+        </div>
+      )}
+    </div>
+    <div className={styles.statContent}>
+      <span className={styles.statValue}>{value}</span>
+      <h3 className={styles.statTitle}>{title}</h3>
+    </div>
+  </div>
+);
 
-    const fetchDashboardData = async () => {
-        setLoading(true);
-        try {
-            // Fetch bookings with hostel data populated (assuming API supports this)
-            const bookingsResponse = await bookingsAPI.getBookings({ limit: 5, populate: 'hostel' });
-            setRecentBookings(bookingsResponse.data.bookings || []);
-        } catch (error) {
-            console.error('Error fetching dashboard data:', error);
-            // Non-critical error, but log it
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const getRoleStats = () => {
-        // Stats are initialized to zero/default values
-        // NOTE: Real-world implementation requires dedicated API endpoints for these counts/sums.
-        
-        switch (user.role) {
-            case 'student':
-                const successfulBookings = recentBookings.filter(b => b.paymentStatus === 'success');
-                const totalSpent = successfulBookings.reduce((sum, b) => sum + (b.amount || 0), 0);
-                
-                return [
-                    { title: 'Active Bookings', value: successfulBookings.length, icon: <FaCalendar /> },
-                    { title: 'Total Spent', value: `GH₵${totalSpent.toFixed(2)}`, icon: <FaMoneyBill /> },
-                    { title: 'Reviews Given', value: '0', icon: <FaStar /> } // Placeholder
-                ];
-            
-            case 'owner':
-                return [
-                    { title: 'My Hostels', value: '0', icon: <FaHome /> }, // Placeholder
-                    { title: 'Total Bookings', value: '0', icon: <FaCalendar /> }, // Placeholder
-                    { title: 'Total Revenue', value: 'GH₵0', icon: <FaMoneyBill /> } // Placeholder
-                ];
-            
-            case 'admin':
-                return [
-                    { title: 'Total Users', value: '0', icon: <FaUser /> }, // Placeholder
-                    { title: 'Total Hostels', value: '0', icon: <FaHome /> }, // Placeholder
-                    { title: 'Total Bookings', value: '0', icon: <FaCalendar /> } // Placeholder
-                ];
-            
-            default:
-                return [];
-        }
-    };
-
-    if (loading) {
-        return <LoadingState />;
+// Booking Item Component
+const BookingItem = ({ booking }) => {
+  const getStatusClass = (status) => {
+    switch(status) {
+      case 'success': return styles.statusSuccess;
+      case 'pending': return styles.statusPending;
+      case 'failed': return styles.statusFailed;
+      default: return styles.statusDefault;
     }
-    
-    // --- Helper Component for Quick Action Links ---
-    const QuickActionButton = ({ to, Icon, label }) => (
-        <Link to={to} className="hostelhub-quick-action flex flex-col items-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 text-teal-600">
-            <Icon className="hostelhub-quick-action-icon text-3xl mb-2" />
-            <span className="text-sm font-medium">{label}</span>
-        </Link>
-    );
+  };
 
-    // --- Helper Component for Stat Card ---
-    const StatCard = ({ title, value, icon }) => (
-        <div className="hostelhub-stat-card p-6 bg-white rounded-lg shadow-lg border-t-4 border-teal-500">
-            <div className="hostelhub-stat-icon text-4xl text-teal-500 mb-2">{icon}</div>
-            <p className="hostelhub-stat-value text-3xl font-bold text-gray-800">{value}</p>
-            <h3 className="hostelhub-stat-title text-sm uppercase tracking-wider text-gray-500">{title}</h3>
+  const getStatusIcon = (status) => {
+    switch(status) {
+      case 'success': return <FaCheckCircle />;
+      case 'pending': return <FaClock />;
+      case 'failed': return <FaExclamationTriangle />;
+      default: return <FaClock />;
+    }
+  };
+
+  return (
+    <div className={styles.bookingItem}>
+      <div className={styles.bookingInfo}>
+        <div className={styles.bookingHostel}>
+          <FaHome className={styles.bookingIcon} />
+          <div>
+            <h4 className={styles.bookingName}>{booking.hostel?.name || 'Hostel Not Found'}</h4>
+            <p className={styles.bookingDate}>
+              {new Date(booking.createdAt).toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+              })}
+            </p>
+          </div>
         </div>
-    );
-    
-    // --- Render Logic ---
-    return (
-        <div className="hostelhub-dashboard p-6 md:p-10 bg-gray-50 min-h-screen">
-            
-            {/* Header Section */}
-            <div className="hostelhub-dashboard-header mb-8 border-b pb-4">
-                <h1 className="hostelhub-dashboard-title text-3xl font-bold text-gray-800">
-                    Welcome back, {user.name}!
-                </h1>
-                <p className="hostelhub-dashboard-subtitle text-gray-600 mt-1">
-                    {user.role === 'student' ? 'Track your bookings and discover new hostels.'
-                        : user.role === 'owner' ? 'Manage your listed hostels and view booking performance.'
-                        : 'System-wide overview and administrative controls.'}
-                </p>
-            </div>
-
-            {/* Quick Actions Grid */}
-            <div className="hostelhub-dashboard-quick-actions grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <QuickActionButton to="/hostels" Icon={FaHome} label="Browse Hostels" />
-                <QuickActionButton to="/bookings" Icon={FaBook} label="My Bookings" />
-                <QuickActionButton to="/profile" Icon={FaUser} label="Profile" />
-
-                {user.role === 'owner' && (
-                    <QuickActionButton to="/add-hostel" Icon={FaHome} label="Add Hostel" />
-                )}
-                
-                {user.role === 'admin' && (
-                    <QuickActionButton to="/admin-dashboard" Icon={FaChartBar} label="Admin Panel" />
-                )}
-            </div>
-
-            {/* Stats Grid */}
-            <div className="hostelhub-stats-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                {getRoleStats().map((stat, index) => (
-                    <StatCard key={index} {...stat} />
-                ))}
-            </div>
-
-            {/* Recent Bookings Section (Student Role) */}
-            {user.role === 'student' && recentBookings.length > 0 && (
-                <div className="hostelhub-recent-section">
-                    <h2 className="hostelhub-section-title text-2xl font-semibold text-gray-700 mb-4 border-b pb-2">
-                        Recent Bookings
-                    </h2>
-                    <div className="hostelhub-recent-bookings space-y-4">
-                        {recentBookings.slice(0, 3).map(booking => (
-                            <div key={booking._id} className="hostelhub-booking-item flex justify-between items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:border-teal-500 transition duration-300">
-                                <div className="hostelhub-booking-info">
-                                    <h4 className="hostelhub-booking-hostel text-lg font-semibold text-gray-800">
-                                        {booking.hostel?.name || 'Hostel Not Found'}
-                                    </h4>
-                                    <p className="hostelhub-booking-date text-sm text-gray-500">
-                                        {new Date(booking.createdAt).toLocaleDateString()}
-                                    </p>
-                                </div>
-                                
-                                <div className="flex items-center space-x-4">
-                                    <p className="hostelhub-booking-status text-sm">
-                                        Status: 
-                                        <span className={`hostelhub-status-${booking.paymentStatus} font-semibold text-xs ml-2 px-2 py-0.5 rounded-full ${booking.paymentStatus === 'success' ? 'text-green-600 bg-green-100' : 'text-yellow-600 bg-yellow-100'}`}>
-                                            {booking.paymentStatus}
-                                        </span>
-                                    </p>
-                                    <Link to={`/bookings/${booking._id}`} className="hostelhub-booking-view text-sm text-teal-600 font-medium hover:text-teal-800">
-                                        View Details
-                                    </Link>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    
-                    <div className="mt-6 text-center">
-                        <Link to="/bookings" className="text-teal-600 hover:text-teal-800 font-medium">
-                            View All Bookings &rarr;
-                        </Link>
-                    </div>
-                </div>
-            )}
-            
-            {/* Fallback for other roles/no bookings */}
-            {user.role !== 'student' && (
-                 <div className="hostelhub-recent-section">
-                    <h2 className="hostelhub-section-title text-2xl font-semibold text-gray-700 mb-4 border-b pb-2">
-                        {user.role === 'owner' ? 'Recent Activity' : 'Admin Tools'}
-                    </h2>
-                    <div className="p-6 bg-white rounded-lg text-center text-gray-500">
-                        No recent data to display for your role.
-                    </div>
-                 </div>
-            )}
-            
+        
+        <div className={styles.bookingMeta}>
+          <div className={styles.bookingAmount}>
+            <FaMoneyBill className={styles.metaIcon} />
+            <span>{formatCurrency(booking.amount || 0)}</span>
+          </div>
+          <div className={`${styles.bookingStatus} ${getStatusClass(booking.paymentStatus)}`}>
+            {getStatusIcon(booking.paymentStatus)}
+            <span>{booking.paymentStatus}</span>
+          </div>
         </div>
-    );
+      </div>
+      
+      <Link to={`/bookings/${booking._id}`} className={styles.bookingLink}>
+        <FaEye className={styles.bookingViewIcon} />
+        <span>View Details</span>
+      </Link>
+    </div>
+  );
+};
+
+// Main Dashboard Component
+const Dashboard = () => {
+  const { user } = useAuth();
+  const [recentBookings, setRecentBookings] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    try {
+      // Fetch recent bookings
+      const bookingsResponse = await bookingsAPI.getBookings({ limit: 5 });
+      setRecentBookings(bookingsResponse.data.bookings || []);
+      
+      // Fetch stats based on role
+      let roleStats = {};
+      switch(user.role) {
+        case 'student':
+          const successfulBookings = bookingsResponse.data.bookings?.filter(b => b.paymentStatus === 'success') || [];
+          const totalSpent = successfulBookings.reduce((sum, b) => sum + (b.amount || 0), 0);
+          
+          roleStats = {
+            activeBookings: successfulBookings.length,
+            totalSpent,
+            reviewsGiven: 0, // Placeholder - would come from API
+            upcomingBookings: bookingsResponse.data.bookings?.filter(b => 
+              b.paymentStatus === 'success' && new Date(b.checkInDate) > new Date()
+            ).length || 0
+          };
+          break;
+          
+        case 'owner':
+          // These would come from actual API endpoints
+          roleStats = {
+            totalHostels: 0,
+            totalBookings: 0,
+            totalRevenue: 0,
+            occupancyRate: 0
+          };
+          break;
+          
+        case 'admin':
+          roleStats = {
+            totalUsers: 0,
+            totalHostels: 0,
+            totalBookings: 0,
+            pendingApprovals: 0
+          };
+          break;
+          
+        default:
+          roleStats = {};
+      }
+      
+      setStats(roleStats);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getQuickActions = () => {
+    const baseActions = [
+      { to: "/hostels", Icon: FaSearch, label: "Browse Hostels", description: "Find your perfect stay", color: "Blue" },
+      { to: "/bookings", Icon: FaBook, label: "My Bookings", description: "View all your bookings", color: "Green" },
+      { to: "/profile", Icon: FaUser, label: "Profile", description: "Manage your account", color: "Purple" },
+    ];
+
+    if (user.role === 'owner') {
+      return [...baseActions, 
+        { to: "/add-hostel", Icon: FaPlus, label: "Add Hostel", description: "List your property", color: "Orange" }
+      ];
+    } else if (user.role === 'admin') {
+      return [...baseActions,
+        { to: "/admin-dashboard", Icon: FaChartBar, label: "Admin Panel", description: "System management", color: "Red" }
+      ];
+    }
+
+    return baseActions;
+  };
+
+  const getRoleStats = () => {
+    if (!stats) return [];
+
+    switch (user.role) {
+      case 'student':
+        return [
+          { 
+            title: 'Active Bookings', 
+            value: stats.activeBookings, 
+            icon: <FaCalendar />, 
+            color: 'Blue',
+            trend: 12 // Example trend
+          },
+          { 
+            title: 'Total Spent', 
+            value: formatCurrency(stats.totalSpent), 
+            icon: <FaWallet />,
+            color: 'Green',
+            trend: 8
+          },
+          { 
+            title: 'Upcoming', 
+            value: stats.upcomingBookings, 
+            icon: <FaClock />,
+            color: 'Orange'
+          },
+          { 
+            title: 'Reviews Given', 
+            value: stats.reviewsGiven, 
+            icon: <FaStar />,
+            color: 'Purple'
+          }
+        ];
+      
+      case 'owner':
+        return [
+          { 
+            title: 'My Hostels', 
+            value: stats.totalHostels, 
+            icon: <FaHome />,
+            color: 'Blue'
+          },
+          { 
+            title: 'Total Bookings', 
+            value: stats.totalBookings, 
+            icon: <FaCalendar />,
+            color: 'Green'
+          },
+          { 
+            title: 'Total Revenue', 
+            value: formatCurrency(stats.totalRevenue), 
+            icon: <FaMoneyBill />,
+            color: 'Orange'
+          },
+          { 
+            title: 'Occupancy Rate', 
+            value: `${stats.occupancyRate}%`, 
+            icon: <FaChartBar />,
+            color: 'Purple'
+          }
+        ];
+      
+      case 'admin':
+        return [
+          { 
+            title: 'Total Users', 
+            value: stats.totalUsers, 
+            icon: <FaUsers />,
+            color: 'Blue'
+          },
+          { 
+            title: 'Total Hostels', 
+            value: stats.totalHostels, 
+            icon: <FaBuilding />,
+            color: 'Green'
+          },
+          { 
+            title: 'Total Bookings', 
+            value: stats.totalBookings, 
+            icon: <FaCalendar />,
+            color: 'Orange'
+          },
+          { 
+            title: 'Pending Approvals', 
+            value: stats.pendingApprovals, 
+            icon: <FaExclamationTriangle />,
+            color: 'Red'
+          }
+        ];
+      
+      default:
+        return [];
+    }
+  };
+
+  if (loading) {
+    return <LoadingState />;
+  }
+
+  const welcomeMessage = user.role === 'student' 
+    ? 'Track your bookings and discover new hostels.'
+    : user.role === 'owner' 
+      ? 'Manage your listed hostels and view booking performance.'
+      : 'System-wide overview and administrative controls.';
+
+  return (
+    <div className={styles.container}>
+      <br />
+      <br />
+      {/* Dashboard Header */}
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.welcomeSection}>
+            <h1 className={styles.title}>Welcome back, {user.name}!</h1>
+            <p className={styles.subtitle}>{welcomeMessage}</p>
+          </div>
+          
+          <div className={styles.headerActions}>
+            <div className={styles.userRoleBadge}>
+              {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions Grid */}
+      <div className={styles.quickActionsSection}>
+        <h2 className={styles.sectionTitle}>Quick Actions</h2>
+        <div className={styles.quickActionsGrid}>
+          {getQuickActions().map((action, index) => (
+            <QuickAction key={index} {...action} />
+          ))}
+        </div>
+      </div>
+
+      {/* Stats Grid */}
+      <div className={styles.statsSection}>
+        <h2 className={styles.sectionTitle}>Overview</h2>
+        <div className={styles.statsGrid}>
+          {getRoleStats().map((stat, index) => (
+            <StatCard key={index} {...stat} />
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Bookings Section (for students) */}
+      {user.role === 'student' && recentBookings.length > 0 && (
+        <div className={styles.recentSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Recent Bookings</h2>
+            <Link to="/bookings" className={styles.viewAllLink}>
+              View All <FaArrowRight className={styles.viewAllIcon} />
+            </Link>
+          </div>
+          
+          <div className={styles.bookingsList}>
+            {recentBookings.slice(0, 3).map(booking => (
+              <BookingItem key={booking._id} booking={booking} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Activity for Owners/Admins */}
+      {user.role !== 'student' && (
+        <div className={styles.recentSection}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>
+              {user.role === 'owner' ? 'Recent Activity' : 'System Overview'}
+            </h2>
+            <Link 
+              to={user.role === 'owner' ? '/owner-dashboard' : '/admin-dashboard'} 
+              className={styles.userRoleBadge}
+            >
+              View Details <FaArrowRight className={styles.viewAllIcon} />
+            </Link>
+          </div>
+          
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>
+              {user.role === 'owner' ? <FaChartBar /> : <FaBuilding />}
+            </div>
+            <p className={styles.emptyText}>
+              {user.role === 'owner' 
+                ? 'No recent activity. Start by listing your first hostel!' 
+                : 'System data will appear here.'}
+            </p>
+            {user.role === 'owner' && (
+              <Link to="/add-hostel" className={styles.userRoleBadge}>
+                <FaPlus className={styles.buttonIcon} />
+                Add Hostel
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Tips Section */}
+      <div className={styles.tipsSection}>
+        <h3 className={styles.tipsTitle}>Pro Tips</h3>
+        <div className={styles.tipsGrid}>
+          <div className={styles.tipCard}>
+            <FaBell className={styles.tipIcon} />
+            <p>Enable booking notifications to never miss a booking</p>
+          </div>
+          <div className={styles.tipCard}>
+            <FaStar className={styles.tipIcon} />
+            <p>Leave reviews to help other students find great hostels</p>
+          </div>
+          <div className={styles.tipCard}>
+            <FaMoneyBill className={styles.tipIcon} />
+            <p>Save payment methods for faster bookings</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;

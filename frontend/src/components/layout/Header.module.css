@@ -1,0 +1,226 @@
+/* --- Header Wrapper --- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Logo Styling --- */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  font-family: 'Retail Monoline JNL Regular', sans-serif;
+  font-size: 1.6rem;
+  color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.logoIcon {
+  color: #8b5cf6;
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.4));
+}
+
+.logoText {
+  letter-spacing: 1px;
+}
+
+.logo:hover {
+  transform: scale(1.02);
+}
+
+/* --- Navigation Desktop --- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navLink {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.navIcon {
+  font-size: 1.1rem;
+}
+
+.navLink:hover {
+  color: #fff;
+  background: #8b5cf6;
+}
+
+.registerButton {
+  background: #00e5ff;
+  color: #0a0a0a !important;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+}
+
+.registerButton:hover {
+  background: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+/* --- User Profile & Dropdown --- */
+.userMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.userButton {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-family: 'Josefin Sans', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.userButton:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.userDropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  width: 200px;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.userMenu:hover .userDropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdownLink, .logoutButton {
+  width: 85%;
+  text-align: left;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  transition: 0.2s ease;
+}
+
+.dropdownLink:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #8b5cf6;
+}
+
+.logoutButton {
+  color: #ff4d4d;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 0.3rem;
+  border-radius: 0 0 8px 8px;
+}
+
+.logoutButton:hover {
+  background: rgba(255, 77, 77, 0.1);
+}
+
+/* --- Mobile Menu Button --- */
+.menuButton {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 1024px) {
+  .menuButton {
+    display: block;
+  }
+
+  .nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: #0a0a0a;
+    flex-direction: column;
+    padding: 100px 2rem;
+    transition: 0.4s ease;
+    border-left: 1px solid rgba(0, 229, 255, 0.2);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  }
+
+  .nav.active {
+    right: 0;
+  }
+
+  .userDropdown {
+    position: static;
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    margin-top: 1rem;
+  }
+  
+  .userButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

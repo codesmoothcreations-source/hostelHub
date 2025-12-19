@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { bookingsAPI } from '../../api';
 import { FaTimesCircle, FaRedo, FaHome } from 'react-icons/fa';
+import styles from './PaymentFailed.module.css';
 
 const PaymentFailed = () => {
   const { id } = useParams();
@@ -30,9 +31,7 @@ const PaymentFailed = () => {
   const handleRetryPayment = async () => {
     setRetrying(true);
     try {
-      // Re-initiate booking payment
       const response = await bookingsAPI.initiateBooking(booking.hostel._id);
-      // Redirect to payment page or handle payment
       window.location.href = response.data.paymentAuthorizationUrl;
     } catch (error) {
       console.error('Error retrying payment:', error);
@@ -44,69 +43,69 @@ const PaymentFailed = () => {
 
   if (loading) {
     return (
-      <div className="hostelhub-loading-state">
-        <div className="hostelhub-loading-spinner"></div>
+      <div className={styles.loadingState}>
+        <div className={styles.loadingSpinner}></div>
         <p>Loading payment status...</p>
       </div>
     );
   }
 
   return (
-    <div className="hostelhub-payment-failed">
-      <div className="hostelhub-failed-container">
-        <div className="hostelhub-failed-icon">
+    <div className={styles.paymentFailed}>
+      <div className={styles.failedContainer}>
+        <div className={styles.failedIcon}>
           <FaTimesCircle />
         </div>
         
-        <h1 className="hostelhub-failed-title">Payment Failed</h1>
+        <h1 className={styles.failedTitle}>Payment Failed</h1>
         
-        <p className="hostelhub-failed-message">
+        <p className={styles.failedMessage}>
           Your payment was not successful. This could be due to insufficient funds,
           incorrect payment details, or a network issue.
         </p>
         
-        <div className="hostelhub-booking-details">
-          <div className="hostelhub-detail-item">
-            <span className="hostelhub-detail-label">Booking Reference:</span>
-            <span className="hostelhub-detail-value">{booking?.reference}</span>
+        <div className={styles.bookingDetails}>
+          <div className={styles.detailItem}>
+            <span className={styles.detailLabel}>Booking Reference:</span>
+            <span className={styles.detailValue}>{booking?.reference}</span>
           </div>
           
-          <div className="hostelhub-detail-item">
-            <span className="hostelhub-detail-label">Hostel:</span>
-            <span className="hostelhub-detail-value">{booking?.hostel?.name}</span>
+          <div className={styles.detailItem}>
+            <span className={styles.detailLabel}>Hostel:</span>
+            <span className={styles.detailValue}>{booking?.hostel?.name}</span>
           </div>
           
-          <div className="hostelhub-detail-item">
-            <span className="hostelhub-detail-label">Amount:</span>
-            <span className="hostelhub-detail-value">
+          <div className={styles.detailItem}>
+            <span className={styles.detailLabel}>Amount:</span>
+            <span className={styles.detailValue}>
               {booking?.currency} {booking?.amount}
             </span>
           </div>
         </div>
         
-        <div className="hostelhub-failed-actions">
+        <div className={styles.failedActions}>
           <button
             onClick={handleRetryPayment}
             disabled={retrying}
-            className="hostelhub-retry-button"
+            className={styles.retryButton}
           >
-            <FaRedo className="hostelhub-action-icon" />
+            <FaRedo className={styles.actionIcon} />
             {retrying ? 'Processing...' : 'Retry Payment'}
           </button>
           
-          <Link to="/hostels" className="hostelhub-browse-hostels-button">
-            <FaHome className="hostelhub-action-icon" />
+          <Link to="/hostels" className={styles.browseHostelsButton}>
+            <FaHome className={styles.actionIcon} />
             Browse Hostels
           </Link>
           
-          <Link to="/bookings" className="hostelhub-view-bookings-button">
+          <Link to="/bookings" className={styles.viewBookingsButton}>
             View My Bookings
           </Link>
         </div>
         
-        <div className="hostelhub-troubleshooting">
-          <h3 className="hostelhub-troubleshooting-title">Troubleshooting Tips:</h3>
-          <ul className="hostelhub-tips-list">
+        <div className={styles.troubleshooting}>
+          <h3 className={styles.troubleshootingTitle}>Troubleshooting Tips:</h3>
+          <ul className={styles.tipsList}>
             <li>Ensure you have sufficient funds in your account</li>
             <li>Check your payment details are correct</li>
             <li>Try using a different payment method</li>
@@ -115,10 +114,10 @@ const PaymentFailed = () => {
           </ul>
         </div>
         
-        <div className="hostelhub-support-info">
-          <p className="hostelhub-support-text">
+        <div className={styles.supportInfo}>
+          <p className={styles.supportText}>
             Need help? Contact our support team at{' '}
-            <a href="mailto:support@hostelhub.com" className="hostelhub-support-link">
+            <a href="mailto:support@hostelhub.com" className={styles.supportLink}>
               support@hostelhub.com
             </a>
           </p>

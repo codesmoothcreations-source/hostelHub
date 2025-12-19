@@ -1,0 +1,222 @@
+/* ROOT CONTAINER */
+.container {
+  background: #0b0d11;
+  border-radius: 28px;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+}
+
+/* HEADER SECTION */
+.mainHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconBox {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #00e5ff 0%, #00acc1 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 8px 20px rgba(0, 229, 255, 0.2);
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.globalStatus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.statusPill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.statusPill.up { background: rgba(0, 229, 255, 0.1); color: #00e5ff; }
+.statusPill.down { background: rgba(255, 59, 48, 0.1); color: #ff3b30; }
+
+.statusText { color: #4b5563; font-size: 0.85rem; }
+
+/* TOOLBAR & CONTROLS */
+.toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.toggleGroup {
+  background: #16191e;
+  padding: 4px;
+  border-radius: 12px;
+  display: flex;
+  border: 1px solid #22262b;
+}
+
+.toggleBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggleBtn.active {
+  background: #2d323a;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.exportBtn {
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.iconBtn {
+  background: #16191e;
+  color: #fff;
+  border: 1px solid #22262b;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* CHART AREA */
+.chartSection {
+  position: relative;
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: 24px;
+  padding: 40px 20px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.chartWatermark {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.05);
+}
+
+.chartWrapper { height: 380px; }
+
+/* METRICS GRID */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: #16191e;
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.cardIcon { color: #00e5ff; }
+
+.cardBody { display: flex; align-items: baseline; gap: 4px; }
+.currency { font-size: 1.2rem; font-weight: 500; color: #64748b; }
+.cardValue { font-size: 2rem; font-weight: 800; }
+.unit { font-size: 0.9rem; color: #64748b; margin-left: 8px; }
+
+.cardFooter {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 8px;
+}
+
+.txtUp { color: #00e5ff; font-weight: 600; }
+.txtDown { color: #ff3b30; font-weight: 600; }
+.footerLabel { color: #4b5563; }
+
+/* FORECAST BAR */
+.forecastBar {
+  background: linear-gradient(90deg, #16191e 0%, #0b0d11 100%);
+  border: 1px solid rgba(0, 229, 255, 0.1);
+  border-left: 4px solid #00e5ff;
+  padding: 28px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.forecastInfo h4 { margin: 0; font-size: 1.2rem; }
+.forecastInfo p { margin: 4px 0 0 0; color: #64748b; font-size: 0.85rem; }
+
+.forecastResult { text-align: right; }
+.forecastVal { font-size: 1.8rem; font-weight: 800; color: #00e5ff; }
+.forecastBadge { font-size: 0.65rem; font-weight: 900; background: #00e5ff; color: #000; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+
+/* RESPONSIVE FIXES */
+@media (max-width: 1024px) {
+  .metricsGrid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 20px; border-radius: 0; }
+  .mainHeader { flex-direction: column; align-items: flex-start; }
+  .toolbar { width: 100%; flex-direction: column; }
+  .toggleGroup, .actionGroup { width: 100%; justify-content: space-between; }
+  .metricsGrid { grid-template-columns: 1fr; }
+  .forecastBar { flex-direction: column; text-align: center; gap: 20px; }
+  .forecastResult { text-align: center; }
+}
