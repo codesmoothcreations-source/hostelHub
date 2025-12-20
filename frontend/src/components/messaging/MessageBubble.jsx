@@ -9,19 +9,23 @@ const MessageBubble = ({ message, isOwnMessage }) => {
   
   return (
     <div className={`${styles.messageBubble} ${isOwnMessage ? styles.messageOwn : styles.messageOther}`}>
-      {!isOwnMessage && (
-        <div className={styles.messageAvatar}>
-          {message.user?.avatar ? (
-            <img src={message.user.avatar} alt={message.user.name} />
-          ) : (
-            <div className={styles.avatarPlaceholder}>
-              {message.user?.name?.charAt(0)}
-            </div>
-          )}
-        </div>
-      )}
+      {/* Avatar - Now visible on both sides */}
+      <div className={styles.messageAvatar}>
+        {message.user?.avatar ? (
+          <img 
+            src={message.user.avatar} 
+            alt={message.user.name} 
+            className={styles.avatarImage} 
+          />
+        ) : (
+          <div className={styles.avatarPlaceholder}>
+            {message.user?.name?.charAt(0)}
+          </div>
+        )}
+      </div>
       
       <div className={styles.messageContent}>
+        {/* Name - Only shown for the recipient */}
         {!isOwnMessage && (
           <div className={styles.messageSender}>
             {message.user?.name}

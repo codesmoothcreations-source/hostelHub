@@ -86,30 +86,30 @@ app.get('/health', (req, res) => {
 });
 
 // Welcome page
-app.get('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: '🏠 Welcome to HostelHub API',
-    version: '1.0.0',
-    documentation: `${req.protocol}://${req.get('host')}/api-docs`,
-    health: `${req.protocol}://${req.get('host')}/health`,
-    api: {
-      base: `${req.protocol}://${req.get('host')}/api/v1`,
-      endpoints: {
-        auth: `${req.protocol}://${req.get('host')}/api/v1/auth`,
-        users: `${req.protocol}://${req.get('host')}/api/v1/users`,
-        hostels: `${req.protocol}://${req.get('host')}/api/v1/hostels`,
-        bookings: `${req.protocol}://${req.get('host')}/api/v1/bookings`,
-        reviews: `${req.protocol}://${req.get('host')}/api/v1/reviews`,
-        messages: `${req.protocol}://${req.get('host')}/api/v1/messages`,
-        analytics: `${req.protocol}://${req.get('host')}/api/v1/analytics`,
-        upload: `${req.protocol}://${req.get('host')}/api/v1/upload`
-      }
-    },
-    status: 'operational',
-    timestamp: new Date().toISOString()
-  });
-});
+// app.get('/', (req, res) => {
+//   res.status(200).json({
+//     success: true,
+//     message: '🏠 Welcome to HostelHub API',
+//     version: '1.0.0',
+//     documentation: `${req.protocol}://${req.get('host')}/api-docs`,
+//     health: `${req.protocol}://${req.get('host')}/health`,
+//     api: {
+//       base: `${req.protocol}://${req.get('host')}/api/v1`,
+//       endpoints: {
+//         auth: `${req.protocol}://${req.get('host')}/api/v1/auth`,
+//         users: `${req.protocol}://${req.get('host')}/api/v1/users`,
+//         hostels: `${req.protocol}://${req.get('host')}/api/v1/hostels`,
+//         bookings: `${req.protocol}://${req.get('host')}/api/v1/bookings`,
+//         reviews: `${req.protocol}://${req.get('host')}/api/v1/reviews`,
+//         messages: `${req.protocol}://${req.get('host')}/api/v1/messages`,
+//         analytics: `${req.protocol}://${req.get('host')}/api/v1/analytics`,
+//         upload: `${req.protocol}://${req.get('host')}/api/v1/upload`
+//       }
+//     },
+//     status: 'operational',
+//     timestamp: new Date().toISOString()
+//   });
+// });
 
 // API Documentation Page
 app.get('/api-docs', (req, res) => {
@@ -317,6 +317,27 @@ app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/upload', uploadRoutes);
 app.use('/api/v1/webhook', webhookRoutes);
 app.use('/api/v1/docs', apiDocsRoutes);
+
+// ========== FRONTEND SERVING & TROUBLESHOOTING ==========
+
+// 1. Serve static assets
+// 2. HEALTH & DOCS
+// app.get('/health', (req, res) => { ... });
+// app.get('/api-docs', (req, res) => { ... });
+
+// 3. THE STATIC FRONTEND (Move this to the very bottom)
+const frontendBuildPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendBuildPath));
+
+// 4. THE CATCH-ALL (This handles navigation for your frontend)
+app.get('*', (req, res) => {
+    // If someone calls a broken API link, don't send the website, send a 404
+    if (req.originalUrl.startsWith('/api')) {
+        return res.status(404).json({ success: false, message: 'API Route Not Found' });
+    }
+    // Send the index.html for everything else (the root / and frontend routes)
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+});
 
 // 404 handler
 app.use('*', (req, res) => {
