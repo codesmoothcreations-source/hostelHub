@@ -1,4 +1,115 @@
-// src/hooks/useGeolocation.js - ENHANCED VERSION
+// import { useState, useEffect } from 'react';
+
+// export const useGeolocation = (options = {}) => {
+//   const [location, setLocation] = useState(null);
+//   const [error, setError] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [permission, setPermission] = useState(null);
+
+//   // --- SECURE IP FALLBACK (Works on Render/HTTPS) ---
+//   const getIPLocation = async () => {
+//     try {
+//       const response = await fetch('https://ipapi.co/json/');
+//       const data = await response.json();
+      
+//       if (data.latitude) {
+//         const locationData = {
+//           lat: data.latitude,
+//           lng: data.longitude,
+//           accuracy: 1000,
+//           timestamp: Date.now(),
+//           isIPBased: true,
+//           city: data.city
+//         };
+//         setLocation(locationData);
+//         setPermission('granted'); 
+//         setLoading(false);
+//         setError(null); // Clear any previous block errors
+//       } else {
+//         throw new Error('IP-API failed');
+//       }
+//     } catch (err) {
+//       setError('Location services unavailable. Please enter location manually.');
+//       setLoading(false);
+//     }
+//   };
+
+//   const getLocation = () => {
+//     if (!navigator.geolocation) {
+//       getIPLocation();
+//       return;
+//     }
+
+//     setLoading(true);
+//     setError(null);
+
+//     if (navigator.permissions && navigator.permissions.query) {
+//       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+//         setPermission(result.state);
+//         if (result.state === 'denied') {
+//           getIPLocation();
+//         } else {
+//           getCurrentPosition();
+//         }
+//       });
+//     } else {
+//       getCurrentPosition();
+//     }
+//   };
+
+//   const getCurrentPosition = () => {
+//     navigator.geolocation.getCurrentPosition(
+//       (position) => {
+//         const locationData = {
+//           lat: position.coords.latitude,
+//           lng: position.coords.longitude,
+//           accuracy: position.coords.accuracy,
+//           timestamp: position.timestamp,
+//           isIPBased: false
+//         };
+//         setLocation(locationData);
+//         setLoading(false);
+//         setPermission('granted');
+//       },
+//       (error) => {
+//         console.warn("GPS failed/blocked, switching to IP...");
+//         getIPLocation();
+//       },
+//       {
+//         enableHighAccuracy: true,
+//         timeout: 5000, 
+//         maximumAge: 0,
+//         ...options
+//       }
+//     );
+//   };
+
+//   // This ensures buttons in your UI still work!
+//   const requestPermission = () => {
+//     if (permission === 'denied') {
+//       // If already denied, don't ask again (it will fail), just use IP
+//       getIPLocation();
+//     } else {
+//       // Otherwise, trigger the browser popup
+//       getCurrentPosition();
+//     }
+//   };
+
+//   useEffect(() => {
+//     getLocation();
+//   }, []);
+
+//   return { 
+//     location, 
+//     error, 
+//     loading, 
+//     permission,
+//     getLocation,
+//     requestPermission 
+//   };
+// };
+
+
 import { useState, useEffect } from 'react';
 
 export const useGeolocation = (options = {}) => {
@@ -7,30 +118,50 @@ export const useGeolocation = (options = {}) => {
   const [loading, setLoading] = useState(true);
   const [permission, setPermission] = useState(null);
 
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser');
+  const getIPLocation = async () => {
+    console.log("DIAGNOSTIC: Attempting IP Fallback via https://ipapi.co/json/");
+    try {
+      const response = await fetch('https://ipapi.co/json/');
+      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+      
+      const data = await response.json();
+      console.log("DIAGNOSTIC: IP Data received successfully", data.city);
+      
+      setLocation({
+        lat: data.latitude,
+        lng: data.longitude,
+        city: data.city,
+        isIPBased: true
+      });
       setLoading(false);
+    } catch (err) {
+      console.error("DIAGNOSTIC: IP Fallback Failed. Reason:", err.message);
+      // This is usually a CSP block or a Network issue
+      setError(`IP Fallback Failed: ${err.message}`);
+      setLoading(false);
+    }
+  };
+
+  const getLocation = () => {
+    console.log("DIAGNOSTIC: Starting Location Search...");
+    if (!navigator.geolocation) {
+      console.error("DIAGNOSTIC: Browser does not support Geolocation.");
+      getIPLocation();
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
-    // Check permission first
+    // Check Permissions API
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+        console.log("DIAGNOSTIC: Permission State is:", result.state);
         setPermission(result.state);
-        
         if (result.state === 'denied') {
-          setError('Location permission denied. Please enable location services.');
-          setLoading(false);
-        } else if (result.state === 'granted' || result.state === 'prompt') {
+          getIPLocation();
+        } else {
           getCurrentPosition();
         }
       });
     } else {
-      // Fallback for browsers that don't support permissions API
       getCurrentPosition();
     }
   };
@@ -38,63 +169,25 @@ export const useGeolocation = (options = {}) => {
   const getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const locationData = {
+        console.log("DIAGNOSTIC: GPS Success!");
+        setLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: position.timestamp
-        };
-        setLocation(locationData);
-        setLoading(false);
-        setPermission('granted');
-      },
-      (error) => {
-        let errorMessage = 'Failed to get location';
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            errorMessage = 'Location permission denied. Please enable location services in your browser settings.';
-            setPermission('denied');
-            break;
-          case error.POSITION_UNAVAILABLE:
-            errorMessage = 'Location information is unavailable.';
-            break;
-          case error.TIMEOUT:
-            errorMessage = 'Location request timed out.';
-            break;
-          default:
-            errorMessage = 'An unknown error occurred.';
-            break;
-        }
-        setError(errorMessage);
+          isIPBased: false
+        });
         setLoading(false);
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-        ...options
-      }
+      (err) => {
+        console.warn(`DIAGNOSTIC: GPS Failed. Code: ${err.code} | Message: ${err.message}`);
+        getIPLocation();
+      },
+      { timeout: 5000, ...options }
     );
-  };
-
-  const requestPermission = () => {
-    if (permission === 'prompt') {
-      getCurrentPosition();
-    } else if (permission === 'denied') {
-      setError('Location permission denied. Please enable location services in your browser settings.');
-    }
   };
 
   useEffect(() => {
     getLocation();
   }, []);
 
-  return { 
-    location, 
-    error, 
-    loading, 
-    permission,
-    getLocation,
-    requestPermission 
-  };
+  return { location, error, loading, permission, getLocation };
 };

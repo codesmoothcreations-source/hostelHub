@@ -29,6 +29,33 @@ const __dirname = path.dirname(__filename);
 
 // Security middleware
 app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      // 1. Allow OSM Map Tiles (Images)
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "https://res.cloudinary.com", 
+        "https://*.tile.openstreetmap.org", // Allowed OSM tiles
+        "https://*.tile.thunderforest.com", // Optional: if using other map styles
+        "https://unpkg.com" // For Leaflet marker icons
+      ], 
+      // 2. Allow Leaflet scripts
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"],
+      // 3. Allow API Connections
+      connectSrc: [
+        "'self'", 
+        "https://res.cloudinary.com", 
+        "http://ip-api.com", 
+        "ws://localhost:5000",
+        "wss://*.onrender.com"
+      ],
+      // 4. Allow Stylesheets (Leaflet CSS)
+      styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
+      upgradeInsecureRequests: [],
+    },
+  },
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
