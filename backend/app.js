@@ -32,26 +32,20 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      // 1. Allow OSM Map Tiles (Images)
-      imgSrc: [
-        "'self'", 
-        "data:", 
-        "https://res.cloudinary.com", 
-        "https://*.tile.openstreetmap.org", // Allowed OSM tiles
-        "https://*.tile.thunderforest.com", // Optional: if using other map styles
-        "https://unpkg.com" // For Leaflet marker icons
-      ], 
-      // 2. Allow Leaflet scripts
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com"],
-      // 3. Allow API Connections
+      // 1. Allow OSM Tiles and Cloudinary
+      imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "https://*.tile.openstreetmap.org"], 
+      // 2. THE FIX: Add 'blob:' here
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "blob:"],
+      // 3. Allow Background Workers (needed for maps)
+      workerSrc: ["'self'", "blob:"],
+      // 4. Allow the Location API and Sockets
       connectSrc: [
         "'self'", 
         "https://res.cloudinary.com", 
-        "http://ip-api.com", 
+        "https://ipapi.co", 
         "ws://localhost:5000",
         "wss://*.onrender.com"
       ],
-      // 4. Allow Stylesheets (Leaflet CSS)
       styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
       upgradeInsecureRequests: [],
     },
