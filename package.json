@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "build": "npm install && cd frontend && npm install && npm run build",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
     "start": "node backend/server.js", 
     "dev": "nodemon backend/server.js",
     "seed": "node scripts/seed.js",
