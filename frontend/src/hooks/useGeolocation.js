@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export const useGeolocation = (options = {}) => {
   const [location, setLocation] = useState(null);
@@ -6,9 +6,11 @@ export const useGeolocation = (options = {}) => {
   const [loading, setLoading] = useState(true);
   const [permission, setPermission] = useState(null);
 
-  // --- SECURE IP FALLBACK (Works on Render/HTTPS) ---
-  const getIPLocation = async () => {
+  // --- SECURE IP FALLBACK ---
+  const getIPLocation = useCallback(async () => {
     try {
+      // We don't set loading(true) here because we want to keep the UI
+      // showing the previous state until we have the new coordinates.
       const response = await fetch('https://ipapi.co/json/');
       const data = await response.json();
       
@@ -23,26 +25,54 @@ export const useGeolocation = (options = {}) => {
         };
         setLocation(locationData);
         setPermission('granted'); 
+        setError(null); // CRITICAL: This clears the "Timeout" or "Denied" message
         setLoading(false);
-        setError(null); // Clear any previous block errors
       } else {
         throw new Error('IP-API failed');
       }
     } catch (err) {
-      setError('Location services unavailable. Please enter location manually.');
+      setError('Location unavailable. Please search manually.');
       setLoading(false);
     }
-  };
+  }, []);
 
-  const getLocation = () => {
+  const getCurrentPosition = useCallback(() => {
     if (!navigator.geolocation) {
       getIPLocation();
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const locationData = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          timestamp: position.timestamp,
+          isIPBased: false
+        };
+        setLocation(locationData);
+        setError(null);
+        setLoading(false);
+        setPermission('granted');
+      },
+      (err) => {
+        // GPS failed or timed out - immediately try IP
+        console.warn(`GPS Error (${err.code}): ${err.message}. Switching to IP...`);
+        getIPLocation();
+      },
+      {
+        enableHighAccuracy: false, // Desktop browsers work better with false
+        timeout: 4000,            // Reduced to 4 seconds for faster fallback
+        maximumAge: 0,
+        ...options
+      }
+    );
+  }, [getIPLocation, options]);
 
+  const getLocation = useCallback(() => {
+    setLoading(true);
+    
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
         setPermission(result.state);
@@ -55,49 +85,21 @@ export const useGeolocation = (options = {}) => {
     } else {
       getCurrentPosition();
     }
-  };
+  }, [getIPLocation, getCurrentPosition]);
 
-  const getCurrentPosition = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const locationData = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: position.timestamp,
-          isIPBased: false
-        };
-        setLocation(locationData);
-        setLoading(false);
-        setPermission('granted');
-      },
-      (error) => {
-        console.warn("GPS failed/blocked, switching to IP...");
-        getIPLocation();
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 5000, 
-        maximumAge: 0,
-        ...options
-      }
-    );
-  };
-
-  // This ensures buttons in your UI still work!
   const requestPermission = () => {
+    setLoading(true);
     if (permission === 'denied') {
-      // If already denied, don't ask again (it will fail), just use IP
+      // If blocked, don't trigger the browser popup (it won't show anyway)
       getIPLocation();
     } else {
-      // Otherwise, trigger the browser popup
       getCurrentPosition();
     }
   };
 
   useEffect(() => {
     getLocation();
-  }, []);
+  }, []); // Only run on mount
 
   return { 
     location, 

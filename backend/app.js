@@ -32,17 +32,33 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      // 1. Allow OSM Tiles and Cloudinary
-      imgSrc: ["'self'", "data:", "https://res.cloudinary.com", "https://*.tile.openstreetmap.org"], 
-      // 2. THE FIX: Add 'blob:' here
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://unpkg.com", "blob:"],
-      // 3. Allow Background Workers (needed for maps)
+      // 1. Allow OSM Tiles, Cloudinary, and Paystack assets
+      imgSrc: [
+        "'self'", 
+        "data:", 
+        "https://res.cloudinary.com", 
+        "https://*.tile.openstreetmap.org",
+        "https://*.paystack.co"
+      ], 
+      // 2. Allow Map scripts, Paystack scripts, and blobs
+      scriptSrc: [
+        "'self'", 
+        "'unsafe-inline'", 
+        "'unsafe-eval'", 
+        "https://unpkg.com", 
+        "https://js.paystack.co", 
+        "blob:"
+      ],
+      // 3. Allow Paystack to show the payment popup (iframe)
+      frameSrc: ["'self'", "https://js.paystack.co"],
+      // 4. Allow Workers for the map
       workerSrc: ["'self'", "blob:"],
-      // 4. Allow the Location API and Sockets
+      // 5. Allow APIs, Sockets, and Paystack telemetry
       connectSrc: [
         "'self'", 
         "https://res.cloudinary.com", 
         "https://ipapi.co", 
+        "https://*.paystack.co",
         "ws://localhost:5000",
         "wss://*.onrender.com"
       ],

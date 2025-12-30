@@ -28,7 +28,8 @@ import {
   FaShare,
   FaCheckCircle,
   FaImages,
-  FaWhatsapp
+  FaWhatsapp,
+  FaSpinner
 } from 'react-icons/fa';
 import styles from './HostelDetail.module.css';
 
