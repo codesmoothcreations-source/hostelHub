@@ -1,0 +1,118 @@
+.privacyPage {
+  background-color: #0c0c0e;
+  color: #e4e4e7;
+  min-height: 100vh;
+  padding: 80px 20px;
+  line-height: 1.7;
+}
+
+/* HEADER STYLE */
+.privacyHeader {
+  max-width: 800px;
+  margin: 0 auto 60px;
+  text-align: center;
+}
+
+.headerTag {
+  display: inline-block;
+  color: #8b5cf6;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  padding: 4px 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 6px;
+}
+
+.privacyTitle {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1.5px;
+  margin-bottom: 12px;
+}
+
+.privacySubtitle {
+  color: #71717a;
+  font-size: 1rem;
+}
+
+/* CONTENT STYLE */
+.privacyContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.legalNotice {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 50px;
+  font-style: italic;
+  color: #a1a1aa;
+}
+
+.privacySection {
+  margin-bottom: 60px;
+}
+
+.privacySection h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.privacySection p {
+  margin-bottom: 20px;
+  color: #d4d4d8;
+}
+
+/* CUSTOM BULLET POINTS */
+.customList {
+  list-style: none;
+  padding: 0;
+}
+
+.customList li {
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 12px;
+  color: #d4d4d8;
+}
+
+.customList li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #8b5cf6;
+  font-weight: 900;
+}
+
+/* CONTACT BOX */
+.contactBox {
+  background: #121214;
+  border-left: 4px solid #8b5cf6;
+  padding: 30px;
+  border-radius: 4px 16px 16px 4px;
+  margin-top: 20px;
+}
+
+.contactBox p {
+  margin-bottom: 8px !important;
+}
+
+.contactBox strong {
+  color: #fff;
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .privacyTitle { font-size: 2.2rem; }
+  .privacyPage { padding: 40px 20px; }
+}

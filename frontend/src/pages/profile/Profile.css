@@ -1,0 +1,707 @@
+/* Profile.css - Consistent with HostelHub Design System */
+
+:root {
+  --modern-blue: #3A86FF;
+  --modern-dark-blue: #2A70E8;
+  --modern-light-blue: #5FA0FF;
+  --bg-color: rgba(26, 26, 46, 0.95);
+  --bg-color-solid: #1a1a2e;
+  --card-bg: rgba(30, 30, 50, 0.8);
+  --card-bg-solid: #1e1e32;
+  --sidebar-bg: rgba(22, 33, 62, 0.8);
+  --text-color-light: rgba(255, 255, 255, 0.9);
+  --text-color-muted: rgba(255, 255, 255, 0.6);
+  --text-color-white: #ffffff;
+  --border-color: rgba(58, 134, 255, 0.2);
+  --border-color-light: rgba(58, 134, 255, 0.1);
+  --success-green: #4CAF50;
+  --warning-orange: #FF9800;
+  --student-blue: #3A86FF;
+  --owner-purple: #8A2BE2;
+  --admin-red: #FF4757;
+  --transition-speed: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius: 16px;
+  --border-radius-md: 12px;
+  --border-radius-sm: 8px;
+  --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-blue: 0 4px 15px rgba(58, 134, 255, 0.3);
+}
+
+/* Main Container */
+.hostelhub-profile-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    var(--bg-color-solid) 0%, 
+    rgba(22, 33, 62, 0.95) 100%);
+  padding: 2rem;
+  color: var(--text-color-light);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Profile Header */
+.hostelhub-profile-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.hostelhub-profile-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, 
+    #ffffff 30%,
+    var(--modern-light-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hostelhub-profile-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-color-muted);
+  margin: 0;
+}
+
+/* Profile Container */
+.hostelhub-profile-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2.5rem;
+}
+
+/* Sidebar */
+.hostelhub-profile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Avatar Section */
+.hostelhub-avatar-section {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  text-align: center;
+}
+
+.hostelhub-avatar-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hostelhub-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--modern-light-blue);
+  box-shadow: 0 0 30px rgba(58, 134, 255, 0.3);
+  transition: all var(--transition-speed);
+}
+
+.hostelhub-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(58, 134, 255, 0.5);
+}
+
+.hostelhub-avatar-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--modern-blue), var(--modern-dark-blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--modern-light-blue);
+  box-shadow: 0 0 30px rgba(58, 134, 255, 0.3);
+}
+
+.hostelhub-avatar-icon {
+  font-size: 4rem;
+  color: white;
+  opacity: 0.8;
+}
+
+.hostelhub-avatar-upload {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: rgba(58, 134, 255, 0.1);
+  color: var(--modern-light-blue);
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.hostelhub-avatar-upload:hover {
+  background: rgba(58, 134, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-blue);
+}
+
+.hostelhub-avatar-input {
+  display: none;
+}
+
+/* User Basic Info */
+.hostelhub-user-basic-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hostelhub-user-name {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color-white);
+}
+
+.hostelhub-user-role {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hostelhub-user-role[class*="student"] {
+  background: rgba(58, 134, 255, 0.15);
+  color: var(--student-blue);
+  border: 1px solid rgba(58, 134, 255, 0.3);
+}
+
+.hostelhub-user-role[class*="owner"] {
+  background: rgba(138, 43, 226, 0.15);
+  color: var(--owner-purple);
+  border: 1px solid rgba(138, 43, 226, 0.3);
+}
+
+.hostelhub-user-role[class*="admin"] {
+  background: rgba(255, 71, 87, 0.15);
+  color: var(--admin-red);
+  border: 1px solid rgba(255, 71, 87, 0.3);
+}
+
+.hostelhub-member-since {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-color-muted);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.hostelhub-calendar-icon {
+  color: var(--modern-light-blue);
+  font-size: 0.9rem;
+}
+
+/* Profile Menu */
+.hostelhub-profile-menu {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  display: flex;
+  visibility: visible;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hostelhub-menubutton {
+  display: flex;
+  visibility: visible;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(58, 134, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--modern-light-blue);
+  border-radius: var(--border-radius-sm);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  font-size: 0.95rem;
+}
+
+.hostelhub-menu-button:hover {
+  background: rgba(58, 134, 255, 0.2);
+  transform: translateX(5px);
+  border-color: var(--modern-light-blue);
+  box-shadow: var(--shadow-blue);
+}
+
+.hostelhub-menu-icon {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Profile Main Content */
+.hostelhub-profile-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Success Message */
+.hostelhub-success-message {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--success-green);
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  font-weight: 500;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section Titles */
+.hostelhub-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+  color: var(--text-color-white);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hostelhub-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    var(--modern-blue) 0%, 
+    transparent 100%);
+  margin-left: 0.5rem;
+}
+
+/* Edit Form */
+.hostelhub-edit-form {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+}
+
+.hostelhub-form-section {
+  margin-bottom: 2rem;
+}
+
+.hostelhub-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.hostelhub-form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-color-light);
+  font-size: 0.95rem;
+}
+
+.hostelhub-label-icon {
+  color: var(--modern-light-blue);
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.hostelhub-form-input,
+.hostelhub-form-textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-color-white);
+  font-size: 1rem;
+  transition: all var(--transition-speed);
+  font-family: inherit;
+}
+
+.hostelhub-form-input:focus,
+.hostelhub-form-textarea:focus {
+  outline: none;
+  border-color: var(--modern-light-blue);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+}
+
+.hostelhub-form-input::placeholder,
+.hostelhub-form-textarea::placeholder {
+  color: var(--text-color-muted);
+}
+
+.hostelhub-form-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.hostelhub-form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+.hostelhub-form-help {
+  color: var(--text-color-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Form Actions */
+.hostelhub-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-color-light);
+}
+
+.hostelhub-cancel-button {
+  padding: 0.75rem 2rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color-muted);
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.hostelhub-cancel-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-color-light);
+  border-color: var(--text-color-muted);
+}
+
+.hostelhub-save-button {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--modern-blue), var(--modern-dark-blue));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hostelhub-save-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+  z-index: -1;
+}
+
+.hostelhub-save-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(58, 134, 255, 0.6);
+}
+
+.hostelhub-save-button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.hostelhub-save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #666, #555);
+}
+
+/* Profile Details */
+.hostelhub-profile-details {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+}
+
+.hostelhub-detail-section {
+  margin-bottom: 2.5rem;
+}
+
+.hostelhub-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.hostelhub-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.hostelhub-detail-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color-light);
+  transition: all var(--transition-speed);
+}
+
+.hostelhub-detail-item:hover {
+  background: rgba(58, 134, 255, 0.05);
+  border-color: var(--modern-light-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(58, 134, 255, 0.1);
+}
+
+.hostelhub-detail-icon {
+  color: var(--modern-light-blue);
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.hostelhub-detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hostelhub-detail-label {
+  font-size: 0.9rem;
+  color: var(--text-color-muted);
+  font-weight: 500;
+}
+
+.hostelhub-detail-value {
+  font-size: 1.1rem;
+  color: var(--text-color-white);
+  font-weight: 500;
+}
+
+/* Role and Status Badges */
+.hostelhub-role-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hostelhub-status-active {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--success-green);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Owner Stats */
+.hostelhub-owner-stats,
+.hostelhub-student-info {
+  background: rgba(58, 134, 255, 0.05);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  border: 1px solid var(--border-color-light);
+}
+
+.hostelhub-stat-info,
+.hostelhub-student-text {
+  color: var(--text-color-light);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.hostelhub-manage-hostels-button,
+.hostelhub-browse-hostels-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--modern-blue), var(--modern-dark-blue));
+  color: white;
+  text-decoration: none;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  transition: all var(--transition-speed);
+  border: none;
+  cursor: pointer;
+}
+
+.hostelhub-manage-hostels-button:hover,
+.hostelhub-browse-hostels-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(58, 134, 255, 0.6);
+}
+
+/* Loading State */
+.hostelhub-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.hostelhub-loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--modern-blue);
+  border-radius: 50%;
+  animation: hostelhub-spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes hostelhub-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hostelhub-profile-container {
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hostelhub-profile-page {
+    padding: 1rem;
+  }
+  
+  .hostelhub-profile-title {
+    font-size: 2rem;
+  }
+  
+  .hostelhub-profile-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .hostelhub-avatar {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .hostelhub-avatar-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .hostelhub-user-name {
+    font-size: 1.5rem;
+  }
+  
+  .hostelhub-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hostelhub-section-title {
+    font-size: 1.3rem;
+  }
+  
+  .hostelhub-edit-form,
+  .hostelhub-profile-details {
+    padding: 1.5rem;
+  }
+  
+  .hostelhub-form-actions {
+    flex-direction: column;
+  }
+  
+  .hostelhub-cancel-button,
+  .hostelhub-save-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hostelhub-profile-title {
+    font-size: 1.8rem;
+  }
+  
+  .hostelhub-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .hostelhub-avatar-placeholder {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .hostelhub-avatar-icon {
+    font-size: 3rem;
+  }
+  
+  .hostelhub-edit-form,
+  .hostelhub-profile-details {
+    padding: 1.25rem;
+  }
+  
+  .hostelhub-form-input,
+  .hostelhub-form-textarea {
+    padding: 0.75rem;
+  }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hostelhub-detail-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop-specific enhancements */
+@media (min-width: 1025px) {
+  .hostelhub-detail-item {
+    min-height: 80px;
+  }
+}

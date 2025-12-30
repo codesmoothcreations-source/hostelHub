@@ -1,0 +1,856 @@
+/* src/index.css - MINIMAL WORKING CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+/* Basic layout styles */
+.hostelhub-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hostelhub-main {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Header styles */
+.hostelhub-header {
+  background: #333;
+  color: white;
+  padding: 1rem;
+}
+
+.hostelhub-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hostelhub-logo {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hostelhub-nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.hostelhub-nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+.hostelhub-nav-link:hover {
+  background: #555;
+  border-radius: 4px;
+}
+
+/* Footer styles */
+.hostelhub-footer {
+  background: #222;
+  color: white;
+  padding: 2rem;
+  margin-top: auto;
+}
+
+/* Form styles */
+.hostelhub-form-group {
+  margin-bottom: 1rem;
+}
+
+.hostelhub-form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.hostelhub-form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.hostelhub-form-error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Button styles */
+.hostelhub-auth-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hostelhub-auth-button:hover {
+  background: #0056b3;
+}
+
+.hostelhub-auth-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Loading spinner */
+.hostelhub-loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hostelhub-loading-state {
+  text-align: center;
+  padding: 40px;
+}
+
+/* Toast styles */
+.hostelhub-toast {
+  font-family: inherit;
+}
+
+/* Map Styles */
+.hostelhub-interactive-map {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.hostelhub-map {
+  border-radius: 8px;
+}
+
+.hostelhub-map-controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hostelhub-map-control-button {
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 16px;
+  color: #333;
+}
+
+.hostelhub-map-control-button:hover {
+  background: #f8f9fa;
+  transform: scale(1.05);
+}
+
+.hostelhub-map-legend {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.hostelhub-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.hostelhub-legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.hostelhub-legend-user {
+  background: #007bff;
+}
+
+.hostelhub-legend-hostel {
+  background: #28a745;
+}
+
+/* Location Banner */
+.hostelhub-location-banner {
+  background: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.hostelhub-location-icon {
+  color: #1976d2;
+  font-size: 24px;
+}
+
+.hostelhub-location-info h4 {
+  margin: 0 0 5px 0;
+  color: #1976d2;
+}
+
+.hostelhub-location-text {
+  margin: 0;
+  color: #333;
+}
+
+.hostelhub-location-coordinates {
+  margin: 5px 0 0 0;
+  font-family: monospace;
+  font-size: 14px;
+  color: #666;
+}
+
+.hostelhub-location-error {
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hostelhub-location-success {
+  background: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  color: #2e7d32;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hostelhub-map-view {
+  margin: 20px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hostelhub-map-picker {
+  margin: 20px 0;
+}
+
+.hostelhub-map-instructions {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.hostelhub-map-instructions ol {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+.hostelhub-map-instructions li {
+  margin-bottom: 5px;
+}
+
+.hostelhub-add-hostel {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.hostelhub-add-hostel-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.hostelhub-add-hostel-title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.hostelhub-add-hostel-subtitle {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.hostelhub-add-hostel-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.hostelhub-form-section {
+  background: white;
+  padding: 25px;
+  border-radius: 10px
+}
+
+/* Price Filter Styles */
+.hostelhub-quick-price-filter {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin: 20px 0;
+}
+
+.hostelhub-price-filter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.hostelhub-price-icon {
+  color: #28a745;
+  font-size: 1.2rem;
+}
+
+.hostelhub-quick-price-filter h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.hostelhub-price-inputs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 15px;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .hostelhub-price-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hostelhub-price-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hostelhub-price-label {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.hostelhub-price-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.hostelhub-price-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.hostelhub-price-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  color: #666;
+  font-weight: bold;
+}
+
+.hostelhub-price-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.hostelhub-apply-price-button {
+  padding: 10px 20px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.hostelhub-apply-price-button:hover:not(:disabled) {
+  background: #218838;
+}
+
+.hostelhub-apply-price-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.hostelhub-clear-price-button {
+  padding: 10px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.3s;
+}
+
+.hostelhub-clear-price-button:hover {
+  background: #545b62;
+}
+
+.hostelhub-active-price-filter {
+  margin-top: 15px;
+  padding: 10px;
+  background: #e7f3ff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hostelhub-active-price-filter span:first-child {
+  font-weight: 600;
+  color: #333;
+}
+
+.hostelhub-price-filter-value {
+  background: #007bff;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* Active Filters */
+.hostelhub-active-filters {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  border: 1px solid #e9ecef;
+}
+
+.hostelhub-active-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.hostelhub-active-filters-header span {
+  font-weight: 600;
+  color: #333;
+}
+
+.hostelhub-clear-filters-button {
+  padding: 6px 12px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.3s;
+}
+
+.hostelhub-clear-filters-button:hover {
+  background: #c82333;
+}
+
+.hostelhub-filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hostelhub-filter-tag {
+  background: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #dee2e6;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hostelhub-remove-filter {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.hostelhub-remove-filter:hover {
+  background: #f8d7da;
+}
+
+/* Results Summary */
+.hostelhub-results-summary {
+  padding: 15px;
+  background: #e7f3ff;
+  border-radius: 8px;
+  margin: 15px 0;
+  color: #333;
+}
+
+.hostelhub-results-summary strong {
+  color: #007bff;
+}
+
+/* Filter Count Badge */
+.hostelhub-filter-count {
+  background: #dc3545;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 5px;
+}
+
+/* Price Slider */
+.hostelhub-price-slider {
+  margin-top: 20px;
+}
+
+.hostelhub-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.hostelhub-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.hostelhub-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Radius Buttons */
+.hostelhub-radius-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.hostelhub-radius-button {
+  padding: 8px 15px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.hostelhub-radius-button:hover {
+  background: #e9ecef;
+}
+
+.hostelhub-radius-active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.hostelhub-radius-info {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Filters Panel */
+.hostelhub-filters-panel {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin: 20px 0;
+}
+
+.hostelhub-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.hostelhub-filters-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: #333;
+}
+
+.hostelhub-filters-icon {
+  color: #6c757d;
+}
+
+.hostelhub-clear-all-filters {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 15px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.hostelhub-clear-all-filters:hover {
+  background: #545b62;
+}
+
+.hostelhub-filter-section {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.hostelhub-filter-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.hostelhub-filter-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.hostelhub-filter-icon {
+  color: #6c757d;
+}
+
+.hostelhub-amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.hostelhub-filter-amenity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hostelhub-filter-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.hostelhub-filter-label {
+  cursor: pointer;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.hostelhub-show-more-amenities {
+  padding: 8px 15px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.hostelhub-show-more-amenities:hover {
+  background: #e9ecef;
+}
+
+.hostelhub-selected-amenities {
+  margin-top: 10px;
+  padding: 10px;
+  background: #e7f3ff;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.hostelhub-filter-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Image Upload Styles */
+.hostelhub-image-upload {
+  width: 100%;
+}
+
+.hostelhub-dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: #f8f9fa;
+}
+
+.hostelhub-dropzone:hover,
+.hostelhub-dropzone-active {
+  border-color: #007bff;
+  background: #e7f3ff;
+}
+
+.hostelhub-dropzone-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.hostelhub-dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.hostelhub-dropzone-icon {
+  font-size: 48px;
+  color: #6c757d;
+}
+
+.hostelhub-dropzone-active .hostelhub-dropzone-icon {
+  color: #007bff;
+}
+
+.hostelhub-dropzone-text h4 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.hostelhub-dropzone-hint {
+  color: #6c757d;
+  margin: 5px 0;
+}
+
+.hostelhub-dropzone-count {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.hostelhub-uploading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.hostelhub-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Uploaded Images */
+.hostelhub-uploaded-images {
+  margin-top: 20px;
+}
+
+.hostelhub-images-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.hostelhub-images-header h4 {
+  margin: 0;
+  color: #333;
+}
