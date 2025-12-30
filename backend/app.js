@@ -32,16 +32,17 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      // 1. Added Google Analytics to imgSrc
+      // 1. Added Paystack & Google Analytics to imgSrc
       imgSrc: [
         "'self'", 
         "data:", 
         "https://res.cloudinary.com", 
         "https://*.tile.openstreetmap.org",
         "https://*.paystack.co",
+        "https://paystack.com",
         "https://www.google-analytics.com"
       ], 
-      // 2. Added Google Tag Manager to scriptSrc
+      // 2. Added Google Tag Manager & Paystack to scriptSrc
       scriptSrc: [
         "'self'", 
         "'unsafe-inline'", 
@@ -51,13 +52,19 @@ app.use(helmet({
         "https://www.googletagmanager.com",
         "blob:"
       ],
-      frameSrc: ["'self'", "https://js.paystack.co"],
+      // 3. CRITICAL: Added checkout.paystack.com so the popup works
+      frameSrc: [
+        "'self'", 
+        "https://js.paystack.co", 
+        "https://checkout.paystack.com"
+      ],
       workerSrc: ["'self'", "blob:"],
-      // 3. Added Analytics, Sentry, and consolidated Render Sockets
+      // 4. Consolidated Sockets, Sentry, and IP APIs
       connectSrc: [
         "'self'", 
         "https://res.cloudinary.com", 
         "https://ipapi.co", 
+        "http://ip-api.com",
         "https://*.paystack.co",
         "https://www.google-analytics.com",
         "https://*.sentry.io",
@@ -65,7 +72,13 @@ app.use(helmet({
         "ws://localhost:5000",
         "wss://hostelhubv2.onrender.com"
       ],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
+      // 5. CRITICAL: Added paystack.com for button styles
+      styleSrc: [
+        "'self'", 
+        "'unsafe-inline'", 
+        "https://unpkg.com", 
+        "https://paystack.com"
+      ],
       upgradeInsecureRequests: [],
     },
   },
@@ -74,7 +87,7 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || 'https://hostelhubv2.onrender.com',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
