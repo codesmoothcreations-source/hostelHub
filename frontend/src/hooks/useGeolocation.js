@@ -6,35 +6,51 @@ export const useGeolocation = (options = {}) => {
   const [loading, setLoading] = useState(true);
   const [permission, setPermission] = useState(null);
 
-  // --- SECURE IP FALLBACK ---
+  // --- SECURE IP FALLBACK WITH MULTIPLE PROVIDERS ---
   const getIPLocation = useCallback(async () => {
     try {
-      // We don't set loading(true) here because we want to keep the UI
-      // showing the previous state until we have the new coordinates.
+      // Try Provider 1: ipapi.co
       const response = await fetch('https://ipapi.co/json/');
+      if (!response.ok) throw new Error('ipapi.co failed');
       const data = await response.json();
       
       if (data.latitude) {
-        const locationData = {
-          lat: data.latitude,
-          lng: data.longitude,
-          accuracy: 1000,
-          timestamp: Date.now(),
-          isIPBased: true,
-          city: data.city
-        };
-        setLocation(locationData);
-        setPermission('granted'); 
-        setError(null); // CRITICAL: This clears the "Timeout" or "Denied" message
-        setLoading(false);
-      } else {
-        throw new Error('IP-API failed');
+        updateLocationState(data, true);
+        return;
       }
     } catch (err) {
-      setError('Location unavailable. Please search manually.');
-      setLoading(false);
+      console.warn("ipapi.co blocked by CORS or failed, trying backup...");
+      try {
+        // Try Provider 2 (Backup): ip-api.com (Very reliable for Render)
+        const response = await fetch('http://ip-api.com/json/');
+        const data = await response.json();
+        if (data.lat) {
+          updateLocationState({
+            latitude: data.lat,
+            longitude: data.lon,
+            city: data.city
+          }, true);
+        }
+      } catch (backupErr) {
+        setError('Location unavailable. Please search manually.');
+        setLoading(false);
+      }
     }
   }, []);
+
+  const updateLocationState = (data, isIP) => {
+    setLocation({
+      lat: data.latitude,
+      lng: data.longitude,
+      accuracy: isIP ? 1000 : data.accuracy,
+      timestamp: Date.now(),
+      isIPBased: isIP,
+      city: data.city || 'Unknown'
+    });
+    setPermission('granted');
+    setError(null);
+    setLoading(false);
+  };
 
   const getCurrentPosition = useCallback(() => {
     if (!navigator.geolocation) {
@@ -44,26 +60,19 @@ export const useGeolocation = (options = {}) => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const locationData = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          accuracy: position.coords.accuracy,
-          timestamp: position.timestamp,
-          isIPBased: false
-        };
-        setLocation(locationData);
-        setError(null);
-        setLoading(false);
-        setPermission('granted');
+        updateLocationState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy
+        }, false);
       },
       (err) => {
-        // GPS failed or timed out - immediately try IP
-        console.warn(`GPS Error (${err.code}): ${err.message}. Switching to IP...`);
+        console.warn(`GPS failed (${err.code}). Switching to IP...`);
         getIPLocation();
       },
       {
-        enableHighAccuracy: false, // Desktop browsers work better with false
-        timeout: 4000,            // Reduced to 4 seconds for faster fallback
+        enableHighAccuracy: false,
+        timeout: 4000,
         maximumAge: 0,
         ...options
       }
@@ -72,7 +81,6 @@ export const useGeolocation = (options = {}) => {
 
   const getLocation = useCallback(() => {
     setLoading(true);
-    
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'geolocation' }).then((result) => {
         setPermission(result.state);
@@ -90,7 +98,6 @@ export const useGeolocation = (options = {}) => {
   const requestPermission = () => {
     setLoading(true);
     if (permission === 'denied') {
-      // If blocked, don't trigger the browser popup (it won't show anyway)
       getIPLocation();
     } else {
       getCurrentPosition();
@@ -99,14 +106,13 @@ export const useGeolocation = (options = {}) => {
 
   useEffect(() => {
     getLocation();
-  }, []); // Only run on mount
+  }, []);
 
   return { 
-    location, 
-    error, 
-    loading, 
+    location,
+    error,
+    loading,
     permission,
     getLocation,
-    requestPermission 
-  };
+    requestPermission };
 };

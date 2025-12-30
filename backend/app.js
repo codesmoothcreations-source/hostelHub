@@ -32,35 +32,38 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      // 1. Allow OSM Tiles, Cloudinary, and Paystack assets
+      // 1. Added Google Analytics to imgSrc
       imgSrc: [
         "'self'", 
         "data:", 
         "https://res.cloudinary.com", 
         "https://*.tile.openstreetmap.org",
-        "https://*.paystack.co"
+        "https://*.paystack.co",
+        "https://www.google-analytics.com"
       ], 
-      // 2. Allow Map scripts, Paystack scripts, and blobs
+      // 2. Added Google Tag Manager to scriptSrc
       scriptSrc: [
         "'self'", 
         "'unsafe-inline'", 
         "'unsafe-eval'", 
         "https://unpkg.com", 
-        "https://js.paystack.co", 
+        "https://js.paystack.co",
+        "https://www.googletagmanager.com",
         "blob:"
       ],
-      // 3. Allow Paystack to show the payment popup (iframe)
       frameSrc: ["'self'", "https://js.paystack.co"],
-      // 4. Allow Workers for the map
       workerSrc: ["'self'", "blob:"],
-      // 5. Allow APIs, Sockets, and Paystack telemetry
+      // 3. Added Analytics, Sentry, and consolidated Render Sockets
       connectSrc: [
         "'self'", 
         "https://res.cloudinary.com", 
         "https://ipapi.co", 
         "https://*.paystack.co",
+        "https://www.google-analytics.com",
+        "https://*.sentry.io",
+        "https://sentry-internal.temp-mail.io",
         "ws://localhost:5000",
-        "wss://*.onrender.com"
+        "wss://hostelhubv2.onrender.com"
       ],
       styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
       upgradeInsecureRequests: [],
