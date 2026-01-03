@@ -1,9 +1,11 @@
+/* src/pages/public/Terms.module.css */
 .termsPage {
   background-color: #0c0c0e;
   color: #e4e4e7;
   min-height: 100vh;
   padding: 100px 20px;
   line-height: 1.8;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
 /* HEADER SECTION */

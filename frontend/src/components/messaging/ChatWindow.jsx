@@ -1,175 +1,92 @@
-// src/components/messaging/ChatWindow.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { format } from 'date-fns';
-import { messagesAPI } from '../../api';
-import MessageInput from './MessageInput';
-import MessageBubble from './MessageBubble';
-import { FaUser, FaArrowLeft, FaPhone, FaEnvelope } from 'react-icons/fa';
 import styles from './ChatWindow.module.css';
+import { format } from 'date-fns'; // Use: npm install date-fns
 
 const ChatWindow = ({ conversation, currentUser, socket }) => {
   const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [sending, setSending] = useState(false);
-  const messagesEndRef = useRef(null);
+  const [newMessage, setNewMessage] = useState('');
+  const scrollRef = useRef();
 
+  // Auto-scroll to bottom on new message
   useEffect(() => {
-    fetchMessages();
-  }, [conversation.user._id]);
-
-  useEffect(() => {
-    scrollToBottom();
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Handle incoming socket messages
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = (message) => {
-      if (message.from === conversation.user._id || message.from === currentUser._id) {
-        setMessages(prev => [...prev, message]);
-      }
-    };
-
-    socket.on('new_message', handleNewMessage);
-
-    return () => {
-      socket.off('new_message', handleNewMessage);
-    };
-  }, [socket, conversation.user._id, currentUser._id]);
-
-  const fetchMessages = async () => {
-    setLoading(true);
-    try {
-      const response = await messagesAPI.getConversation(conversation.user._id, {
-        limit: 50
-      });
-      setMessages(response.data.messages || []);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const sendMessage = async (content) => {
-    if (!content.trim()) return;
-
-    setSending(true);
-    try {
-      // Send via API
-      await messagesAPI.sendMessage({
-        to: conversation.user._id,
-        content
-      });
-
-      // Send via socket
-      if (socket) {
-        socket.emit('send_message', {
-          to: conversation.user._id,
-          content,
-          from: currentUser._id
+    const onMessage = (msg) => {
+      // Logic: Only add if message belongs to THIS conversation and isn't a duplicate
+      if (msg.sender === conversation.user._id || msg.sender === currentUser._id) {
+        setMessages((prev) => {
+            const exists = prev.find(m => m._id === msg._id);
+            return exists ? prev : [...prev, msg];
         });
       }
+    };
 
-      // Add message to local state immediately
-      const newMessage = {
-        _id: Date.now().toString(),
-        from: currentUser._id,
-        to: conversation.user._id,
-        content,
-        read: false,
-        createdAt: new Date().toISOString(),
-        user: {
-          _id: currentUser._id,
-          name: currentUser.name,
-          avatar: currentUser.avatar
-        }
-      };
+    socket.on('new_message', onMessage);
+    return () => socket.off('new_message');
+  }, [socket, conversation, currentUser]);
 
-      setMessages(prev => [...prev, newMessage]);
-    } catch (error) {
-      console.error('Error sending message:', error);
-      alert('Failed to send message. Please try again.');
-    } finally {
-      setSending(false);
-    }
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (!newMessage.trim()) return;
+
+    const messageData = {
+      to: conversation.user._id,
+      content: newMessage,
+      sender: currentUser._id, // Attach sender for immediate UI update
+      createdAt: new Date().toISOString(),
+      _id: Date.now() // Temporary ID
+    };
+
+    socket.emit('send_message', messageData);
+    setMessages(prev => [...prev, messageData]);
+    setNewMessage('');
   };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const groupedMessages = messages.reduce((groups, message) => {
-    const date = format(new Date(message.createdAt), 'yyyy-MM-dd');
-    if (!groups[date]) {
-      groups[date] = [];
-    }
-    groups[date].push(message);
-    return groups;
-  }, {});
 
   return (
-    <div className={styles.chatWindow}>
-      <div className={styles.chatHeader}>
-        <div className={styles.userInfo}>
-          <div className={styles.avatar}>
-            {conversation.user.avatar ? (
-              <img src={conversation.user.avatar} alt={conversation.user.name} />
-            ) : (
-              <div className={styles.avatarPlaceholder}>
-                <FaUser />
-              </div>
-            )}
-          </div>
-          <div className={styles.userDetails}>
-            <h3 className={styles.userName}>{conversation.user.name}</h3>
-            <span className={styles.userRole}>{conversation.user.role}</span>
-            <div className={styles.userContact}>
-              {conversation.user.phone && (
-                <span className={styles.contactItem}>
-                  <FaPhone /> {conversation.user.phone}
-                </span>
-              )}
-              <span className={styles.contactItem}>
-                <FaEnvelope /> {conversation.user.email}
-              </span>
-            </div>
-          </div>
+    <div className={styles.window}>
+      <header className={styles.chatHeader}>
+        <img src={conversation.user.avatar || '/default-avatar.png'} alt="User" />
+        <div className={styles.headerInfo}>
+            <h4>{conversation.user.name}</h4>
+            <span>online</span>
         </div>
-      </div>
+      </header>
 
-      <div className={styles.messagesContainer}>
-        {loading ? (
-          <div className={styles.loadingMessages}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading messages...</p>
-          </div>
-        ) : messages.length === 0 ? (
-          <div className={styles.noMessages}>
-            <p>No messages yet. Start the conversation!</p>
-          </div>
-        ) : (
-          <div className={styles.messagesList}>
-            {Object.entries(groupedMessages).map(([date, dateMessages]) => (
-              <div key={date} className={styles.dateGroup}>
-                <div className={styles.dateSeparator}>
-                  {format(new Date(date), 'MMMM d, yyyy')}
-                </div>
-                {dateMessages.map((message) => (
-                  <MessageBubble
-                    key={message._id}
-                    message={message}
-                    isOwnMessage={message.from === currentUser._id}
-                  />
-                ))}
+      <div className={styles.messageArea}>
+        {messages.map((msg, index) => {
+          // KEY LOGIC: Is this message from ME or THEM?
+          const isMe = msg.sender === currentUser._id;
+          
+          return (
+            <div 
+                key={msg._id || index} 
+                className={isMe ? styles.sentWrapper : styles.receivedWrapper}
+            >
+              <div className={isMe ? styles.sentBubble : styles.receivedBubble}>
+                <p>{msg.content}</p>
+                <span className={styles.timestamp}>
+                    {format(new Date(msg.createdAt), 'HH:mm')}
+                </span>
               </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-        )}
+            </div>
+          );
+        })}
+        <div ref={scrollRef} />
       </div>
 
-      <MessageInput onSendMessage={sendMessage} sending={sending} />
+      <form className={styles.inputArea} onSubmit={handleSend}>
+        <input 
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type a message" 
+        />
+        <button type="submit">Send</button>
+      </form>
     </div>
   );
 };

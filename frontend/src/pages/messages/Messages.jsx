@@ -1,5 +1,5 @@
 // src/pages/messages/Messages.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
@@ -19,34 +19,52 @@ const Messages = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const [unreadCount, setUnreadCount] = useState(0);
+
+  // 1. Memoized message handler to prevent logic bugs
+  const handleNewMessage = useCallback((message) => {
+    setConversations(prev => {
+      const updated = [...prev];
+      // Check if conversation exists
+      const index = updated.findIndex(c => c.user._id === message.sender._id || c.user._id === message.recipient._id);
+      
+      if (index !== -1) {
+        // Update existing conversation
+        const conversation = { ...updated[index] };
+        conversation.lastMessage = message.content;
+        conversation.lastMessageTime = message.createdAt;
+        
+        // Only increment unread if we aren't currently looking at this chat
+        if (!userId || userId !== message.sender._id) {
+            conversation.unreadCount = (conversation.unreadCount || 0) + 1;
+        }
+
+        updated.splice(index, 1);
+        updated.unshift(conversation);
+      } else {
+        // If it's a brand new person messaging us, we should re-fetch or add them
+        fetchConversations();
+      }
+      return updated;
+    });
+  }, [userId]);
 
   useEffect(() => {
     fetchConversations();
-    fetchUnreadCount();
   }, []);
 
+  // Handle URL changes (when user clicks a chat)
   useEffect(() => {
-    if (userId) {
-      const conversation = conversations.find(c => c.user._id === userId);
-      if (conversation) {
-        setSelectedConversation(conversation);
-      }
+    if (userId && conversations.length > 0) {
+      const found = conversations.find(c => c.user._id === userId);
+      if (found) setSelectedConversation(found);
     }
   }, [userId, conversations]);
 
   useEffect(() => {
     if (!socket || !isConnected) return;
-
-    // Listen for new messages
     socket.on('new_message', handleNewMessage);
-    socket.on('message_read', handleMessageRead);
-
-    return () => {
-      socket.off('new_message', handleNewMessage);
-      socket.off('message_read', handleMessageRead);
-    };
-  }, [socket, isConnected]);
+    return () => socket.off('new_message');
+  }, [socket, isConnected, handleNewMessage]);
 
   const fetchConversations = async () => {
     setLoading(true);
@@ -54,64 +72,15 @@ const Messages = () => {
       const response = await messagesAPI.getConversations();
       setConversations(response.data.conversations || []);
     } catch (error) {
-      console.error('Error fetching conversations:', error);
+      console.error('Error:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchUnreadCount = async () => {
-    try {
-      const response = await messagesAPI.getUnreadCount();
-      setUnreadCount(response.data.count || 0);
-    } catch (error) {
-      console.error('Error fetching unread count:', error);
-    }
-  };
-
-  const handleNewMessage = (message) => {
-    // Update conversations with new message
-    setConversations(prev => {
-      const updated = [...prev];
-      const index = updated.findIndex(c => c.user._id === message.from._id);
-      
-      if (index !== -1) {
-        updated[index] = {
-          ...updated[index],
-          lastMessage: message.content,
-          lastMessageTime: message.createdAt,
-          unreadCount: (updated[index].unreadCount || 0) + 1
-        };
-        // Move to top
-        const [moved] = updated.splice(index, 1);
-        updated.unshift(moved);
-      }
-      
-      return updated;
-    });
-
-    // Update unread count
-    setUnreadCount(prev => prev + 1);
-  };
-
-  const handleMessageRead = (data) => {
-    // Update unread count for conversation
-    setConversations(prev => 
-      prev.map(conv => 
-        conv.user._id === data.userId 
-          ? { ...conv, unreadCount: 0 }
-          : conv
-      )
-    );
-  };
-
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
     navigate(`/messages/${conversation.user._id}`);
-  };
-
-  const handleStartNewChat = () => {
-    navigate('/messages/new');
   };
 
   const filteredConversations = conversations.filter(conv =>
@@ -120,67 +89,36 @@ const Messages = () => {
 
   return (
     <div className={styles.messagesPage}>
-      <br />
-      <br />
-      <div className={styles.messagesHeader}>
-        <div className={styles.titleSection}>
-          <h1 className={styles.title}>
-            <FaComments className={styles.titleIcon} />
-            Messages
-          </h1>
-          {unreadCount > 0 && (
-            <span className={styles.unreadBadge}>{unreadCount}</span>
-          )}
-        </div>
-        
-        <button
-          onClick={handleStartNewChat}
-          className={styles.newChatButton}
-        >
-          <FaUserPlus className={styles.buttonIcon} />
-          New Chat
-        </button>
-      </div>
-
       <div className={styles.messagesContainer}>
+        {/* Sidebar */}
         <div className={styles.conversationsSidebar}>
+            <div className={styles.sidebarHeader}>
+                <h2>Chats</h2>
+                <button onClick={() => navigate('/messages/new')} className={styles.iconBtn}>
+                    <FaUserPlus />
+                </button>
+            </div>
+          
           <div className={styles.search}>
             <FaSearch className={styles.searchIcon} />
             <input
               type="text"
-              placeholder="Search conversations..."
+              placeholder="Search or start new chat"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={styles.searchInput}
             />
           </div>
 
-          {loading ? (
-            <div className={styles.loading}>
-              <div className={styles.spinner}></div>
-              <p>Loading conversations...</p>
-            </div>
-          ) : filteredConversations.length === 0 ? (
-            <div className={styles.empty}>
-              <FaComments className={styles.emptyIcon} />
-              <p>No conversations yet</p>
-              <button
-                onClick={handleStartNewChat}
-                className={styles.startChatButton}
-              >
-                Start a conversation
-              </button>
-            </div>
-          ) : (
-            <ConversationList
-              conversations={filteredConversations}
-              selectedConversation={selectedConversation}
-              onSelectConversation={handleSelectConversation}
-              currentUser={user}
-            />
-          )}
+          <ConversationList
+            conversations={filteredConversations}
+            selectedConversation={selectedConversation}
+            onSelectConversation={handleSelectConversation}
+            currentUser={user}
+          />
         </div>
 
+        {/* Chat Area */}
         <div className={styles.chatMain}>
           {selectedConversation ? (
             <ChatWindow
@@ -190,15 +128,11 @@ const Messages = () => {
             />
           ) : (
             <div className={styles.noChatSelected}>
-              <FaComments className={styles.noChatIcon} />
-              <h3>Select a conversation</h3>
-              <p>Choose a conversation from the list to start chatting</p>
-              <button
-                onClick={handleStartNewChat}
-                className={styles.startChatButton}
-              >
-                Start New Chat
-              </button>
+                <div className={styles.emptyStateCircle}>
+                    <FaComments />
+                </div>
+                <h3>WhatsApp for Web</h3>
+                <p>Send and receive messages without keeping your phone online.</p>
             </div>
           )}
         </div>

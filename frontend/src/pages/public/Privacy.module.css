@@ -1,9 +1,11 @@
+/* src/pages/public/Privacy.module.css */
 .privacyPage {
   background-color: #0c0c0e;
   color: #e4e4e7;
   min-height: 100vh;
   padding: 80px 20px;
   line-height: 1.7;
+  font-family: 'Inter', sans-serif;
 }
 
 /* HEADER STYLE */
