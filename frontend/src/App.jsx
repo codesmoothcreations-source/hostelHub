@@ -2,6 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import style from "./App.module.css"
 
 // Context Providers
 import { AuthProvider } from './context/AuthContext';

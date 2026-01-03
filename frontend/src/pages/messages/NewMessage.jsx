@@ -19,12 +19,14 @@ const NewMessage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const [recentContacts, setRecentContacts] = useState([]);
 
   useEffect(() => {
     if (recipientId) {
       fetchRecipient();
     }
-  }, [recipientId]);
+    fetchRecentContacts();
+  }, []);
 
   useEffect(() => {
     if (searchQuery.length >= 2) {
@@ -36,20 +38,27 @@ const NewMessage = () => {
 
   const fetchRecipient = async () => {
     try {
-      setRecipient({ _id: recipientId, name: 'User', role: 'student' });
+      const response = await usersAPI.getUser(recipientId);
+      setRecipient(response.data.user);
     } catch (error) {
       console.error('Error fetching recipient:', error);
+    }
+  };
+
+  const fetchRecentContacts = async () => {
+    try {
+      const response = await messagesAPI.getConversations({ limit: 5 });
+      setRecentContacts(response.data.conversations || []);
+    } catch (error) {
+      console.error('Error fetching recent contacts:', error);
     }
   };
 
   const searchUsers = async () => {
     setLoading(true);
     try {
-      const mockUsers = [];
-      setUsers(mockUsers.filter(u => 
-        u._id !== user._id && 
-        u.name.toLowerCase().includes(searchQuery.toLowerCase())
-      ));
+      const response = await usersAPI.searchUsers(searchQuery);
+      setUsers(response.data.users.filter(u => u._id !== user._id));
     } catch (error) {
       console.error('Error searching users:', error);
     } finally {
@@ -108,17 +117,18 @@ const NewMessage = () => {
 
       <div className={styles.container}>
         <div className={styles.recipientSection}>
-          <h3 className={styles.sectionTitle}>Recipient</h3>
+          <h3 className={styles.sectionTitle}>Search or Select Recipient</h3>
           
           <div className={styles.userSearch}>
             <div className={styles.searchInputWrapper}>
               <FaSearch className={styles.searchIcon} />
               <input
                 type="text"
-                placeholder="Search users by name..."
+                placeholder="Search by name, email, or role..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={styles.searchInput}
+                autoFocus
               />
             </div>
 
@@ -137,11 +147,16 @@ const NewMessage = () => {
                     className={styles.userResult}
                   >
                     <div className={styles.userAvatar}>
-                      <FaUser className={styles.avatarIcon} />
+                      {userResult.avatar ? (
+                        <img src={userResult.avatar} alt={userResult.name} />
+                      ) : (
+                        <FaUser className={styles.avatarIcon} />
+                      )}
                     </div>
                     <div className={styles.userInfo}>
                       <h4 className={styles.userName}>{userResult.name}</h4>
                       <span className={styles.userRole}>{userResult.role}</span>
+                      <span className={styles.userEmail}>{userResult.email}</span>
                     </div>
                   </div>
                 ))}
@@ -149,15 +164,51 @@ const NewMessage = () => {
             )}
           </div>
 
+          {recentContacts.length > 0 && !recipient && (
+            <div className={styles.recentContacts}>
+              <h4 className={styles.subSectionTitle}>Recent Contacts</h4>
+              <div className={styles.contactsGrid}>
+                {recentContacts.map((contact) => (
+                  <div
+                    key={contact.user._id}
+                    onClick={() => handleSelectUser(contact.user)}
+                    className={styles.contactCard}
+                  >
+                    <div className={styles.contactAvatar}>
+                      {contact.user.avatar ? (
+                        <img src={contact.user.avatar} alt={contact.user.name} />
+                      ) : (
+                        <FaUser className={styles.avatarIcon} />
+                      )}
+                    </div>
+                    <div className={styles.contactInfo}>
+                      <h5 className={styles.contactName}>{contact.user.name}</h5>
+                      <span className={styles.contactRole}>{contact.user.role}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {recipient && (
             <div className={styles.selectedRecipient}>
               <div className={styles.recipientCard}>
                 <div className={styles.recipientAvatar}>
-                  <FaUser className={styles.avatarIcon} />
+                  {recipient.avatar ? (
+                    <img src={recipient.avatar} alt={recipient.name} />
+                  ) : (
+                    <FaUser className={styles.avatarIcon} />
+                  )}
                 </div>
                 <div className={styles.recipientInfo}>
                   <h4 className={styles.recipientName}>{recipient.name}</h4>
-                  <span className={styles.recipientRole}>{recipient.role}</span>
+                  <div className={styles.recipientMeta}>
+                    <span className={styles.recipientRole}>{recipient.role}</span>
+                    {recipient.email && (
+                      <span className={styles.recipientEmail}>{recipient.email}</span>
+                    )}
+                  </div>
                 </div>
                 <button
                   onClick={() => setRecipient(null)}
@@ -177,19 +228,29 @@ const NewMessage = () => {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type your message here..."
+              placeholder={`Type your message to ${recipient ? recipient.name : '...'}`}
               className={styles.messageTextarea}
               rows="6"
               disabled={!recipient}
             />
             
             <div className={styles.messageActions}>
+              <div className={styles.characterCount}>
+                {message.length}/1000
+              </div>
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim() || !recipient || sending}
                 className={styles.sendButton}
               >
-                {sending ? 'Sending...' : 'Send Message'}
+                {sending ? (
+                  <>
+                    <div className={styles.buttonSpinner}></div>
+                    Sending...
+                  </>
+                ) : (
+                  'Send Message'
+                )}
               </button>
             </div>
           </div>

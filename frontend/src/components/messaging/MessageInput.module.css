@@ -1,134 +1,163 @@
-/* Container at the bottom of the chat */
+/* MessageInput.module.css */
 .messageInput {
-  background-color: #202c33; /* Classic WhatsApp dark-mode input background */
-  padding: 10px 16px;
-  display: flex;
-  flex-direction: column;
+  padding: 20px;
+  background: rgba(18, 18, 20, 0.95);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .inputContainer {
   display: flex;
-  align-items: flex-end; /* Allows textarea to grow upwards */
+  align-items: flex-end;
   gap: 12px;
-  max-width: 100%;
+  background: rgba(30, 30, 33, 0.8);
+  border-radius: 25px;
+  padding: 8px 15px;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  transition: all 0.3s ease;
 }
 
-/* EMOJI BUTTON */
-.emojiButton {
+.inputContainer:focus-within {
+  border-color: #8b5cf6;
+  background: rgba(30, 30, 33, 1);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.actionButton {
   background: none;
   border: none;
-  padding: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.2rem;
   cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #8696a0;
-  transition: color 0.2s;
 }
 
-.emojiButton:hover {
-  color: #d1d7db;
+.actionButton:hover {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
 }
 
-.emojiIcon {
-  font-size: 1.4rem;
-}
-
-/* THE TEXTAREA PILL */
-.messageTextarea {
+.textareaWrapper {
   flex: 1;
-  background-color: #2a3942;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  color: #d1d7db;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  resize: none; /* Prevents manual resizing */
-  max-height: 120px; /* Limits growth */
-  overflow-y: auto;
-  transition: background-color 0.2s;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 }
 
-.messageTextarea:focus {
+.messageTextarea {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  resize: none;
   outline: none;
-  background-color: #31424e;
+  font-family: inherit;
+  line-height: 1.4;
+  max-height: 120px;
+  overflow-y: auto;
+  padding: 12px 0;
 }
 
 .messageTextarea::placeholder {
-  color: #8696a0;
+  color: rgba(255, 255, 255, 0.4);
 }
 
-.messageTextarea:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* THE SEND BUTTON (WhatsApp Style) */
 .sendButton {
-  background-color: #8b5cf6; /* Your Theme Purple */
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   border: none;
-  width: 45px;
-  height: 45px;
+  color: white;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  color: white;
+  transition: all 0.3s ease;
   flex-shrink: 0;
-  transition: transform 0.2s, background-color 0.2s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  /* Text inside button is usually hidden on WhatsApp in favor of icon */
-  font-size: 0; 
 }
 
 .sendButton:hover:not(:disabled) {
   transform: scale(1.05);
-  background-color: #7c3aed;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
 }
 
 .sendButton:disabled {
-  background-color: #374151;
-  cursor: default;
-  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: not-allowed;
 }
 
 .sendIcon {
+  font-size: 1rem;
+}
+
+.voiceButton {
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.voiceButton:hover {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8b5cf6;
+}
+
+.voiceIcon {
   font-size: 1.2rem;
-  margin-left: 3px; /* Centers the paper plane icon visually */
 }
 
-/* HINT TEXT */
-.inputActions {
-  padding-top: 4px;
-  padding-left: 56px; /* Aligns with the start of the textarea */
+.sendingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-.inputHint {
-  font-size: 0.7rem;
-  color: #667781;
-  margin: 0;
-  pointer-events: none;
-}
-
-/* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
   .messageInput {
-    padding: 8px 10px;
+    padding: 15px;
   }
   
   .inputContainer {
-    gap: 8px;
+    padding: 6px 12px;
   }
   
-  .sendButton {
+  .messageTextarea {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .messageInput {
+    padding: 12px;
+  }
+  
+  .actionButton,
+  .sendButton,
+  .voiceButton {
     width: 40px;
     height: 40px;
+    padding: 6px;
   }
   
-  .inputHint {
-    display: none; /* Hide hint on mobile to save space */
+  .messageTextarea {
+    font-size: 0.9rem;
   }
 }

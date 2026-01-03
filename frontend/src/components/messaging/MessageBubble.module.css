@@ -1,26 +1,99 @@
-/* Container for the whole bubble row */
-.messageBubble {
+/* MessageBubble.module.css */
+.messageContainer {
   display: flex;
+  margin: 8px 0;
+  padding: 0 20px;
+  align-items: flex-end;
+  transition: all 0.3s ease;
+}
+
+.messageLeft {
+  justify-content: flex-start;
+}
+
+.messageRight {
+  justify-content: flex-end;
+}
+
+.messageWrapper {
+  max-width: 70%;
+}
+
+.messageSender {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 4px;
-  width: 100%;
+  padding-left: 10px;
+  font-weight: 500;
+}
+
+.messageBubble {
+  padding: 12px 16px;
+  border-radius: 18px;
   position: relative;
+  word-break: break-word;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease;
 }
 
-/* Logic: Sent messages go right, Received go left */
-.messageOwn {
-  flex-direction: row-reverse;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.messageOther {
-  flex-direction: row;
+.ownBubble {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: white;
+  border-bottom-right-radius: 4px;
 }
 
-/* AVATAR STYLING */
+.otherBubble {
+  background: rgba(30, 30, 33, 0.9);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 4px;
+}
+
+.messageText {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.messageMeta {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.messageTime {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.messageStatus {
+  display: flex;
+  align-items: center;
+}
+
+.statusIcon {
+  font-size: 0.75rem;
+}
+
+.statusSent {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.statusRead {
+  color: #34d399;
+}
+
 .messageAvatar {
   width: 32px;
   height: 32px;
   margin: 0 8px;
-  align-self: flex-end; /* Avatars at the bottom of the bubble */
   flex-shrink: 0;
 }
 
@@ -35,90 +108,49 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #374151;
-  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
-/* BUBBLE CONTENT WRAPPER */
-.messageContent {
-  max-width: 65%;
-  padding: 6px 10px 8px 10px;
-  border-radius: 8px;
-  position: relative;
-  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.15);
+.ownAvatar {
+  background: linear-gradient(135deg, #34d399, #10b981);
 }
 
-/* DIFFERENTIATING SENT VS RECEIVED BUBBLES */
-.messageOwn .messageContent {
-  background-color: #8b5cf6; /* Your Theme Purple */
-  color: #ffffff;
-  border-bottom-right-radius: 2px; /* WhatsApp "tail" effect */
-}
-
-.messageOther .messageContent {
-  background-color: #202c33; /* WhatsApp recipient dark grey */
-  color: #e9edef;
-  border-bottom-left-radius: 2px;
-}
-
-/* SENDER NAME (For Group feel, though usually hidden in 1-on-1) */
-.messageSender {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #a5b4fc; /* Light purple for name contrast */
-  margin-bottom: 2px;
-}
-
-.messageText {
-  font-size: 0.95rem;
-  line-height: 1.4;
-  word-wrap: break-word;
-  white-space: pre-wrap; /* Preserves line breaks */
-  padding-right: 40px; /* Space for the floating time footer */
-}
-
-/* FOOTER: TIME AND STATUS */
-.messageFooter {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  position: absolute;
-  bottom: 4px;
-  right: 8px;
-  height: 15px;
-}
-
-.messageTime {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.messageStatus {
-  display: flex;
-  align-items: center;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* Double check icon for read status */
-.statusRead {
-  color: #34d399; /* Emerald/Green for read receipts */
-}
-
-/* MOBILE ADJUSTMENTS */
 @media (max-width: 768px) {
-  .messageContent {
-    max-width: 85%; /* Wider bubbles on small screens */
+  .messageContainer {
+    padding: 0 15px;
+  }
+  
+  .messageWrapper {
+    max-width: 80%;
   }
   
   .messageAvatar {
-    display: none; /* Hide avatars in mobile view to save space, like WhatsApp */
+    width: 28px;
+    height: 28px;
+    margin: 0 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .messageContainer {
+    padding: 0 12px;
+  }
+  
+  .messageWrapper {
+    max-width: 85%;
+  }
+  
+  .messageBubble {
+    padding: 10px 14px;
+  }
+  
+  .messageText {
+    font-size: 0.9rem;
   }
 }

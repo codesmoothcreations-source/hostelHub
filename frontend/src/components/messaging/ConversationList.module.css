@@ -1,145 +1,149 @@
-/* Container for the scrollable list */
+/* ConversationList.module.css */
 .conversationList {
-  display: flex;
-  flex-direction: column;
-  background: #111b21;
-  height: 100%;
+  flex: 1;
   overflow-y: auto;
 }
 
-/* Individual Item Row */
 .conversationItem {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  gap: 15px;
+  padding: 20px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
-  background: transparent;
-  height: 72px; /* Standard WhatsApp row height */
-  box-sizing: border-box;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .conversationItem:hover {
-  background-color: #202c33;
+  background: rgba(139, 92, 246, 0.05);
 }
 
-/* Active/Selected Chat State */
 .conversationSelected {
-  background-color: #2a3942 !important;
+  background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), transparent);
+  border-left: 3px solid #8b5cf6;
 }
 
-/* AVATAR SECTION */
 .conversationAvatar {
   position: relative;
-  margin-right: 15px;
+  width: 56px;
+  height: 56px;
   flex-shrink: 0;
 }
 
 .conversationAvatar img {
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid rgba(139, 92, 246, 0.3);
 }
 
 .avatarPlaceholder {
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  background: #6b7280;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #d1d7db;
+  color: white;
   font-size: 1.2rem;
+  border: 2px solid rgba(139, 92, 246, 0.3);
 }
 
 .onlineIndicator {
   position: absolute;
   bottom: 2px;
   right: 2px;
-  color: #00a884; /* WhatsApp online green */
-  font-size: 0.7rem;
-  background: #111b21;
+  color: #10b981;
+  font-size: 0.8rem;
+  background: #0c0c0e;
   border-radius: 50%;
   padding: 1px;
 }
 
-/* INFO CONTENT SECTION */
 .conversationInfo {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0; /* Important for text-overflow to work */
-  border-bottom: 1px solid #222e35; /* Divider */
-  height: 100%;
+  min-width: 0;
 }
 
 .conversationHeader {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 4px;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
 .conversationName {
-  font-size: 1.05rem;
-  font-weight: 400;
-  color: #e9edef;
   margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 10px;
 }
 
 .conversationTime {
-  font-size: 0.75rem;
-  color: #8696a0;
-  white-space: nowrap;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  flex-shrink: 0;
+  margin-left: 10px;
 }
 
-/* MESSAGE PREVIEW */
 .conversationPreview {
-  font-size: 0.9rem;
-  color: #8696a0;
   margin: 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* UNREAD BADGE */
 .unreadCount {
-  position: absolute;
-  right: 16px;
-  bottom: 12px;
-  background-color: #8b5cf6; /* Your Theme Purple */
-  color: #ffffff;
+  background: #8b5cf6;
+  color: white;
   font-size: 0.75rem;
   font-weight: 700;
   min-width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2px;
+  padding: 0 6px;
+  flex-shrink: 0;
 }
 
-/* Hide divider for the active item or on hover for cleaner look */
-.conversationSelected .conversationInfo,
-.conversationItem:hover .conversationInfo {
-  border-bottom: 1px solid transparent;
+@media (max-width: 768px) {
+  .conversationItem {
+    padding: 15px;
+    gap: 12px;
+  }
+  
+  .conversationAvatar {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .conversationName {
+    font-size: 0.95rem;
+  }
+  
+  .conversationPreview {
+    font-size: 0.85rem;
+  }
 }
 
-/* SCROLLBAR */
-.conversationList::-webkit-scrollbar {
-  width: 6px;
-}
-
-.conversationList::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+@media (max-width: 480px) {
+  .conversationItem {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .conversationAvatar {
+    width: 44px;
+    height: 44px;
+  }
 }
