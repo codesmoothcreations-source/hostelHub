@@ -1,92 +1,100 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { messagesAPI } from '../../api';
+import MessageBubble from './MessageBubble';
+import MessageInput from './MessageInput';
 import styles from './ChatWindow.module.css';
-import { format } from 'date-fns'; // Use: npm install date-fns
 
 const ChatWindow = ({ conversation, currentUser, socket }) => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [sending, setSending] = useState(false);
   const scrollRef = useRef();
 
-  // Auto-scroll to bottom on new message
+  // 1. Load history when chat changes
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const fetchMessages = async () => {
+      try {
+        const response = await messagesAPI.getMessages(conversation.user._id);
+        setMessages(response.data.messages || []);
+      } catch (error) {
+        console.error('History fetch error:', error);
+      }
+    };
+    fetchMessages();
+  }, [conversation.user._id]);
 
-  // Handle incoming socket messages
+  // 2. Logic: Listen for messages in this specific thread
   useEffect(() => {
     if (!socket) return;
 
-    const onMessage = (msg) => {
-      // Logic: Only add if message belongs to THIS conversation and isn't a duplicate
-      if (msg.sender === conversation.user._id || msg.sender === currentUser._id) {
-        setMessages((prev) => {
-            const exists = prev.find(m => m._id === msg._id);
-            return exists ? prev : [...prev, msg];
+    const handleNewMessage = (msg) => {
+      // Check if message belongs to this user
+      const msgSenderId = msg.sender?._id || msg.sender;
+      if (msgSenderId === conversation.user._id || msgSenderId === currentUser._id) {
+        setMessages(prev => {
+          // Deduplication: Stop double messages
+          if (prev.find(m => m._id === msg._id)) return prev;
+          return [...prev, msg];
         });
       }
     };
 
-    socket.on('new_message', onMessage);
+    socket.on('new_message', handleNewMessage);
     return () => socket.off('new_message');
-  }, [socket, conversation, currentUser]);
+  }, [socket, conversation.user._id, currentUser._id]);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
+  // 3. Auto-scroll to bottom
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-    const messageData = {
-      to: conversation.user._id,
-      content: newMessage,
-      sender: currentUser._id, // Attach sender for immediate UI update
+  const onSendMessage = async (content) => {
+    setSending(true);
+    const tempId = Date.now().toString();
+
+    // Optimistic Update (Right Side)
+    const optimisticMsg = {
+      _id: tempId,
+      content,
+      sender: currentUser._id,
+      user: currentUser, // So bubble shows your avatar
       createdAt: new Date().toISOString(),
-      _id: Date.now() // Temporary ID
+      read: false
     };
 
-    socket.emit('send_message', messageData);
-    setMessages(prev => [...prev, messageData]);
-    setNewMessage('');
+    setMessages(prev => [...prev, optimisticMsg]);
+
+    try {
+      const response = await messagesAPI.sendMessage({ to: conversation.user._id, content });
+      
+      // Emit via socket
+      socket.emit('send_message', { to: conversation.user._id, content });
+
+      // Update the optimistic message with the real one from DB
+      setMessages(prev => 
+        prev.map(m => m._id === tempId ? response.data.message : m)
+      );
+    } catch (error) {
+      setMessages(prev => prev.filter(m => m._id !== tempId));
+      console.error('Send Error:', error);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
-    <div className={styles.window}>
-      <header className={styles.chatHeader}>
-        <img src={conversation.user.avatar || '/default-avatar.png'} alt="User" />
-        <div className={styles.headerInfo}>
-            <h4>{conversation.user.name}</h4>
-            <span>online</span>
-        </div>
-      </header>
-
-      <div className={styles.messageArea}>
-        {messages.map((msg, index) => {
-          // KEY LOGIC: Is this message from ME or THEM?
-          const isMe = msg.sender === currentUser._id;
-          
-          return (
-            <div 
-                key={msg._id || index} 
-                className={isMe ? styles.sentWrapper : styles.receivedWrapper}
-            >
-              <div className={isMe ? styles.sentBubble : styles.receivedBubble}>
-                <p>{msg.content}</p>
-                <span className={styles.timestamp}>
-                    {format(new Date(msg.createdAt), 'HH:mm')}
-                </span>
-              </div>
-            </div>
-          );
-        })}
+    <div className={styles.chatWindow}>
+      <div className={styles.messageFeed}>
+        {messages.map((msg) => (
+          <MessageBubble
+            key={msg._id}
+            message={msg}
+            // LOGIC: Compare sender ID to currentUser ID
+            isOwnMessage={(msg.sender?._id || msg.sender) === currentUser._id}
+          />
+        ))}
         <div ref={scrollRef} />
       </div>
-
-      <form className={styles.inputArea} onSubmit={handleSend}>
-        <input 
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message" 
-        />
-        <button type="submit">Send</button>
-      </form>
+      <MessageInput onSendMessage={onSendMessage} sending={sending} />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-// src/pages/messages/Messages.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -18,70 +17,58 @@ const Messages = () => {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedConversation, setSelectedConversation] = useState(null);
 
-  // 1. Memoized message handler to prevent logic bugs
-  const handleNewMessage = useCallback((message) => {
+  // 1. Fetch Conversations on Mount
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        const response = await messagesAPI.getConversations();
+        setConversations(response.data.conversations || []);
+      } catch (error) {
+        console.error('Error fetching conversations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchConversations();
+  }, []);
+
+  // 2. WhatsApp Logic: Update sidebar order when ANY message arrives
+  const handleNewMessageGlobal = useCallback((message) => {
     setConversations(prev => {
       const updated = [...prev];
-      // Check if conversation exists
-      const index = updated.findIndex(c => c.user._id === message.sender._id || c.user._id === message.recipient._id);
+      // Logic: Find if the conversation exists for this message
+      const senderId = message.sender?._id || message.sender;
+      const recipientId = message.recipient?._id || message.recipient;
+      const otherId = senderId === user._id ? recipientId : senderId;
+
+      const index = updated.findIndex(c => c.user._id === otherId);
       
       if (index !== -1) {
-        // Update existing conversation
         const conversation = { ...updated[index] };
         conversation.lastMessage = message.content;
         conversation.lastMessageTime = message.createdAt;
         
-        // Only increment unread if we aren't currently looking at this chat
-        if (!userId || userId !== message.sender._id) {
-            conversation.unreadCount = (conversation.unreadCount || 0) + 1;
+        // Only increment unread if we aren't currently in this chat
+        if (userId !== otherId) {
+          conversation.unreadCount = (conversation.unreadCount || 0) + 1;
         }
 
+        // Move to top of the list
         updated.splice(index, 1);
         updated.unshift(conversation);
-      } else {
-        // If it's a brand new person messaging us, we should re-fetch or add them
-        fetchConversations();
       }
       return updated;
     });
-  }, [userId]);
-
-  useEffect(() => {
-    fetchConversations();
-  }, []);
-
-  // Handle URL changes (when user clicks a chat)
-  useEffect(() => {
-    if (userId && conversations.length > 0) {
-      const found = conversations.find(c => c.user._id === userId);
-      if (found) setSelectedConversation(found);
-    }
-  }, [userId, conversations]);
+  }, [user._id, userId]);
 
   useEffect(() => {
     if (!socket || !isConnected) return;
-    socket.on('new_message', handleNewMessage);
-    return () => socket.off('new_message');
-  }, [socket, isConnected, handleNewMessage]);
+    socket.on('new_message', handleNewMessageGlobal);
+    return () => socket.off('new_message', handleNewMessageGlobal);
+  }, [socket, isConnected, handleNewMessageGlobal]);
 
-  const fetchConversations = async () => {
-    setLoading(true);
-    try {
-      const response = await messagesAPI.getConversations();
-      setConversations(response.data.conversations || []);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSelectConversation = (conversation) => {
-    setSelectedConversation(conversation);
-    navigate(`/messages/${conversation.user._id}`);
-  };
+  const selectedConversation = conversations.find(c => c.user._id === userId);
 
   const filteredConversations = conversations.filter(conv =>
     conv.user.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -90,17 +77,8 @@ const Messages = () => {
   return (
     <div className={styles.messagesPage}>
       <div className={styles.messagesContainer}>
-        {/* Sidebar */}
         <div className={styles.conversationsSidebar}>
-            <div className={styles.sidebarHeader}>
-                <h2>Chats</h2>
-                <button onClick={() => navigate('/messages/new')} className={styles.iconBtn}>
-                    <FaUserPlus />
-                </button>
-            </div>
-          
           <div className={styles.search}>
-            <FaSearch className={styles.searchIcon} />
             <input
               type="text"
               placeholder="Search or start new chat"
@@ -113,12 +91,11 @@ const Messages = () => {
           <ConversationList
             conversations={filteredConversations}
             selectedConversation={selectedConversation}
-            onSelectConversation={handleSelectConversation}
+            onSelectConversation={(c) => navigate(`/messages/${c.user._id}`)}
             currentUser={user}
           />
         </div>
 
-        {/* Chat Area */}
         <div className={styles.chatMain}>
           {selectedConversation ? (
             <ChatWindow
@@ -128,11 +105,7 @@ const Messages = () => {
             />
           ) : (
             <div className={styles.noChatSelected}>
-                <div className={styles.emptyStateCircle}>
-                    <FaComments />
-                </div>
-                <h3>WhatsApp for Web</h3>
-                <p>Send and receive messages without keeping your phone online.</p>
+              <h3>Select a chat to start messaging</h3>
             </div>
           )}
         </div>

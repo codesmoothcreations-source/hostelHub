@@ -1,155 +1,145 @@
+/* Container for the scrollable list */
 .conversationList {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  background: #111b21;
   height: 100%;
-  background: #121214;
+  overflow-y: auto;
 }
 
-/* Custom Scrollbar for the sidebar */
-.conversationList::-webkit-scrollbar {
-  width: 4px;
-}
-
-.conversationList::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 10px;
-}
-
+/* Individual Item Row */
 .conversationItem {
   display: flex;
   align-items: center;
-  padding: 16px 20px;
-  gap: 15px;
+  padding: 12px 16px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-left: 3px solid transparent;
+  transition: background-color 0.2s ease;
   position: relative;
+  background: transparent;
+  height: 72px; /* Standard WhatsApp row height */
+  box-sizing: border-box;
 }
 
 .conversationItem:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background-color: #202c33;
 }
 
-/* SELECTED STATE */
+/* Active/Selected Chat State */
 .conversationSelected {
-  background: rgba(139, 92, 246, 0.08);
-  border-left-color: #8b5cf6;
+  background-color: #2a3942 !important;
 }
 
-.conversationSelected::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-  background: linear-gradient(to right, transparent, rgba(139, 92, 246, 0.03));
-  pointer-events: none;
-}
-
-/* AVATAR & ONLINE STATUS */
+/* AVATAR SECTION */
 .conversationAvatar {
   position: relative;
+  margin-right: 15px;
   flex-shrink: 0;
 }
 
-.conversationAvatar img, .avatarPlaceholder {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px; /* Squircle style */
+.conversationAvatar img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
   object-fit: cover;
 }
 
 .avatarPlaceholder {
-  background: #1e1e21;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #6b7280;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #71717a;
-  border: 1px solid #27272a;
+  color: #d1d7db;
+  font-size: 1.2rem;
 }
 
 .onlineIndicator {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  color: #10b981;
-  font-size: 12px;
-  background: #121214;
+  bottom: 2px;
+  right: 2px;
+  color: #00a884; /* WhatsApp online green */
+  font-size: 0.7rem;
+  background: #111b21;
   border-radius: 50%;
-  padding: 2px;
-  display: flex;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+  padding: 1px;
 }
 
-/* INFO SECTION */
+/* INFO CONTENT SECTION */
 .conversationInfo {
-  flex-grow: 1;
-  min-width: 0; /* Important for text truncation */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
+  min-width: 0; /* Important for text-overflow to work */
+  border-bottom: 1px solid #222e35; /* Divider */
+  height: 100%;
 }
 
 .conversationHeader {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  margin-bottom: 4px;
 }
 
 .conversationName {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #e9edef;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-right: 10px;
 }
 
 .conversationTime {
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #52525b;
-  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: #8696a0;
+  white-space: nowrap;
 }
 
+/* MESSAGE PREVIEW */
 .conversationPreview {
-  font-size: 0.85rem;
-  color: #a1a1aa;
+  font-size: 0.9rem;
+  color: #8696a0;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.4;
 }
 
 /* UNREAD BADGE */
 .unreadCount {
-  background: #8b5cf6;
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 800;
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  background-color: #8b5cf6; /* Your Theme Purple */
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
   min-width: 20px;
   height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  padding: 2px;
 }
 
-/* MOBILE OPTIMIZATION */
-@media (max-width: 768px) {
-  .conversationItem {
-    padding: 12px 16px;
-  }
-  
-  .conversationAvatar img, .avatarPlaceholder {
-    width: 48px;
-    height: 48px;
-  }
+/* Hide divider for the active item or on hover for cleaner look */
+.conversationSelected .conversationInfo,
+.conversationItem:hover .conversationInfo {
+  border-bottom: 1px solid transparent;
+}
+
+/* SCROLLBAR */
+.conversationList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.conversationList::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
 }
